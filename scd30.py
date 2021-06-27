@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 https://www.shroomology.org/forums/topic/2098-ideal-ppm-co2-concentration/
 
@@ -28,8 +30,8 @@ Cropping:
 
 from scd30_i2c import SCD30
 import time
-import transistor_blaeser as tb
-import datacollect as dc
+#import transistor_blaeser as tb
+#import datacollect as dc
 import threading
 
 from datetime import datetime, timedelta
@@ -76,7 +78,7 @@ def co2_control(ppm):
 
         if ppm<=grow_setpoint.co2_min:
             if datetime.now() > time_runfan_stop:
-                tb.writeMR_DO4(modbus_adr = 3, relay_no = 3, state = 0) #fan stopped
+                #tb.writeMR_DO4(modbus_adr = 3, relay_no = 3, state = 0) #fan stopped
                 fan_percentage = 0
                 fan_time_set = False
                 
@@ -95,7 +97,7 @@ def co2_control(ppm):
             
             if fan_time_set == False:
                 #time_runfan_start = datetime.now().strftime("%H:%M:%S")
-                tb.writeMR_DO4(modbus_adr = 3, relay_no = 3, state = 1) #fan started
+                #tb.writeMR_DO4(modbus_adr = 3, relay_no = 3, state = 1) #fan started
                 
                 time_runfan_stop = datetime.now() + timedelta(seconds = run_fan_seconds)
                 fan_time_set = True
@@ -183,7 +185,7 @@ while True:
         #try:
 			if scd30.get_data_ready():
 				if (datetime.now() - time_zero).total_seconds() > savedata_interval:
-					save_data = True
+					save_data = False #should be TRUE!!!!
 
 				m = scd30.read_measurement()
 
@@ -204,9 +206,9 @@ while True:
 
 				elif program_number == 2:  #GROW
 					co2_control(co2)
-					temp_control(temp, grow_setpoint.temp_max, grow_setpoint.temp_min)
-					rh_control(rh)
-					light_control()
+					#temp_control(temp, grow_setpoint.temp_max, grow_setpoint.temp_min)
+					#rh_control(rh)
+					#light_control()
 
 					if save_data == True:
 						dc.save_data('PrgCake', 0, 'n/a')

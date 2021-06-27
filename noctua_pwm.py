@@ -59,7 +59,7 @@ try:
     # Handle fan speed every WAIT_TIME sec
     while True:
         #handleFanSpeed()
-        setFanSpeed(50)
+        setFanSpeed(10)
         getCpuTemperature()
         time.sleep(WAIT_TIME)
 
