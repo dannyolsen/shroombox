@@ -59,6 +59,7 @@ try:
     # Handle fan speed every WAIT_TIME sec
     while True:
         #handleFanSpeed()
+        print("setting fan speed")
         setFanSpeed(10)
         getCpuTemperature()
         time.sleep(WAIT_TIME)
@@ -66,5 +67,8 @@ try:
 except KeyboardInterrupt: # trap a CTRL+C keyboard interrupt
     setFanSpeed(FAN_HIGH)
     #GPIO.cleanup() # resets all GPIO ports used by this function
-
-
+"""
+if __name__ == "__main__":
+    print("main running")
+    setFanSpeed(50)
+"""

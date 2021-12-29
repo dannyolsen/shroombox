@@ -8,6 +8,6 @@ pixels = neopixel.NeoPixel(board.D21, 24)
 
 #pixels[10] = (0, 255, 0)
 
-pixels.fill((0, 0, 255))
+pixels.fill((0, 255, 0))
 
 pixels.show()
