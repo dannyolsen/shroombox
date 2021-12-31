@@ -40,7 +40,7 @@ Tasks that need completion:
 		
 """
 
-#IMPORTS
+#region IMPORTS
 import time
 import threading
 from datetime import datetime, timedelta
@@ -52,10 +52,29 @@ import heater as heater
 
 from scd30_i2c import SCD30     #climate measuring device
 
+from simple_pid import PID
+#endregion
+
+### CLASSES ###
+class grow_setpoint:
+        temp_max = 24
+        temp_min = 23
+        co2_max = 2000 #5000
+        rh_max = 92
+        rh_min = 85
+        
+class cake_setpoint:
+        temp_max = 26.5
+        temp_min = 25.5
+
+class neo_data:
+		pass
+
+### INIT SETUP VARS ###
 scd30 = SCD30()
 scd30.set_measurement_interval(2)
 scd30.start_periodic_measurement()
-temp_offset = 0
+temp_offset = 2
 scd30.set_temperature_offset(temp_offset)
 time.sleep(2)
 scd30.get_data_ready()
@@ -78,62 +97,29 @@ savedata_interval = 10 #seconds
 time_zero = datetime.now()
 save_data = True
 
-class grow_setpoint:
-        temp_max = 24
-        temp_min = 23
-        co2_max = 1200 	#5000
-        co2_min = 1000	#4500
-        rh_max = 92
-        rh_min = 85
-        
-class cake_setpoint:
-        temp_max = 26.5
-        temp_min = 25.5
+pid 				= PID(-0.05, -1, 0.05, setpoint=grow_setpoint.co2_max)
+pid.output_limits 	= (0, 100)    # Output value will be between 0 and 10
 
-class neo_data:
-		pass
-
+### FUNCTIONS ###
 def co2_control(ppm):
-        #relay_no = 3 #this is actually number four when you look at the physical device
-        global fan_percentage_zero
-        global save_data
-        #global time_runfan_start
-        global time_runfan_stop
-        global fan_time_set
+	global fan_percentage_zero
+	global save_data
+	global time_runfan_stop
+	global fan_time_set
 
-        if ppm<=grow_setpoint.co2_min:
-            if datetime.now() > time_runfan_stop:
-                fan_percentage = 0
-                fan.setFanSpeed(fan_percentage)
-                fan_time_set = False
-                
-            else:
-                fan_percentage = 10
-                
-            if (save_data == True or fan_percentage != fan_percentage_zero):
-                influx.write_ver18("fan_percentage",["device","noctua_fan"],field=['%',fan_percentage])
-                fan_percentage_zero = fan_percentage
-                save_data = True
-            else:
-                pass
-                
-        elif ppm>grow_setpoint.co2_max:
-            fan_percentage = 30
-            
-            if fan_time_set == False:
-                #time_runfan_start = datetime.now().strftime("%H:%M:%S")
-                fan.setFanSpeed(fan_percentage)
-                
-                time_runfan_stop = datetime.now() + timedelta(seconds = run_fan_seconds)
-                fan_time_set = True
-            else:
-                pass
-                
-            if save_data == True or fan_percentage != fan_percentage_zero:
-                influx.write_ver18("fan_percentage",["device","noctua_fan"],field=['%',fan_percentage])
-                fan_percentage_zero = fan_percentage
-                save_data = True
-                
+	v = ppm
+	print("from co2_control() ppm is : {}".format(ppm))
+	
+	fan_percentage = int(round(pid(ppm),0))
+	
+	fan.setFanSpeed(fan_percentage)		#setting new fan speed from calculated pid
+	print("fanspeed has been set to : {}".format(fan_percentage))
+
+	if save_data == True or fan_percentage != fan_percentage_zero:	#save data if it has changed since last time
+		influx.write_ver18("fan_percentage",["device","noctua_fan"],field=['%',fan_percentage])
+		fan_percentage_zero = fan_percentage
+		save_data = True
+
 def temp_control(temp, setpoint_max, setpoint_min):
 	#aquarium water heater is connected to relay number one (11 / 14)
 	global heater_percentage_zero
@@ -212,7 +198,6 @@ def light_control():
 	
 	print("lights are : {}".format(neo_data.lights))
 		
-
 def save_scd30_data():
 	influx.write_ver18("co2",["device","sdc30"],field=['ppm',co2])
 	influx.write_ver18("humidity",["device","sdc30"],field=['%',rh])
@@ -221,6 +206,7 @@ def save_scd30_data():
 	#influx.write_points_ver18(["temperature,type=offset,device=scd30 degrees={}".format(temp_offset),]) #NOT SURE IF THIS WORKS - CHECK IT
 
 #---- MAIN ----
+fanspeed = 0
 
 #User chooses a program to run
 print("What's you plan?")
@@ -271,7 +257,7 @@ while True:
 							"temperature,setpoint=min,program=cake °C={}".format(cake_setpoint.temp_min),
 							"temperature,setpoint=max,program=grow °C={}".format(grow_setpoint.temp_min),
 							"temperature,setpoint=min,program=grow °C={}".format(grow_setpoint.temp_min),
-							"co2,setpoint=min,program=grow ppm={}".format(grow_setpoint.co2_min),
+							#"co2,setpoint=min,program=grow ppm={}".format(grow_setpoint.co2_min),
 							"co2,setpoint=max,program=grow ppm={}".format(grow_setpoint.co2_max),
 							"humidity,setpoint=min,program=grow rh={}".format(grow_setpoint.rh_min),
 							"humidity,setpoint=max,program=grow rh={}".format(grow_setpoint.rh_max),
