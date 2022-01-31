@@ -1,3 +1,4 @@
+#!/home/pi/Venv/env_shroombox2/bin python3
 # -*- coding: utf-8 -*-
 
 """
@@ -36,40 +37,54 @@ Tasks that need completion:
 	- logging in influxdb
 		- fan activity 		- DONE
 		- heatpad activity 	- DONE
-		- temp offset value
+		- temp offset value - DONE (relative humidity does go a bit to high though
+		- make PID's run on specific intervals - like once a second or so...
+			- create class or function that triggers true every interval
 		
 """
 
 #region IMPORTS
-import time
-import threading
-from datetime import datetime, timedelta
+import sys, select, os # to quit program on pressing enter
+import 	time
+import 	threading
+from 	datetime 	import datetime, timedelta
 
-import noctua_pwm as fan        #python program writte by me
+import noctua_pwm 	as fan        #python program writte by me
 import influx
-import neo_single as neo
-import heater as heater
+import neo_single 	as neo
+import heater 		as heater
 
-from scd30_i2c import SCD30     #climate measuring device
+from scd30_i2c 		import SCD30     #climate measuring device
 
-from simple_pid import PID
+from simple_pid 	import PID
+
+from picamera 		import PiCamera
+from time 			import sleep
+
+import run_every_s_m_h as pic_interval
+
+from gpiozero import CPUTemperature
 #endregion
 
 ### CLASSES ###
 class grow_setpoint:
-        temp_max = 24
-        temp_min = 23
-        co2_max = 2000 #5000
+        temp_max = 25.1
+        temp_min = 25.0
+        co2_max = 5000
         rh_max = 92
         rh_min = 85
         
 class cake_setpoint:
-        temp_max = 26.5
-        temp_min = 25.5
+        temp_max 			= 27.1
+        temp_min 			= 27
+        co2_max 			= 7500	#between 5000-10000	
+        rh_setpoint 		= 90
 
-class neo_data:
-		pass
+class program_settings:
+	program_running			= None			#so we know what mode we are in - cake or grow
 
+#program_settings.cpu_temp.pid_setpoint	
+	
 ### INIT SETUP VARS ###
 scd30 = SCD30()
 scd30.set_measurement_interval(2)
@@ -80,7 +95,7 @@ time.sleep(2)
 scd30.get_data_ready()
 m = scd30.read_measurement()
 
-print(f"CO2: {m[0]:.2f}ppm, temp: {m[1]:.2f}'C, rh: {m[2]:.2f}%")
+#print(f"CO2: {m[0]:.2f}ppm, temp: {m[1]:.2f}'C, rh: {m[2]:.2f}%")
 co2 = float(f"{m[0]:.1f}")
 temp = float(f"{m[1]:.2f}")
 rh = float(f"{m[2]:.2f}")
@@ -97,22 +112,32 @@ savedata_interval = 10 #seconds
 time_zero = datetime.now()
 save_data = True
 
-pid 				= PID(-0.05, -1, 0.05, setpoint=grow_setpoint.co2_max)
+pid = PID(-0.0001, -0.0001, -0.0, setpoint=grow_setpoint.co2_max)
 pid.output_limits 	= (0, 100)    # Output value will be between 0 and 10
 
+#camera = PiCamera()		#this can only be set once otherwise the program will not function
+#NEO DATA
+light_status = {
+	"status": "",       #on or off
+	"rgb" : []			#[255,255,255]
+}
+
 ### FUNCTIONS ###
-def co2_control(ppm):
+def co2_control():
 	global fan_percentage_zero
 	global save_data
-	global time_runfan_stop
-	global fan_time_set
-
-	v = ppm
-	print("from co2_control() ppm is : {}".format(ppm))
+	#global time_runfan_stop
+	#global fan_time_set
+	#global pid
+	#global co2
 	
-	fan_percentage = int(round(pid(ppm),0))
+	print("pid setpoint is: {}".format(str(grow_setpoint.co2_max)))
 	
-	fan.setFanSpeed(fan_percentage)		#setting new fan speed from calculated pid
+	v 	= co2		#ppm level in shroombox so the pid can figure out how much air to fan
+	print("from co2_control() ppm is : {}".format(co2))
+	
+	fan_percentage = float(pid(co2))
+	fan.fan_filter.start(fan_percentage)		#setting new fan speed from calculated pid
 	print("fanspeed has been set to : {}".format(fan_percentage))
 
 	if save_data == True or fan_percentage != fan_percentage_zero:	#save data if it has changed since last time
@@ -127,7 +152,7 @@ def temp_control(temp, setpoint_max, setpoint_min):
 	
 	if temp>setpoint_max:
 		heater.off() #stopped
-		heater_percentage = 0
+		heater_percentage = 0.0
 
 		"""
 		#TEST FAN FOR HUMIDITY - NOT PART OF FINAL PROGRAM
@@ -137,16 +162,12 @@ def temp_control(temp, setpoint_max, setpoint_min):
 		"""
 
 		if save_data == True or heater_percentage != heater_percentage_zero:
-			#influx.write_ver18("heater",["device","heater"],field=['percentage',heater_percentage])
-			influx.write_points_ver18(["heater,mode=off percentage={}".format(int(heater_percentage)),])
-			print("heater on saved in database")
-			#######influx.write_ver18("fan_percentage",["device","noctua_fan"],field=['%',fan_percentage]) #FAN TEST - DELETE WHEN DONE
-
+			influx.write_ver18("heater",["device","heater"],field=['percentage',heater_percentage])
 			heater_percentage_zero = heater_percentage
 			
 	elif temp<=setpoint_min:
 		heater.on() #started
-		heater_percentage = 100
+		heater_percentage = 100.0
 		influx.write_ver18("heater",["device","heater"],field=['percentage',heater_percentage])
 
 		"""
@@ -157,11 +178,9 @@ def temp_control(temp, setpoint_max, setpoint_min):
 		"""
 
 		if save_data == True or heater_percentage != heater_percentage_zero:
-			#influx.write_ver18("heater",["device","heater"],field=['percentage',heater_percentage])
 			influx.write_points_ver18(["heater,mode=on percentage={}".format(int(heater_percentage)),])
-			print("heater on saved in database")
-			########influx.write_ver18("fan_percentage",["device","noctua_fan"],field=['%',fan_percentage]) #FAN TEST - DELETE WHEN DONE
-
+			#print("heater on saved in database")
+			
 			heater_percentage_zero = heater_percentage
 
 def rh_control(rh): #NOT USED IN SHROOMBOX 2.0
@@ -185,68 +204,133 @@ def rh_control(rh): #NOT USED IN SHROOMBOX 2.0
 			humidifier_percentage_zero = humidifier_percentage
 			#threading.Thread(target=rh_shot).start() #activating the humidity device for x seconds
 
-def light_control():
-	time = datetime.now().strftime("%H:%M")
+def light_control(t_start, t_end):
+	#specify time start and time end like "06:00" and "19:00"
+	time_now = datetime.now().strftime("%H:%M")
+
+	time_now 	= datetime.strptime(time_now, "%H:%M")
+	time_start 	= datetime.strptime(t_start, "%H:%M")
+	time_end 	= datetime.strptime(t_end, "%H:%M")
 	
-	if  time >= "06:00" and time < "18:00" :
-		neo.on() #lights on
-		neo_data.lights = "on"
+	if  time_now >= time_start and time_now <= time_end and neo.light_status["state"] != "on": #blue lights if withing time period
+		print("blue lights on")
+		neo.on_blue() #lights on
 	
-	else:
+	elif (time_now > time_end or time_now < time_start) and neo.light_status["state"] != "off":  #lights off when outside time period
+		print("lights off")
 		neo.off() #lights off
-		neo_data.lights = "off"
-	
-	print("lights are : {}".format(neo_data.lights))
 		
 def save_scd30_data():
 	influx.write_ver18("co2",["device","sdc30"],field=['ppm',co2])
 	influx.write_ver18("humidity",["device","sdc30"],field=['%',rh])
 	influx.write_ver18("temperature",["device","sdc30"],field=['°C',temp])
 	#influx.write_ver18("temperature_offset",["device","sdc30"],field=['°C',temp_offset])
-	#influx.write_points_ver18(["temperature,type=offset,device=scd30 degrees={}".format(temp_offset),]) #NOT SURE IF THIS WORKS - CHECK IT
+
+def take_pic(folder):
+	time = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
+	rgb = [255,255,255]					#turning white lights on
+	neo.pixels.fill((rgb))
+	neo.pixels.show()
+	
+	camera = PiCamera()
+	sleep(1)
+	camera.capture(folder+'{}_{}.jpg'.format(program_settings.program_running, time))
+	camera.close()
+	
+	#neo.off_after_picure() #lights back to what the where before picture taking
+	neo.pixels.fill((neo.light_status["rgb"]))
+	neo.pixels.show()
+
+def cpu_temp_control():
+	global pid_cpu
+	
+	pid_cpu = PID(-10, -3, 0.05, setpoint=30)
+	pid_cpu.output_limits 	= (0, 100)    # Output value will be between 0 and 10
+	
+	cpu = CPUTemperature()
+	print("cpu temp is : {}".format(str(cpu.temperature)))
+	
+	fan_speed = float(pid_cpu(cpu.temperature))
+	fan.fan_cpu.start(fan_speed)		#setting fan speed on cpu
+	
+	#fan.setFanSpeed(fan_speed)		#setting new fan speed from calculated pid
+	print("CPU fanspeed has been set to : {}".format(fan_speed))
+
+	"""
+	if save_data == True or fan_percentage != fan_percentage_zero:	#save data if it has changed since last time
+		influx.write_ver18("fan_percentage",["device","noctua_fan"],field=['%',fan_percentage])
+		fan_percentage_zero = fan_percentage
+		save_data = True
+	"""
+	
+def quit_if_enter_is_pressed():
+	if sys.stdin in select.select([sys.stdin], [], [], 0)[0]: #
+		exit()
 
 #---- MAIN ----
 fanspeed = 0
 
 #User chooses a program to run
+print("To QUIT program while it is running, just press enter...")
 print("What's you plan?")
 print("1 : I'm making af Pf-tek cake")
 print("2 : I'm growing shroomies")
 program_number = int(input("Choose a program: "))
 
+if program_number == 1:
+	program_settings.program_running = "Cake"
+
+if program_number == 2:
+	program_settings.program_running = "Grow"
+	
+sleep(1) #to prevent program from exiting on enter pressed
+
 while True:
         #try:
-			if scd30.get_data_ready():
+			quit_if_enter_is_pressed()
+			#cpu_temp_control()
+				
+			if scd30.get_data_ready():		#get clima data
 				if (datetime.now() - time_zero).total_seconds() > savedata_interval:
 					save_data = True #should be TRUE!!!!
 
 				m = scd30.read_measurement()
 				
-				print(f"CO2: {m[0]:.2f}ppm, temp: {m[1]:.2f}'C, rh: {m[2]:.2f}%")
+				#print(f"CO2: {m[0]:.2f}ppm, temp: {m[1]:.2f}'C, rh: {m[2]:.2f}%")
 				co2 = float(f"{m[0]:.1f}")
 				temp = float(f"{m[1]:.2f}")
 				rh = float(f"{m[2]:.2f}")
 
-				print("Temp offset")
-				print(scd30.get_temperature_offset())
+				#print("Temp offset")
+				#print(scd30.get_temperature_offset())
 
 				#run the different control functions here -fx. light control, co2, heat and so on
 				if program_number == 1:  #CAKE
 					temp_control(temp, cake_setpoint.temp_max, cake_setpoint.temp_min)
-					co2_control(co2)
-					#rh_control(rh)
+					
+					co2_control(cake_setpoint.co2_max)
+					neo.off() 			#lights off during cake program
+					#rh_control(rh)		#this could be controlled with the fan in Cake program
 
 					if save_data == True:
-						#dc.save_data('PrgCake', 1, 'n/a')
-						#dc.save_data('PrgGrow', 0, 'n/a')
-						#dc.save_setpoints(cake_setpoint.temp_max, cake_setpoint.temp_min, grow_setpoint.temp_max, grow_setpoint.temp_min, grow_setpoint.co2_max, grow_setpoint.co2_min, grow_setpoint.rh_max, grow_setpoint.rh_min)
+						influx.write_points_ver18([
+							"program,mode=cake PrgCake={}".format(int(1)),
+							"program,mode=grow PrgGrow={}".format(int(0)),
+							"temperature,setpoint=max,program=cake °C={}".format(cake_setpoint.temp_max),
+							"temperature,setpoint=min,program=cake °C={}".format(cake_setpoint.temp_min),
+							"temperature,setpoint=max,program=grow °C={}".format(grow_setpoint.temp_min),
+							"temperature,setpoint=min,program=grow °C={}".format(grow_setpoint.temp_min),
+							"co2,setpoint=max,program=grow ppm={}".format(grow_setpoint.co2_max),
+							"humidity,setpoint=min,program=grow rh={}".format(grow_setpoint.rh_min),
+							"humidity,setpoint=max,program=grow rh={}".format(grow_setpoint.rh_max),
+						])
 						pass
 
 				elif program_number == 2:  #GROW
-					co2_control(co2)
+					co2_control()
 					temp_control(temp, grow_setpoint.temp_max, grow_setpoint.temp_min)
-					#rh_control(rh)
-					light_control()
+					#rh_control(rh)	#could be controlled with fan while prioritising co2
+					light_control(t_start="06:00",t_end="18:00")
 
 					#Saving program specific data
 					if save_data == True:
@@ -257,8 +341,7 @@ while True:
 							"temperature,setpoint=min,program=cake °C={}".format(cake_setpoint.temp_min),
 							"temperature,setpoint=max,program=grow °C={}".format(grow_setpoint.temp_min),
 							"temperature,setpoint=min,program=grow °C={}".format(grow_setpoint.temp_min),
-							#"co2,setpoint=min,program=grow ppm={}".format(grow_setpoint.co2_min),
-							"co2,setpoint=max,program=grow ppm={}".format(grow_setpoint.co2_max),
+							"co2,setpoint=max,program=grow ppm={}".format(grow_setpoint.co2_max), #co2_max is just the setpoint for the pid to reach
 							"humidity,setpoint=min,program=grow rh={}".format(grow_setpoint.rh_min),
 							"humidity,setpoint=max,program=grow rh={}".format(grow_setpoint.rh_max),
 						])
@@ -268,7 +351,7 @@ while True:
 				#Saving data that needs recording nomatter what program is running - climate data from scd30 sensor
 				if save_data == True:
 					save_scd30_data()
-				time.sleep(2)
+				time.sleep(1)
 			else:
 				time.sleep(0.2)
 				pass
@@ -276,6 +359,12 @@ while True:
 			if save_data == True:
 				time_zero = datetime.now()
 				save_data = False
+		
+			if pic_interval.pic_timelapse("h") == True:
+				#print("taking picture")
+				take_pic(folder = '/home/pi/Github/shroombox/shroombox2/timelapse_pics/1stgrow/')
+				
+
         #except:
         #        print("main program failed, trying to run code again...")
         #        pass

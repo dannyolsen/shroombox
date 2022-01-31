@@ -1,8 +1,0 @@
-CO2: 2079.26ppm, temp: 23.49'C, rh: 92.70%
-What's you plan?
-1 : I'm making af Pf-tek cake
-2 : I'm growing shroomies
-Choose a program: Traceback (most recent call last):
-  File "shroombox2.py", line 221, in <module>
-    program_number = int(input("Choose a program: "))
-OSError: [Errno 9] Bad file descriptor
