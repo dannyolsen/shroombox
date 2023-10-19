@@ -3,7 +3,7 @@
 
 import board
 import neopixel
-pixels = neopixel.NeoPixel(board.D21, 24) #D21 er GPIO21 dvs. ben 40 på raspberry (24 er antal dioder som er i neopixel ringen)
+pixels = neopixel.NeoPixel(board.D21, 119) #D21 er GPIO21 dvs. ben 40 på raspberry (24 er antal dioder som er i neopixel ringen)
 
 #pixels[0] = (255, 0, 255)
 #pixels[3] = (0, 0, 255)

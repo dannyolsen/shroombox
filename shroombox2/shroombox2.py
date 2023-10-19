@@ -68,9 +68,10 @@ from gpiozero import CPUTemperature
 
 ### CLASSES ###
 class grow_setpoint:
-        temp_max = 25.1
-        temp_min = 25.0
-        co2_max = 5000
+        
+        temp_min = 22.0
+        temp_max = temp_min + 0.1
+        co2_max = 700
         rh_max = 92
         rh_min = 85
         
@@ -112,8 +113,13 @@ savedata_interval = 10 #seconds
 time_zero = datetime.now()
 save_data = True
 
-pid = PID(-0.0001, -0.0001, -0.0, setpoint=grow_setpoint.co2_max)
+#PID for CO2 fan
+pid = PID(-1, -0.0001, -0.0, setpoint=grow_setpoint.co2_max)
 pid.output_limits 	= (0, 100)    # Output value will be between 0 and 10
+
+#PID for CPU fan
+pid_cpu = PID(-10, -3, 0.05, setpoint=30)
+pid_cpu.output_limits 	= (0, 100)    # Output value will be between 0 and 10
 
 #camera = PiCamera()		#this can only be set once otherwise the program will not function
 #NEO DATA
@@ -233,20 +239,15 @@ def take_pic(folder):
 	neo.pixels.show()
 	
 	camera = PiCamera()
-	sleep(1)
+	camera.vflip = True
+	sleep(3)
 	camera.capture(folder+'{}_{}.jpg'.format(program_settings.program_running, time))
 	camera.close()
 	
-	#neo.off_after_picure() #lights back to what the where before picture taking
-	neo.pixels.fill((neo.light_status["rgb"]))
+	neo.pixels.fill((neo.light_status["rgb"])) #lights back to what the where before picture taking
 	neo.pixels.show()
 
 def cpu_temp_control():
-	global pid_cpu
-	
-	pid_cpu = PID(-10, -3, 0.05, setpoint=30)
-	pid_cpu.output_limits 	= (0, 100)    # Output value will be between 0 and 10
-	
 	cpu = CPUTemperature()
 	print("cpu temp is : {}".format(str(cpu.temperature)))
 	
@@ -284,7 +285,7 @@ if program_number == 2:
 	program_settings.program_running = "Grow"
 	
 sleep(1) #to prevent program from exiting on enter pressed
-
+fan.fan_filter.start(75)	#Setting initial fan speed
 while True:
         #try:
 			quit_if_enter_is_pressed()
@@ -308,7 +309,8 @@ while True:
 				if program_number == 1:  #CAKE
 					temp_control(temp, cake_setpoint.temp_max, cake_setpoint.temp_min)
 					
-					co2_control(cake_setpoint.co2_max)
+					#co2_control(cake_setpoint.co2_max)
+					co2_control()
 					neo.off() 			#lights off during cake program
 					#rh_control(rh)		#this could be controlled with the fan in Cake program
 
@@ -330,7 +332,7 @@ while True:
 					co2_control()
 					temp_control(temp, grow_setpoint.temp_max, grow_setpoint.temp_min)
 					#rh_control(rh)	#could be controlled with fan while prioritising co2
-					light_control(t_start="06:00",t_end="18:00")
+					light_control(t_start="11:00",t_end="23:00")
 
 					#Saving program specific data
 					if save_data == True:
@@ -362,7 +364,8 @@ while True:
 		
 			if pic_interval.pic_timelapse("h") == True:
 				#print("taking picture")
-				take_pic(folder = '/home/pi/Github/shroombox/shroombox2/timelapse_pics/1stgrow/')
+				#take_pic(folder = '/home/pi/Github/shroombox/shroombox2/timelapse_pics/1stgrow/')
+				pass
 				
 
         #except:

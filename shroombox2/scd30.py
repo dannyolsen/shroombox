@@ -16,6 +16,7 @@ time.sleep(2)
 scd30.get_data_ready()
 
 m = scd30.read_measurement()
+print(m)
 
 print(f"CO2: {m[0]:.2f}ppm, temp: {m[1]:.2f}'C, rh: {m[2]:.2f}%")
 co2 = float(f"{m[0]:.1f}")
@@ -29,4 +30,5 @@ if __name__ == "__main__":                  #just for testing purposes
     print(scd30.get_temperature_offset())
     scd30.set_temperature_offset(0)
     print(scd30.get_temperature_offset())
+
     
