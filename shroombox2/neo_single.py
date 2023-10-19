@@ -3,7 +3,7 @@
 
 import board
 import neopixel
-pixels = neopixel.NeoPixel(board.D21, 119) #D21 er GPIO21 dvs. ben 40 på raspberry (24 er antal dioder som er i neopixel ringen)
+pixels = neopixel.NeoPixel(board.D12, 119) #D21 er GPIO21 dvs. ben 40 på raspberry (24 er antal dioder som er i neopixel ringen) - ændret til D12
 
 #pixels[0] = (255, 0, 255)
 #pixels[3] = (0, 0, 255)
@@ -14,20 +14,25 @@ pixels = neopixel.NeoPixel(board.D21, 119) #D21 er GPIO21 dvs. ben 40 på raspbe
 #DICTS
 light_status = {                       #current status of the light
     "state" : "",	                #are the lights on or off	
-    "rgb" : [0,0,0]                      #[255,255,255]
+    "rgb" : [0,0,0],                      #[255,255,255]
+    "brightness" : "1.0"
     }
 
 #FUNCTIONS
 def on_blue():
-    light_status["state"]   = "on"
-    light_status["rgb"]     = [0,0,255]
+    light_status["state"]           = "on"
+    light_status["rgb"]             = [0,0,255]
+    light_status["brightness"]      = 1.0
     pixels.fill((light_status["rgb"]))
+    #pixels.brightness = light_status["brightness"]
     pixels.show()
 
 def off():
-    light_status["state"]   = "off"
-    light_status["rgb"] = [0,0,0]
+    light_status["state"]           = "off"
+    light_status["rgb"]             = [0,0,0]
+    light_status["brightness"]      = 0.0
     pixels.fill((light_status["rgb"]))
+    #pixels.brightness = light_status["brightness"]
     pixels.show()
     
 def on_white():

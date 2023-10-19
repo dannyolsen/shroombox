@@ -50,15 +50,33 @@ import 	threading
 from 	datetime 	import datetime, timedelta
 
 import noctua_pwm 	as fan        #python program writte by me
-import influx
 import neo_single 	as neo
 import heater 		as heater
+import humidity		as humidity
 
 from scd30_i2c 		import SCD30     #climate measuring device
 
 from simple_pid 	import PID
 
-from picamera 		import PiCamera
+#INFLUX27
+import influxdb_client, os, time
+from influxdb_client import InfluxDBClient, Point, WritePrecision
+from influxdb_client.client.write_api import SYNCHRONOUS
+
+token = os.environ.get("INFLUXDB_TOKEN")
+org = "dannyolsen"
+url = "http://192.168.87.37:8086"
+
+token = "f5kVhve7HO2yJggJeYueKNoL18a89bRWgV91GbvQ-GGa-k_MCHHSK2WoDALLWEQbBJDAXQIsMCEFa-ox_K4Omg=="
+write_client = influxdb_client.InfluxDBClient(url=url, token=token, org=org)
+
+bucket="shroomcabinet"
+
+write_api = write_client.write_api(write_options=SYNCHRONOUS)
+#INFLUX27 END
+
+
+#from picamera 		import PiCamera
 from time 			import sleep
 
 import run_every_s_m_h as pic_interval
@@ -68,12 +86,11 @@ from gpiozero import CPUTemperature
 
 ### CLASSES ###
 class grow_setpoint:
-        
         temp_min = 22.0
         temp_max = temp_min + 0.1
         co2_max = 700
         rh_max = 92
-        rh_min = 85
+        rh_min = rh_max - 0.5
         
 class cake_setpoint:
         temp_max 			= 27.1
@@ -96,20 +113,21 @@ time.sleep(2)
 scd30.get_data_ready()
 m = scd30.read_measurement()
 
-#print(f"CO2: {m[0]:.2f}ppm, temp: {m[1]:.2f}'C, rh: {m[2]:.2f}%")
+print(f"CO2: {m[0]:.2f}ppm, temp: {m[1]:.2f}'C, rh: {m[2]:.2f}%")
 co2 = float(f"{m[0]:.1f}")
 temp = float(f"{m[1]:.2f}")
 rh = float(f"{m[2]:.2f}")
 
 fan_percentage = 0
-fan_percentage_zero = 0
-heater_percentage_zero = 0
+fan_percentage_old = 0
+heater_percentage = 0
+heater_percentage_old = 0
 
 time_runfan_stop = datetime.now()
 run_fan_seconds = 120
 fan_time_set = False
 
-savedata_interval = 10 #seconds
+savedata_interval = 60 #seconds
 time_zero = datetime.now()
 save_data = True
 
@@ -130,7 +148,7 @@ light_status = {
 
 ### FUNCTIONS ###
 def co2_control():
-	global fan_percentage_zero
+	global fan_percentage_old
 	global save_data
 	#global time_runfan_stop
 	#global fan_time_set
@@ -146,71 +164,72 @@ def co2_control():
 	fan.fan_filter.start(fan_percentage)		#setting new fan speed from calculated pid
 	print("fanspeed has been set to : {}".format(fan_percentage))
 
-	if save_data == True or fan_percentage != fan_percentage_zero:	#save data if it has changed since last time
-		influx.write_ver18("fan_percentage",["device","noctua_fan"],field=['%',fan_percentage])
-		fan_percentage_zero = fan_percentage
-		save_data = True
+	if save_data == True:# or fan_percentage != fan_percentage_old:	#save data if it has changed since last time
+		timestamp = datetime.utcnow()
+		p = []
+		cabinet = 1
+		location = "Acidman"
+
+		p.append(Point("airfan_percent").tag("location", location).tag("cabinet", cabinet).field("airfan", fan_percentage).time(timestamp))
+		
+		write_api.write(bucket=bucket, org="dannyolsen", record=p)
+
+		humidifier_percentage_old = humidifier_percentage #will only log everytime the percentage changes
+		fan_percentage_old = fan_percentage
+	# 	save_data = True
 
 def temp_control(temp, setpoint_max, setpoint_min):
-	#aquarium water heater is connected to relay number one (11 / 14)
-	global heater_percentage_zero
+	global heater_percentage_old
+	global heater_percentage
 	global save_data
 	
 	if temp>setpoint_max:
 		heater.off() #stopped
 		heater_percentage = 0.0
-
-		"""
-		#TEST FAN FOR HUMIDITY - NOT PART OF FINAL PROGRAM
-		fan_percentage = 50
-		fan.setFanSpeed(fan_percentage)
-		#TEST END
-		"""
-
-		if save_data == True or heater_percentage != heater_percentage_zero:
-			influx.write_ver18("heater",["device","heater"],field=['percentage',heater_percentage])
-			heater_percentage_zero = heater_percentage
 			
 	elif temp<=setpoint_min:
 		heater.on() #started
 		heater_percentage = 100.0
-		influx.write_ver18("heater",["device","heater"],field=['percentage',heater_percentage])
 
-		"""
-		#TEST FAN FOR HUMIDITY - NOT PART OF FINAL PROGRAM----
-		fan_percentage = 0
-		fan.setFanSpeed(fan_percentage)
-		#TEST END
-		"""
+	if save_data == True or heater_percentage != heater_percentage_old:
+		timestamp = datetime.utcnow()
+		p = []
+		cabinet = 1
+		location = "Acidman"
 
-		if save_data == True or heater_percentage != heater_percentage_zero:
-			influx.write_points_ver18(["heater,mode=on percentage={}".format(int(heater_percentage)),])
-			#print("heater on saved in database")
-			
-			heater_percentage_zero = heater_percentage
+		p.append(Point("airheater").tag("location", location).tag("cabinet", cabinet).field("heater", heater_percentage).time(timestamp))
+		
+		write_api.write(bucket=bucket, org="dannyolsen", record=p)
+		
+		heater_percentage_old = heater_percentage
 
-def rh_control(rh): #NOT USED IN SHROOMBOX 2.0
-	global humidifier_percentage_zero
+def rh_control(rh): 
+	global humidifier_percentage
 	global save_data
+	global humidifier_percentage_old
 	
 	if rh>grow_setpoint.rh_max:
-		#tb.writeMR_DO4(modbus_adr = 3, relay_no = 0, state = 0) #stopped
+		humidity.off()
 		humidifier_percentage = 0
 
-		if save_data == True or humidifier_percentage != humidifier_percentage_zero:
-			#dc.save_data('humidifier', humidifier_percentage, '%')
-			humidifier_percentage_zero = humidifier_percentage
-
 	elif rh<=grow_setpoint.rh_min:
-		#tb.writeMR_DO4(modbus_adr = 3, relay_no = 0, state = 1) #started
+		humidity.on()
 		humidifier_percentage = 100
 
-		if save_data == True or humidifier_percentage != humidifier_percentage_zero:
-			#dc.save_data('humidifier', humidifier_percentage, '%')
-			humidifier_percentage_zero = humidifier_percentage
-			#threading.Thread(target=rh_shot).start() #activating the humidity device for x seconds
+	if save_data == True or humidifier_percentage != humidifier_percentage_old:
+		timestamp = datetime.utcnow()
+		p = []
+		cabinet = 1
+		location = "Acidman"
 
+		p.append(Point("humidifier").tag("location", location).tag("cabinet", cabinet).field("humidity", humidifier_percentage).time(timestamp))
+		
+		write_api.write(bucket=bucket, org="dannyolsen", record=p)
+
+		humidifier_percentage_old = humidifier_percentage #will only log everytime the percentage changes
+			
 def light_control(t_start, t_end):
+	global light_brightness_old
 	#specify time start and time end like "06:00" and "19:00"
 	time_now = datetime.now().strftime("%H:%M")
 
@@ -225,7 +244,15 @@ def light_control(t_start, t_end):
 	elif (time_now > time_end or time_now < time_start) and neo.light_status["state"] != "off":  #lights off when outside time period
 		print("lights off")
 		neo.off() #lights off
+
+	if save_data == True or neo.light_status["brightness"] != light_brightness_old:
+		timestamp = datetime.utcnow()
+		cabinet = 1
+		location = "Acidman"
 		
+		write_api.write(bucket=bucket, org="dannyolsen", record=Point("lights").tag("location", location).tag("cabinet", cabinet).field("brightness", neo.light_status["brightness"]).time(timestamp))
+
+		light_status_old = neo.light_status["brightness"] #will only log everytime it changes		
 def save_scd30_data():
 	influx.write_ver18("co2",["device","sdc30"],field=['ppm',co2])
 	influx.write_ver18("humidity",["device","sdc30"],field=['%',rh])
@@ -286,6 +313,11 @@ if program_number == 2:
 	
 sleep(1) #to prevent program from exiting on enter pressed
 fan.fan_filter.start(75)	#Setting initial fan speed
+humidifier_percentage		= 0
+humidifier_percentage_zero 	= 0
+humidifier_percentage_old 	= 0
+light_brightness_old		= 0 
+
 while True:
         #try:
 			quit_if_enter_is_pressed()
@@ -296,8 +328,9 @@ while True:
 					save_data = True #should be TRUE!!!!
 
 				m = scd30.read_measurement()
-				
-				#print(f"CO2: {m[0]:.2f}ppm, temp: {m[1]:.2f}'C, rh: {m[2]:.2f}%")
+
+				os.system('clear')
+				print(f"CO2: {m[0]:.2f}ppm, temp: {m[1]:.2f}'C, rh: {m[2]:.2f}%")
 				co2 = float(f"{m[0]:.1f}")
 				temp = float(f"{m[1]:.2f}")
 				rh = float(f"{m[2]:.2f}")
@@ -314,46 +347,60 @@ while True:
 					neo.off() 			#lights off during cake program
 					#rh_control(rh)		#this could be controlled with the fan in Cake program
 
-					if save_data == True:
-						influx.write_points_ver18([
-							"program,mode=cake PrgCake={}".format(int(1)),
-							"program,mode=grow PrgGrow={}".format(int(0)),
-							"temperature,setpoint=max,program=cake °C={}".format(cake_setpoint.temp_max),
-							"temperature,setpoint=min,program=cake °C={}".format(cake_setpoint.temp_min),
-							"temperature,setpoint=max,program=grow °C={}".format(grow_setpoint.temp_min),
-							"temperature,setpoint=min,program=grow °C={}".format(grow_setpoint.temp_min),
-							"co2,setpoint=max,program=grow ppm={}".format(grow_setpoint.co2_max),
-							"humidity,setpoint=min,program=grow rh={}".format(grow_setpoint.rh_min),
-							"humidity,setpoint=max,program=grow rh={}".format(grow_setpoint.rh_max),
-						])
-						pass
+					# if save_data == True:
+					# 	influx.write_points_ver18([
+					# 		"program,mode=cake PrgCake={}".format(int(1)),
+					# 		"program,mode=grow PrgGrow={}".format(int(0)),
+					# 		"temperature,setpoint=max,program=cake °C={}".format(cake_setpoint.temp_max),
+					# 		"temperature,setpoint=min,program=cake °C={}".format(cake_setpoint.temp_min),
+					# 		"temperature,setpoint=max,program=grow °C={}".format(grow_setpoint.temp_min),
+					# 		"temperature,setpoint=min,program=grow °C={}".format(grow_setpoint.temp_min),
+					# 		"co2,setpoint=max,program=grow ppm={}".format(grow_setpoint.co2_max),
+					# 		"humidity,setpoint=min,program=grow rh={}".format(grow_setpoint.rh_min),
+					# 		"humidity,setpoint=max,program=grow rh={}".format(grow_setpoint.rh_max),
+					# 	])
+						# pass
 
 				elif program_number == 2:  #GROW
 					co2_control()
 					temp_control(temp, grow_setpoint.temp_max, grow_setpoint.temp_min)
-					#rh_control(rh)	#could be controlled with fan while prioritising co2
+					rh_control(rh)	#could be controlled with fan while prioritising co2
 					light_control(t_start="11:00",t_end="23:00")
 
 					#Saving program specific data
 					if save_data == True:
-						influx.write_points_ver18([
-							"program,mode=cake PrgCake={}".format(int(0)),
-							"program,mode=grow PrgGrow={}".format(int(1)),
-							"temperature,setpoint=max,program=cake °C={}".format(cake_setpoint.temp_max),
-							"temperature,setpoint=min,program=cake °C={}".format(cake_setpoint.temp_min),
-							"temperature,setpoint=max,program=grow °C={}".format(grow_setpoint.temp_min),
-							"temperature,setpoint=min,program=grow °C={}".format(grow_setpoint.temp_min),
-							"co2,setpoint=max,program=grow ppm={}".format(grow_setpoint.co2_max), #co2_max is just the setpoint for the pid to reach
-							"humidity,setpoint=min,program=grow rh={}".format(grow_setpoint.rh_min),
-							"humidity,setpoint=max,program=grow rh={}".format(grow_setpoint.rh_max),
-						])
+						timestamp = datetime.utcnow()
+						p = []
+						cabinet = 1
+						location = "Acidman"
+
+						p.append(Point("rh_percent").tag(	"location", location).tag("cabinet", cabinet).field("humidity", rh).time(		timestamp))
+						p.append(Point("co2_ppm").tag(		"location", location).tag("cabinet", cabinet).field("co2", co2).time(			timestamp))
+						p.append(Point("temp_degrees").tag(	"location", location).tag("cabinet", cabinet).field("temperature", temp).time(	timestamp))
+						
+						write_api.write(bucket=bucket, org="dannyolsen", record=p)
+
+		# 	#dc.save_data('humidifier', humidifier_percentage, '%')
+		# 	#threading.Thread(target=rh_shot).start() #activating the humidity device for x seconds
+					# 	influx.write_points_ver18([
+					# 		"program,mode=cake PrgCake={}".format(int(0)),
+					# 		"program,mode=grow PrgGrow={}".format(int(1)),
+					# 		"temperature,setpoint=max,program=cake °C={}".format(cake_setpoint.temp_max),
+					# 		"temperature,setpoint=min,program=cake °C={}".format(cake_setpoint.temp_min),
+					# 		"temperature,setpoint=max,program=grow °C={}".format(grow_setpoint.temp_min),
+					# 		"temperature,setpoint=min,program=grow °C={}".format(grow_setpoint.temp_min),
+					# 		"co2,setpoint=max,program=grow ppm={}".format(grow_setpoint.co2_max), #co2_max is just the setpoint for the pid to reach
+					# 		"humidity,setpoint=min,program=grow rh={}".format(grow_setpoint.rh_min),
+					# 		"humidity,setpoint=max,program=grow rh={}".format(grow_setpoint.rh_max),
+					# 	])
 				else:
 					pass
 				
 				#Saving data that needs recording nomatter what program is running - climate data from scd30 sensor
-				if save_data == True:
-					save_scd30_data()
-				time.sleep(1)
+				# if save_data == True:
+				# 	# save_scd30_data()
+				# 	program_settings
+				# time.sleep(1)
 			else:
 				time.sleep(0.2)
 				pass

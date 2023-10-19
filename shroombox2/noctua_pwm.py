@@ -11,8 +11,8 @@ def setFanSpeed(speed):
     return()
     
 # Configuration
-FAN_PIN = 18            # BCM18/BOARD12 pin used to drive PWM fan
-FAN_PIN_CPU = 12        # 
+FAN_PIN = 13            # 
+FAN_PIN_CPU = 18        # BCM18/BOARD12 pin used to drive PWM fan
 WAIT_TIME = 1           # [s] Time to wait between each refresh
 PWM_FREQ = 25           # [kHz] 25kHz for Noctua PWM control
 
