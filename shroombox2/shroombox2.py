@@ -90,7 +90,7 @@ class grow_setpoint:
         temp_max = temp_min + 0.1
         co2_max = 700
         rh_max = 92
-        rh_min = rh_max - 0.5
+        rh_min = rh_max - 2
         
 class cake_setpoint:
         temp_max 			= 27.1
@@ -197,7 +197,7 @@ def temp_control(temp, setpoint_max, setpoint_min):
 		cabinet = 1
 		location = "Acidman"
 
-		p.append(Point("airheater").tag("location", location).tag("cabinet", cabinet).field("heater", heater_percentage).time(timestamp))
+		p.append(Point("airheater").tag("location", location).tag("cabinet", cabinet).field("heater", float(heater_percentage)).time(timestamp))
 		
 		write_api.write(bucket=bucket, org="dannyolsen", record=p)
 		
