@@ -40,6 +40,7 @@ Tasks that need completion:
 		- temp offset value - DONE (relative humidity does go a bit to high though
 		- make PID's run on specific intervals - like once a second or so...
 			- create class or function that triggers true every interval
+		- Overvej at putte en vandsensor i humidifier så man kan se om der mangler vand i den
 		
 """
 
@@ -57,6 +58,8 @@ import humidity		as humidity
 from scd30_i2c 		import SCD30     #climate measuring device
 
 from simple_pid 	import PID
+
+import picture
 
 #INFLUX27
 import influxdb_client, os, time
@@ -85,18 +88,26 @@ from gpiozero import CPUTemperature
 #endregion
 
 ### CLASSES ###
+class setpoints_colonisation:
+    temp_min = 27.0
+    temp_max = temp_min + 0.1
+    co2_max = 1000
+    rh_max = 10
+    rh_min = rh_max - 2	
+
 class grow_setpoint:
-        temp_min = 22.0
-        temp_max = temp_min + 0.1
-        co2_max = 700
-        rh_max = 92
-        rh_min = rh_max - 2
+	temp_min = 22.0
+	temp_max = temp_min + 0.1
+	co2_max = 700
+	rh_max = 92
+	rh_min = rh_max - 2
         
 class cake_setpoint:
-        temp_max 			= 27.1
-        temp_min 			= 27
-        co2_max 			= 7500	#between 5000-10000	
-        rh_setpoint 		= 90
+	temp_min = 27.0
+	temp_max = temp_min + 0.1
+	co2_max = 500
+	rh_max = 92
+	rh_min = rh_max - 2
 
 class program_settings:
 	program_running			= None			#so we know what mode we are in - cake or grow
@@ -105,11 +116,12 @@ class program_settings:
 	
 ### INIT SETUP VARS ###
 scd30 = SCD30()
-scd30.set_measurement_interval(2)
+scd30.set_measurement_interval(14)   ######DEN SKAL NOK VÆRE 2 FOR AT PID FUNGERER
 scd30.start_periodic_measurement()
 temp_offset = 2
 scd30.set_temperature_offset(temp_offset)
 time.sleep(2)
+
 scd30.get_data_ready()
 m = scd30.read_measurement()
 
@@ -147,21 +159,17 @@ light_status = {
 }
 
 ### FUNCTIONS ###
-def co2_control():
+def co2_control(setpoint_max):
 	global fan_percentage_old
 	global save_data
-	#global time_runfan_stop
-	#global fan_time_set
-	#global pid
-	#global co2
 	
-	print("pid setpoint is: {}".format(str(grow_setpoint.co2_max)))
+	print("pid setpoint is: {}".format(str(setpoint_max)))
 	
 	v 	= co2		#ppm level in shroombox so the pid can figure out how much air to fan
 	print("from co2_control() ppm is : {}".format(co2))
 	
 	fan_percentage = float(pid(co2))
-	fan.fan_filter.start(fan_percentage)		#setting new fan speed from calculated pid
+	fan.setFanSpeed(fan_percentage)	#setting new fan speed from calculated pid
 	print("fanspeed has been set to : {}".format(fan_percentage))
 
 	if save_data == True:# or fan_percentage != fan_percentage_old:	#save data if it has changed since last time
@@ -261,18 +269,9 @@ def save_scd30_data():
 
 def take_pic(folder):
 	time = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
-	rgb = [255,255,255]					#turning white lights on
-	neo.pixels.fill((rgb))
-	neo.pixels.show()
+	filepath = folder+'{}_{}.jpg'.format(program_settings.program_running, time)
+	picture.take(filepath)
 	
-	camera = PiCamera()
-	camera.vflip = True
-	sleep(3)
-	camera.capture(folder+'{}_{}.jpg'.format(program_settings.program_running, time))
-	camera.close()
-	
-	neo.pixels.fill((neo.light_status["rgb"])) #lights back to what the where before picture taking
-	neo.pixels.show()
 
 def cpu_temp_control():
 	cpu = CPUTemperature()
@@ -303,6 +302,7 @@ print("To QUIT program while it is running, just press enter...")
 print("What's you plan?")
 print("1 : I'm making af Pf-tek cake")
 print("2 : I'm growing shroomies")
+print("3 : I'm colonzing rye in glasses")
 program_number = int(input("Choose a program: "))
 
 if program_number == 1:
@@ -310,9 +310,12 @@ if program_number == 1:
 
 if program_number == 2:
 	program_settings.program_running = "Grow"
+
+if program_number == 3:
+	program_settings.program_running = "Colonisation"
 	
 sleep(1) #to prevent program from exiting on enter pressed
-fan.fan_filter.start(75)	#Setting initial fan speed
+fan.setFanSpeed(0)	#Setting initial fan speed
 humidifier_percentage		= 0
 humidifier_percentage_zero 	= 0
 humidifier_percentage_old 	= 0
@@ -327,80 +330,72 @@ while True:
 				if (datetime.now() - time_zero).total_seconds() > savedata_interval:
 					save_data = True #should be TRUE!!!!
 
-				m = scd30.read_measurement()
+				try:
+					m = scd30.read_measurement()
 
-				os.system('clear')
-				print(f"CO2: {m[0]:.2f}ppm, temp: {m[1]:.2f}'C, rh: {m[2]:.2f}%")
-				co2 = float(f"{m[0]:.1f}")
-				temp = float(f"{m[1]:.2f}")
-				rh = float(f"{m[2]:.2f}")
+					os.system('clear')
+					print(f"CO2: {m[0]:.2f}ppm, temp: {m[1]:.2f}'C, rh: {m[2]:.2f}%")
+					co2 = float(f"{m[0]:.1f}")
+					temp = float(f"{m[1]:.2f}")
+					rh = float(f"{m[2]:.2f}")
 
-				#print("Temp offset")
-				#print(scd30.get_temperature_offset())
+					#print("Temp offset")
+					#print(scd30.get_temperature_offset())
+				
+				except:
+					timestamp = datetime.utcnow()
+					cabinet = 1
+					location = "Acidman"
+					write_api.write(bucket=bucket, org="dannyolsen", record=Point("sdc_error")
+					 	.tag("location", location)
+						.tag("cabinet", cabinet)
+						.field("sdc_error", 1)
+						.time(timestamp))
+						
+					print("Exception has made - co2, temp and rh set to None...")
+					co2 = None
+					temp = None
+					rh = None
+
+				finally:
+					pass
 
 				#run the different control functions here -fx. light control, co2, heat and so on
 				if program_number == 1:  #CAKE
 					temp_control(temp, cake_setpoint.temp_max, cake_setpoint.temp_min)
-					
-					#co2_control(cake_setpoint.co2_max)
-					co2_control()
+					co2_control(cake_setpoint.co2_max)
+					temp_control(temp, cake_setpoint.temp_max, cake_setpoint.temp_min)
 					neo.off() 			#lights off during cake program
-					#rh_control(rh)		#this could be controlled with the fan in Cake program
-
-					# if save_data == True:
-					# 	influx.write_points_ver18([
-					# 		"program,mode=cake PrgCake={}".format(int(1)),
-					# 		"program,mode=grow PrgGrow={}".format(int(0)),
-					# 		"temperature,setpoint=max,program=cake °C={}".format(cake_setpoint.temp_max),
-					# 		"temperature,setpoint=min,program=cake °C={}".format(cake_setpoint.temp_min),
-					# 		"temperature,setpoint=max,program=grow °C={}".format(grow_setpoint.temp_min),
-					# 		"temperature,setpoint=min,program=grow °C={}".format(grow_setpoint.temp_min),
-					# 		"co2,setpoint=max,program=grow ppm={}".format(grow_setpoint.co2_max),
-					# 		"humidity,setpoint=min,program=grow rh={}".format(grow_setpoint.rh_min),
-					# 		"humidity,setpoint=max,program=grow rh={}".format(grow_setpoint.rh_max),
-					# 	])
-						# pass
+					rh_control(rh)		#this could be controlled with the fan in Cake program
 
 				elif program_number == 2:  #GROW
-					co2_control()
+					co2_control(grow_setpoint.co2_max)
 					temp_control(temp, grow_setpoint.temp_max, grow_setpoint.temp_min)
 					rh_control(rh)	#could be controlled with fan while prioritising co2
 					light_control(t_start="11:00",t_end="23:00")
 
-					#Saving program specific data
-					if save_data == True:
-						timestamp = datetime.utcnow()
-						p = []
-						cabinet = 1
-						location = "Acidman"
+				elif program_number == 3:  #COLONIZATION
+					temp_control(temp, setpoints_colonisation.temp_max, setpoints_colonisation.temp_min)
+					neo.off() 			#lights off during cake program
+					humidity.off()
+					fan.setFanSpeed(0)		#setting new fan speed from calculated pid
 
-						p.append(Point("rh_percent").tag(	"location", location).tag("cabinet", cabinet).field("humidity", rh).time(		timestamp))
-						p.append(Point("co2_ppm").tag(		"location", location).tag("cabinet", cabinet).field("co2", co2).time(			timestamp))
-						p.append(Point("temp_degrees").tag(	"location", location).tag("cabinet", cabinet).field("temperature", temp).time(	timestamp))
-						
-						write_api.write(bucket=bucket, org="dannyolsen", record=p)
-
-		# 	#dc.save_data('humidifier', humidifier_percentage, '%')
-		# 	#threading.Thread(target=rh_shot).start() #activating the humidity device for x seconds
-					# 	influx.write_points_ver18([
-					# 		"program,mode=cake PrgCake={}".format(int(0)),
-					# 		"program,mode=grow PrgGrow={}".format(int(1)),
-					# 		"temperature,setpoint=max,program=cake °C={}".format(cake_setpoint.temp_max),
-					# 		"temperature,setpoint=min,program=cake °C={}".format(cake_setpoint.temp_min),
-					# 		"temperature,setpoint=max,program=grow °C={}".format(grow_setpoint.temp_min),
-					# 		"temperature,setpoint=min,program=grow °C={}".format(grow_setpoint.temp_min),
-					# 		"co2,setpoint=max,program=grow ppm={}".format(grow_setpoint.co2_max), #co2_max is just the setpoint for the pid to reach
-					# 		"humidity,setpoint=min,program=grow rh={}".format(grow_setpoint.rh_min),
-					# 		"humidity,setpoint=max,program=grow rh={}".format(grow_setpoint.rh_max),
-					# 	])
 				else:
 					pass
+
+				#Saving program specific data
+				if save_data == True:
+					timestamp = datetime.utcnow()
+					p = []
+					cabinet = 1
+					location = "Acidman"
+
+					p.append(Point("rh_percent").tag(	"location", location).tag("cabinet", cabinet).field("humidity", rh).time(		timestamp))
+					p.append(Point("co2_ppm").tag(		"location", location).tag("cabinet", cabinet).field("co2", co2).time(			timestamp))
+					p.append(Point("temp_degrees").tag(	"location", location).tag("cabinet", cabinet).field("temperature", temp).time(	timestamp))
+					
+					write_api.write(bucket=bucket, org="dannyolsen", record=p)
 				
-				#Saving data that needs recording nomatter what program is running - climate data from scd30 sensor
-				# if save_data == True:
-				# 	# save_scd30_data()
-				# 	program_settings
-				# time.sleep(1)
 			else:
 				time.sleep(0.2)
 				pass
@@ -410,10 +405,9 @@ while True:
 				save_data = False
 		
 			if pic_interval.pic_timelapse("h") == True:
-				#print("taking picture")
-				#take_pic(folder = '/home/pi/Github/shroombox/shroombox2/timelapse_pics/1stgrow/')
-				pass
-				
+				print("taking picture")
+				take_pic(folder = '/home/pi/Github/shroombox/shroombox2/timelapse_pics/')
+		
 
         #except:
         #        print("main program failed, trying to run code again...")

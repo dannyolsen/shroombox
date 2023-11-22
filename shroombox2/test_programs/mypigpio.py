@@ -46,17 +46,14 @@ def handleFanSpeed():
         #print(FAN_LOW + ( round(temp) * step )) # Uncomment for testing
     return ()
 
-# Setup GPIO pin
-GPIO.setwarnings(False)
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(FAN_PIN, GPIO.OUT, initial=GPIO.LOW)
-fan = GPIO.PWM(FAN_PIN,PWM_FREQ)
-
 if __name__ == "__main__":
     try:
         # Setup GPIO pin
-
-        setFanSpeed(25)
+        GPIO.setwarnings(False)
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(FAN_PIN, GPIO.OUT, initial=GPIO.LOW)
+        fan = GPIO.PWM(FAN_PIN,PWM_FREQ)
+        setFanSpeed(50)
         sleep(10)
         # Handle fan speed every WAIT_TIME sec
         #while True:
