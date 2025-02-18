@@ -1,0 +1,44 @@
+# Core Dependencies
+RPi.GPIO==0.7.1
+    - Hardware interface for Raspberry Pi GPIO
+    - Used for: PWM fan control
+
+# Sensors & Hardware Control
+scd30-i2c==0.0.8
+    - SCD30 CO2 sensor interface
+    - Used for: CO2, temperature, humidity readings
+
+tapo==2.0.5
+    - TP-Link Tapo smart plug control
+    - Used for: Humidifier control
+    - Chosen over: python-kasa (better Tapo device support)
+
+# Control Systems
+simple-pid==1.0.1
+    - PID controller implementation
+    - Used for: CO2 and humidity control loops
+
+# Data Storage
+influxdb-client==1.36.1
+    - InfluxDB API client
+    - Used for: Time series data storage and metrics
+
+# Web Interface
+Flask==2.3.3
+    - Web framework
+    - Used for: Configuration interface and API
+
+# Async Support
+aiohttp==3.8.5
+    - Async HTTP client/server
+    - Used for: Smart plug communication
+
+# System Monitoring
+psutil==5.9.5
+    - System and process utilities
+    - Used for: CPU temperature monitoring, process management
+
+# Development & Testing
+pytest==7.4.2
+    - Testing framework (optional)
+    - Used for: Unit and integration testing 

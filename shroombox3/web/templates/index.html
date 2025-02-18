@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Shroombox Control</title>
+    
+    <!-- GridStack CSS and JS -->
+    <link href="https://cdn.jsdelivr.net/npm/gridstack@7.2.3/dist/gridstack.min.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/gridstack@7.2.3/dist/gridstack-all.js"></script>
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+        .grid-stack {
+            background: #fafafa;
+        }
+
+        .grid-stack-item-content {
+            background: #f5f5f5;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            padding: 20px;
+        }
+
+        .widget-header {
+            background: #e0e0e0;
+            padding: 10px;
+            margin: -20px -20px 10px -20px;
+            border-radius: 5px 5px 0 0;
+            cursor: move;
+        }
+
+        .widget-header h2 {
+            margin: 0;
+            font-size: 1.2em;
+        }
+
+        .control-panel {
+            background: #f5f5f5;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-running { background: #4CAF50; }
+        .status-stopped { background: #f44336; }
+
+        .save-button {
+            background: #4CAF50;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .save-button:hover {
+            background: #45a049;
+        }
+
+        #log-container {
+            background: #1e1e1e;
+            color: #ffffff;
+            padding: 10px;
+            border-radius: 3px;
+            height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+        }
+
+        .log-line {
+            border-bottom: 1px solid #333;
+            padding: 2px 0;
+        }
+
+        input[type="number"] {
+            width: 100px;
+            padding: 5px;
+            margin: 5px 0;
+        }
+
+        .setting {
+            margin-bottom: 10px;
+        }
+
+        .save-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            border-radius: 5px;
+            color: white;
+            animation: fadeInOut 2s ease-in-out;
+            z-index: 1000;
+        }
+
+        .save-notification.success { background-color: #4CAF50; }
+        .save-notification.error { background-color: #f44336; }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translateY(-20px); }
+            10% { opacity: 1; transform: translateY(0); }
+            90% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-20px); }
+        }
+
+        select {
+            padding: 5px;
+            margin: 5px 0;
+            width: 200px;
+        }
+
+        .pid-setting {
+            margin: 5px 0;
+        }
+
+        h3 {
+            margin: 15px 0 10px 0;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+    <!-- Control Panel -->
+    <div class="control-panel">
+        <div id="status-display">
+            <span class="status-indicator" id="status-dot"></span>
+            <span id="status-text">Checking status...</span>
+        </div>
+        <button id="controlButton" onclick="toggleSystem()">Loading...</button>
+    </div>
+
+    <!-- Grid Layout -->
+    <div class="grid-stack">
+        <!-- Phase Selection -->
+        <div class="grid-stack-item" id="phase-section" gs-x="0" gs-y="0" gs-w="4" gs-h="2">
+            <div class="grid-stack-item-content">
+                <div class="widget-header">
+                    <h2>Current Phase</h2>
+                </div>
+                <select id="phase-select">
+                    <option value="colonisation" {% if config.environment.current_phase == 'colonisation' %}selected{% endif %}>Colonisation</option>
+                    <option value="growing" {% if config.environment.current_phase == 'growing' %}selected{% endif %}>Growing</option>
+                    <option value="cake" {% if config.environment.current_phase == 'cake' %}selected{% endif %}>Cake</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Phase Settings -->
+        <div class="grid-stack-item" id="phase-settings-section" gs-x="4" gs-y="0" gs-w="4" gs-h="4">
+            <div class="grid-stack-item-content">
+                <div class="widget-header">
+                    <h2>Phase Settings</h2>
+                </div>
+                <div id="phase-settings">
+                    <div class="setting">
+                        <label>Temperature Min (°C):</label>
+                        <input type="number" step="0.1" id="temp-min" value="{{ config.environment.phases[config.environment.current_phase].temp_min }}">
+                    </div>
+                    <div class="setting">
+                        <label>Temperature Max (°C):</label>
+                        <input type="number" step="0.1" id="temp-max" value="{{ config.environment.phases[config.environment.current_phase].temp_max }}">
+                    </div>
+                    <div class="setting">
+                        <label>CO2 Max (ppm):</label>
+                        <input type="number" id="co2-max" value="{{ config.environment.phases[config.environment.current_phase].co2_max }}">
+                    </div>
+                    <div class="setting">
+                        <label>RH Setpoint (%):</label>
+                        <input type="number" step="0.1" id="rh-setpoint" value="{{ config.environment.phases[config.environment.current_phase].rh_setpoint }}">
+                    </div>
+                </div>
+                <button class="save-button" onclick="saveSettings('phase')">Save Phase Settings</button>
+            </div>
+        </div>
+
+        <!-- Humidifier Settings -->
+        <div class="grid-stack-item" id="humidifier-section" gs-x="8" gs-y="0" gs-w="4" gs-h="4">
+            <div class="grid-stack-item-content">
+                <div class="widget-header">
+                    <h2>Humidifier Settings</h2>
+                </div>
+                <div class="setting">
+                    <label>Burst Min (s):</label>
+                    <input type="number" step="0.1" id="burst-min" value="{{ config.humidifier.burst_min }}">
+                </div>
+                <div class="setting">
+                    <label>Burst Max (s):</label>
+                    <input type="number" step="0.1" id="burst-max" value="{{ config.humidifier.burst_max }}">
+                </div>
+                <div class="setting">
+                    <label>Burst Interval (s):</label>
+                    <input type="number" min="30" id="burst-interval" value="{{ config.humidifier.burst_interval }}">
+                </div>
+                <div class="setting">
+                    <label>RH Hysteresis (%):</label>
+                    <input type="number" step="0.1" id="rh-hysteresis" value="{{ config.humidifier.rh_hysteresis }}">
+                </div>
+                <button class="save-button" onclick="saveSettings('humidifier')">Save</button>
+            </div>
+        </div>
+
+        <!-- PID Settings -->
+        <div class="grid-stack-item" id="pid-section" gs-x="0" gs-y="4" gs-w="6" gs-h="4">
+            <div class="grid-stack-item-content">
+                <div class="widget-header">
+                    <h2>PID Settings</h2>
+                </div>
+                <div class="setting">
+                    <h3>Humidity PID</h3>
+                    <div class="pid-setting">
+                        <label>Kp:</label>
+                        <input type="number" step="0.01" id="humidity-kp" value="{{ config.humidifier.pid.Kp }}">
+                    </div>
+                    <div class="pid-setting">
+                        <label>Ki:</label>
+                        <input type="number" step="0.001" id="humidity-ki" value="{{ config.humidifier.pid.Ki }}">
+                    </div>
+                    <div class="pid-setting">
+                        <label>Kd:</label>
+                        <input type="number" step="0.001" id="humidity-kd" value="{{ config.humidifier.pid.Kd }}">
+                    </div>
+                </div>
+                
+                <div class="setting">
+                    <h3>CO2 PID</h3>
+                    <div class="pid-setting">
+                        <label>Kp:</label>
+                        <input type="number" step="0.1" id="co2-kp" value="{{ config.co2.pid.Kp }}">
+                    </div>
+                    <div class="pid-setting">
+                        <label>Ki:</label>
+                        <input type="number" step="0.01" id="co2-ki" value="{{ config.co2.pid.Ki }}">
+                    </div>
+                    <div class="pid-setting">
+                        <label>Kd:</label>
+                        <input type="number" step="0.01" id="co2-kd" value="{{ config.co2.pid.Kd }}">
+                    </div>
+                </div>
+                <button class="save-button" onclick="saveSettings('pid')">Save PID Settings</button>
+            </div>
+        </div>
+
+        <!-- System Logs -->
+        <div class="grid-stack-item" id="logs-section" gs-x="6" gs-y="4" gs-w="6" gs-h="4">
+            <div class="grid-stack-item-content">
+                <div class="widget-header">
+                    <h2>System Logs</h2>
+                </div>
+                <div id="log-container">
+                    <pre id="logs"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize GridStack
+        document.addEventListener('DOMContentLoaded', function() {
+            var grid = GridStack.init({
+                cellHeight: 60,
+                margin: 10,
+                animate: true,
+                draggable: {
+                    handle: '.widget-header',
+                },
+                resizable: {
+                    handles: 'all'
+                },
+                float: true,
+                alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+            });
+
+            // Load saved layout or keep current
+            const savedLayout = localStorage.getItem('gridLayout');
+            if (savedLayout) {
+                try {
+                    // Save the current DOM elements
+                    const items = document.querySelectorAll('.grid-stack-item');
+                    const itemsArray = Array.from(items);
+                    
+                    // Load the saved layout
+                    const layout = JSON.parse(savedLayout);
+                    layout.forEach(widget => {
+                        const element = itemsArray.find(item => item.id === widget.id);
+                        if (element) {
+                            grid.update(element, {
+                                x: widget.x,
+                                y: widget.y,
+                                w: widget.w,
+                                h: widget.h
+                            });
+                        }
+                    });
+                } catch (e) {
+                    console.error('Error loading layout:', e);
+                }
+            }
+
+            // Save layout on changes
+            grid.on('change', function() {
+                const serializedData = grid.save();
+                localStorage.setItem('gridLayout', JSON.stringify(serializedData));
+            });
+
+            // Make grid variable available globally
+            window.grid = grid;
+        });
+
+        // 1. System Control (Start/Stop)
+        let isRunning = false;
+        const controlButton = document.getElementById('controlButton');
+        const statusText = document.getElementById('status-text');
+        const statusDot = document.getElementById('status-dot');
+
+        async function updateSystemStatus() {
+            try {
+                const response = await fetch('/api/system/status');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    isRunning = data.running;
+                    controlButton.textContent = isRunning ? 'Stop System' : 'Start System';
+                    statusText.textContent = isRunning ? 'System Running' : 'System Stopped';
+                    statusDot.className = `status-indicator status-${isRunning ? 'running' : 'stopped'}`;
+                    controlButton.disabled = false;
+                } else {
+                    throw new Error(data.error || 'Status check failed');
+                }
+            } catch (error) {
+                console.error('Error checking system status:', error);
+                statusText.textContent = `Error: ${error.message}`;
+                controlButton.disabled = false;
+            }
+        }
+
+        async function toggleSystem() {
+            try {
+                const action = isRunning ? 'stop' : 'start';
+                controlButton.disabled = true;
+                statusText.textContent = `${action}ing system...`;
+                
+                const response = await fetch('/api/system/control', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action })
+                });
+                
+                if (response.ok) {
+                    if (action === 'stop') {
+                        await new Promise(resolve => setTimeout(resolve, 2000));
+                        const statusCheck = await fetch('/api/system/status');
+                        const statusData = await statusCheck.json();
+                        
+                        if (statusData.running) {
+                            throw new Error('System did not stop properly');
+                        }
+                    }
+                    await updateSystemStatus();
+                } else {
+                    const data = await response.json();
+                    throw new Error(data.error || 'Unknown error');
+                }
+            } catch (error) {
+                console.error('Error controlling system:', error);
+                statusText.textContent = `Error: ${error.message}`;
+            } finally {
+                controlButton.disabled = false;
+            }
+        }
+
+        // 2. Settings Management
+        function showSaveNotification(message, isError = false) {
+            const notification = document.createElement('div');
+            notification.className = `save-notification ${isError ? 'error' : 'success'}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 2000);
+        }
+
+        async function saveSettings(section) {
+            const phase = document.getElementById('phase-select').value;
+            let settings = {};
+
+            switch(section) {
+                case 'phase':
+                    settings = {
+                        environment: {
+                            current_phase: phase,
+                            phases: {
+                                [phase]: {
+                                    temp_min: parseFloat(document.getElementById('temp-min').value),
+                                    temp_max: parseFloat(document.getElementById('temp-max').value),
+                                    co2_max: parseInt(document.getElementById('co2-max').value),
+                                    rh_setpoint: parseFloat(document.getElementById('rh-setpoint').value)
+                                }
+                            }
+                        }
+                    };
+                    break;
+
+                case 'humidifier':
+                    settings = {
+                        humidifier: {
+                            burst_min: parseFloat(document.getElementById('burst-min').value),
+                            burst_max: parseFloat(document.getElementById('burst-max').value),
+                            burst_interval: parseInt(document.getElementById('burst-interval').value),
+                            rh_hysteresis: parseFloat(document.getElementById('rh-hysteresis').value)
+                        }
+                    };
+                    break;
+
+                case 'pid':
+                    settings = {
+                        humidifier: {
+                            pid: {
+                                Kp: parseFloat(document.getElementById('humidity-kp').value),
+                                Ki: parseFloat(document.getElementById('humidity-ki').value),
+                                Kd: parseFloat(document.getElementById('humidity-kd').value)
+                            }
+                        },
+                        co2: {
+                            pid: {
+                                Kp: parseFloat(document.getElementById('co2-kp').value),
+                                Ki: parseFloat(document.getElementById('co2-ki').value),
+                                Kd: parseFloat(document.getElementById('co2-kd').value)
+                            }
+                        }
+                    };
+                    break;
+            }
+
+            try {
+                const response = await fetch('/api/settings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(settings)
+                });
+                
+                if (response.ok) {
+                    showSaveNotification(`${section.charAt(0).toUpperCase() + section.slice(1)} settings saved!`);
+                } else {
+                    const errorText = await response.text();
+                    showSaveNotification(`Error saving ${section} settings`, true);
+                }
+            } catch (error) {
+                console.error('Fetch error:', error);
+                showSaveNotification(`Error saving ${section} settings`, true);
+            }
+        }
+
+        // 3. Log Handling
+        const logs = document.getElementById('logs');
+        const logContainer = document.getElementById('log-container');
+        const MAX_LINES = 100;
+        let lineCount = 0;
+
+        const eventSource = new EventSource('/api/logs');
+        
+        eventSource.onmessage = function(event) {
+            const line = document.createElement('div');
+            line.className = 'log-line';
+            line.textContent = event.data;
+            
+            logs.appendChild(line);
+            lineCount++;
+            
+            while (lineCount > MAX_LINES) {
+                logs.removeChild(logs.firstChild);
+                lineCount--;
+            }
+            
+            const isScrolledToBottom = logContainer.scrollHeight - logContainer.clientHeight <= logContainer.scrollTop + 50;
+            if (isScrolledToBottom) {
+                logContainer.scrollTop = logContainer.scrollHeight;
+            }
+        };
+        
+        eventSource.onerror = function(error) {
+            console.error('Log stream error:', error);
+            setTimeout(() => {
+                if (eventSource.readyState === EventSource.CLOSED) {
+                    eventSource = new EventSource('/api/logs');
+                }
+            }, 5000);
+        };
+
+        // 4. Phase Changes
+        document.getElementById('phase-select').addEventListener('change', async function() {
+            const phase = this.value;
+            try {
+                const response = await fetch('/api/phase', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phase })
+                });
+                
+                if (response.ok) {
+                    showSaveNotification('Phase updated successfully!');
+                    loadPhaseSettings(phase);
+                } else {
+                    showSaveNotification('Error updating phase', true);
+                }
+            } catch (error) {
+                console.error('Error updating phase:', error);
+                showSaveNotification('Error updating phase', true);
+            }
+        });
+
+        // Initialize
+        updateSystemStatus();
+        setInterval(updateSystemStatus, 2000);
+
+        // Clean up on page unload
+        window.addEventListener('beforeunload', () => {
+            if (eventSource) {
+                eventSource.close();
+            }
+        });
+    </script>
+</body>
+</html> 

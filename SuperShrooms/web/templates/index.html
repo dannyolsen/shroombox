@@ -35,12 +35,47 @@
                 <input type="number" step="0.1" id="burst-max" value="{{ config.humidifier.burst_max }}">
             </div>
             <div class="setting">
-                <label>Break Time (s):</label>
-                <input type="number" id="break-time" value="{{ config.humidifier.break_time }}">
+                <label>Burst Interval (s):</label>
+                <input type="number" min="30" id="burst-interval" value="{{ config.humidifier.burst_interval }}">
             </div>
             <div class="setting">
                 <label>RH Hysteresis (%):</label>
                 <input type="number" step="0.1" id="rh-hysteresis" value="{{ config.humidifier.rh_hysteresis }}">
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>PID Settings</h2>
+            <div class="setting">
+                <h3>Humidity PID</h3>
+                <div class="pid-setting">
+                    <label>Kp:</label>
+                    <input type="number" step="0.01" id="humidity-kp" value="{{ config.humidifier.pid.Kp }}">
+                </div>
+                <div class="pid-setting">
+                    <label>Ki:</label>
+                    <input type="number" step="0.001" id="humidity-ki" value="{{ config.humidifier.pid.Ki }}">
+                </div>
+                <div class="pid-setting">
+                    <label>Kd:</label>
+                    <input type="number" step="0.001" id="humidity-kd" value="{{ config.humidifier.pid.Kd }}">
+                </div>
+            </div>
+            
+            <div class="setting">
+                <h3>CO2 PID</h3>
+                <div class="pid-setting">
+                    <label>Kp:</label>
+                    <input type="number" step="0.1" id="co2-kp" value="{{ config.co2.pid.Kp }}">
+                </div>
+                <div class="pid-setting">
+                    <label>Ki:</label>
+                    <input type="number" step="0.01" id="co2-ki" value="{{ config.co2.pid.Ki }}">
+                </div>
+                <div class="pid-setting">
+                    <label>Kd:</label>
+                    <input type="number" step="0.01" id="co2-kd" value="{{ config.co2.pid.Kd }}">
+                </div>
             </div>
         </div>
 
@@ -110,8 +145,20 @@
                 humidifier: {
                     burst_min: parseFloat(document.getElementById('burst-min').value),
                     burst_max: parseFloat(document.getElementById('burst-max').value),
-                    break_time: parseInt(document.getElementById('break-time').value),
-                    rh_hysteresis: parseFloat(document.getElementById('rh-hysteresis').value)
+                    burst_interval: parseInt(document.getElementById('burst-interval').value),
+                    rh_hysteresis: parseFloat(document.getElementById('rh-hysteresis').value),
+                    pid: {
+                        Kp: parseFloat(document.getElementById('humidity-kp').value),
+                        Ki: parseFloat(document.getElementById('humidity-ki').value),
+                        Kd: parseFloat(document.getElementById('humidity-kd').value)
+                    }
+                },
+                co2: {
+                    pid: {
+                        Kp: parseFloat(document.getElementById('co2-kp').value),
+                        Ki: parseFloat(document.getElementById('co2-ki').value),
+                        Kd: parseFloat(document.getElementById('co2-kd').value)
+                    }
                 }
             };
 
@@ -126,11 +173,15 @@
                 
                 if (response.ok) {
                     alert('Settings saved successfully!');
+                    console.log('Settings saved:', settings);
                 } else {
-                    alert('Error saving settings');
+                    const errorText = await response.text();
+                    alert('Error saving settings: ' + errorText);
+                    console.error('Error response:', errorText);
                 }
             } catch (error) {
                 alert('Error saving settings: ' + error);
+                console.error('Fetch error:', error);
             }
         });
     </script>

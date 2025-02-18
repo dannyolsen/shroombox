@@ -44,4 +44,25 @@ button:hover {
 
 .phase-setting {
     margin: 10px 0;
+}
+
+.pid-setting {
+    margin: 5px 0;
+    display: flex;
+    align-items: center;
+}
+
+.pid-setting label {
+    width: 50px;
+    margin-right: 10px;
+}
+
+.pid-setting input {
+    width: 80px;
+}
+
+h3 {
+    margin: 10px 0;
+    font-size: 1.1em;
+    color: #333;
 } 

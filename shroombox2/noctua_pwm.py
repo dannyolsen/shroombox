@@ -70,5 +70,5 @@ if __name__ == "__main__":
         #    time.sleep(WAIT_TIME)
 
     except KeyboardInterrupt: # trap a CTRL+C keyboard interrupt
-        setFanSpeed(FAN_HIGH)
+        setFanSpeed(FAN_LOW)
         #GPIO.cleanup() # resets all GPIO ports used by this function

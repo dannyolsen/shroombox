@@ -1,0 +1,14 @@
+v1.0
+- Basic sensor reading
+- Fan control
+- Humidifier control
+
+v1.1
+- Added web interface
+- PID controllers
+- Data logging
+
+v1.2
+- Improved error handling
+- Better shutdown sequence
+- Resource cleanup 

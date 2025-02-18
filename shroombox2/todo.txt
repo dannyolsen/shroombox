@@ -1,0 +1,5 @@
+TODO:
+- Add temperature control
+- Implement alerts
+- Add data visualization
+- Mobile app integration 

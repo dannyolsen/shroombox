@@ -1,0 +1,25 @@
+# Hardware Requirements
+- Control Noctua PWM fan via GPIO
+- Control Tapo P115 smart plug for humidifier
+- Read CO2, temperature, and humidity from SCD30 sensor
+
+# Control Requirements
+- PID control for CO2 levels using fan
+- PID control for humidity using timed humidifier bursts
+- CPU temperature safety monitoring
+
+# Data Requirements
+- Store all measurements in InfluxDB
+- Track humidifier burst effectiveness
+- Log system events and errors
+
+# User Interface
+- Web interface for configuration
+- Real-time status display
+- Phase control (colonization/growing/cake)
+- PID tuning interface
+
+# Safety Features
+- Graceful shutdown on Ctrl+C
+- Auto-shutdown of all devices on error
+- Resource cleanup (GPIO, network, database) 
