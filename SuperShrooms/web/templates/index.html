@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SuperShrooms Control</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>SuperShrooms Control Panel</h1>
+        
+        <div class="section">
+            <h2>Current Phase</h2>
+            <select id="phase-select">
+                <option value="colonisation" {% if config.environment.current_phase == 'colonisation' %}selected{% endif %}>Colonisation</option>
+                <option value="growing" {% if config.environment.current_phase == 'growing' %}selected{% endif %}>Growing</option>
+                <option value="cake" {% if config.environment.current_phase == 'cake' %}selected{% endif %}>Cake</option>
+            </select>
+        </div>
+
+        <div class="section">
+            <h2>Phase Settings</h2>
+            <div id="phase-settings">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Humidifier Settings</h2>
+            <div class="setting">
+                <label>Burst Min (s):</label>
+                <input type="number" step="0.1" id="burst-min" value="{{ config.humidifier.burst_min }}">
+            </div>
+            <div class="setting">
+                <label>Burst Max (s):</label>
+                <input type="number" step="0.1" id="burst-max" value="{{ config.humidifier.burst_max }}">
+            </div>
+            <div class="setting">
+                <label>Break Time (s):</label>
+                <input type="number" id="break-time" value="{{ config.humidifier.break_time }}">
+            </div>
+            <div class="setting">
+                <label>RH Hysteresis (%):</label>
+                <input type="number" step="0.1" id="rh-hysteresis" value="{{ config.humidifier.rh_hysteresis }}">
+            </div>
+        </div>
+
+        <button id="save-settings">Save Settings</button>
+    </div>
+
+    <script>
+        // Load phase settings when phase changes
+        function loadPhaseSettings(phase) {
+            const config = {{ config | tojson }};
+            const phaseConfig = config.environment.phases[phase];
+            const container = document.getElementById('phase-settings');
+            
+            container.innerHTML = `
+                <div class="phase-setting">
+                    <label>Temperature Min (°C):</label>
+                    <input type="number" step="0.1" class="phase-input" id="temp-min" value="${phaseConfig.temp_min}">
+                </div>
+                <div class="phase-setting">
+                    <label>Temperature Max (°C):</label>
+                    <input type="number" step="0.1" class="phase-input" id="temp-max" value="${phaseConfig.temp_max}">
+                </div>
+                <div class="phase-setting">
+                    <label>CO2 Max (ppm):</label>
+                    <input type="number" class="phase-input" id="co2-max" value="${phaseConfig.co2_max}">
+                </div>
+                <div class="phase-setting">
+                    <label>RH Setpoint (%):</label>
+                    <input type="number" step="0.1" class="phase-input" id="rh-setpoint" value="${phaseConfig.rh_setpoint}">
+                </div>
+            `;
+        }
+
+        // Initialize phase settings
+        loadPhaseSettings(document.getElementById('phase-select').value);
+
+        // Handle phase change
+        document.getElementById('phase-select').addEventListener('change', (e) => {
+            const phase = e.target.value;
+            loadPhaseSettings(phase);
+            
+            // Update current phase
+            fetch('/api/phase', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ phase: phase })
+            });
+        });
+
+        // Handle save settings
+        document.getElementById('save-settings').addEventListener('click', async () => {
+            const phase = document.getElementById('phase-select').value;
+            const settings = {
+                environment: {
+                    current_phase: phase,
+                    phases: {
+                        [phase]: {
+                            temp_min: parseFloat(document.getElementById('temp-min').value),
+                            temp_max: parseFloat(document.getElementById('temp-max').value),
+                            co2_max: parseInt(document.getElementById('co2-max').value),
+                            rh_setpoint: parseFloat(document.getElementById('rh-setpoint').value)
+                        }
+                    }
+                },
+                humidifier: {
+                    burst_min: parseFloat(document.getElementById('burst-min').value),
+                    burst_max: parseFloat(document.getElementById('burst-max').value),
+                    break_time: parseInt(document.getElementById('break-time').value),
+                    rh_hysteresis: parseFloat(document.getElementById('rh-hysteresis').value)
+                }
+            };
+
+            try {
+                const response = await fetch('/api/settings', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(settings)
+                });
+                
+                if (response.ok) {
+                    alert('Settings saved successfully!');
+                } else {
+                    alert('Error saving settings');
+                }
+            } catch (error) {
+                alert('Error saving settings: ' + error);
+            }
+        });
+    </script>
+</body>
+</html> 

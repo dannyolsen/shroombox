@@ -1,0 +1,26 @@
+{
+    "environment": {
+        "current_phase": "growing",
+        "phases": {
+            "growing": {
+                "temp_min": 22,
+                "temp_max": 22.1,
+                "co2_max": 550,
+                "rh_setpoint": 60
+            }
+        }
+    },
+    "humidifier": {
+        "burst_min": 0.5,
+        "burst_max": 30,
+        "burst_default": 2,
+        "break_time": 60,
+        "rh_hysteresis": 2,
+        "pid": {
+            "Kp": 1.0,
+            "Ki": 0.2,
+            "Kd": 0.05,
+            "setpoint": 2.0
+        }
+    }
+}
