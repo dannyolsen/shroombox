@@ -1889,3 +1889,7 @@ Initializing PIDs:
 2025-03-05 20:14:48,213 - INFO - Successful measurement at 20:14:48 - CO2: 556.96ppm, Temp: 21.64°C, RH: 33.4%
 2025-03-05 20:14:48,213 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
 2025-03-05 20:14:48,229 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:14:50,263 - WARNING - Warning: No sensor available
+2025-03-05 20:14:52,287 - INFO - Successful measurement at 20:14:52 - CO2: 557.32ppm, Temp: 21.62°C, RH: 33.35%
+2025-03-05 20:14:52,287 - INFO - Large temperature difference detected: current=21.62°C, setpoint=20.0°C
+2025-03-05 20:14:52,302 - INFO - Heater state forced to OFF due to large setpoint change
