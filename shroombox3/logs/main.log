@@ -1716,3 +1716,176 @@ Initializing PIDs:
 2025-03-05 20:12:44,510 - INFO - Successful measurement at 20:12:44 - CO2: 543.42ppm, Temp: 21.64°C, RH: 32.89%
 2025-03-05 20:12:44,511 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
 2025-03-05 20:12:44,558 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:12:46,610 - INFO - Successful measurement at 20:12:46 - CO2: 543.03ppm, Temp: 21.65°C, RH: 33.34%
+2025-03-05 20:12:46,611 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:12:46,626 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:12:48,681 - INFO - Successful measurement at 20:12:48 - CO2: 543.74ppm, Temp: 21.65°C, RH: 33.5%
+2025-03-05 20:12:48,682 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:12:48,699 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:12:50,752 - INFO - Successful measurement at 20:12:50 - CO2: 544.17ppm, Temp: 21.65°C, RH: 33.59%
+2025-03-05 20:12:50,753 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:12:50,772 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:12:52,826 - INFO - Successful measurement at 20:12:52 - CO2: 544.37ppm, Temp: 21.65°C, RH: 33.67%
+2025-03-05 20:12:52,827 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:12:52,843 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:12:54,896 - INFO - Successful measurement at 20:12:54 - CO2: 544.47ppm, Temp: 21.64°C, RH: 33.77%
+2025-03-05 20:12:54,897 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:12:54,912 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:12:56,960 - INFO - Successful measurement at 20:12:56 - CO2: 544.88ppm, Temp: 21.65°C, RH: 33.77%
+2025-03-05 20:12:56,961 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:12:56,977 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:12:59,011 - WARNING - Warning: No sensor available
+2025-03-05 20:13:01,035 - INFO - Successful measurement at 20:13:01 - CO2: 545.17ppm, Temp: 21.65°C, RH: 33.64%
+2025-03-05 20:13:01,036 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:13:01,053 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:13:03,111 - INFO - Successful measurement at 20:13:03 - CO2: 545.62ppm, Temp: 21.65°C, RH: 33.43%
+2025-03-05 20:13:03,112 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:13:03,130 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:13:05,184 - INFO - Successful measurement at 20:13:05 - CO2: 546.0ppm, Temp: 21.64°C, RH: 33.3%
+2025-03-05 20:13:05,186 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:13:05,203 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:13:06,043 - shroombox - INFO - Successful measurement at 20:13:06 - CO2: 546.19ppm, Temp: 21.65°C, RH: 33.21%
+2025-03-05 20:13:06,043 - shroombox - INFO - Live measurements - Temp: 21.65°C, RH: 33.21%, CO2: 546.19ppm
+2025-03-05 20:13:06,107 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:13:06,108 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:13:06,158 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 33.3, 'co2': 546.0}
+2025-03-05 20:13:07,242 - WARNING - Warning: No sensor available
+2025-03-05 20:13:09,264 - INFO - Successful measurement at 20:13:09 - CO2: 546.43ppm, Temp: 21.64°C, RH: 33.18%
+2025-03-05 20:13:09,265 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:13:09,289 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:13:11,338 - INFO - Successful measurement at 20:13:11 - CO2: 547.76ppm, Temp: 21.64°C, RH: 32.98%
+2025-03-05 20:13:11,339 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:13:11,353 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:13:13,407 - INFO - Successful measurement at 20:13:13 - CO2: 548.06ppm, Temp: 21.65°C, RH: 32.93%
+2025-03-05 20:13:13,408 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:13:13,428 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:13:15,477 - INFO - Successful measurement at 20:13:15 - CO2: 548.11ppm, Temp: 21.65°C, RH: 32.86%
+2025-03-05 20:13:15,478 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:13:15,496 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:13:17,548 - INFO - Successful measurement at 20:13:17 - CO2: 547.95ppm, Temp: 21.64°C, RH: 32.89%
+2025-03-05 20:13:17,548 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:13:17,564 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:13:19,612 - INFO - Successful measurement at 20:13:19 - CO2: 548.56ppm, Temp: 21.64°C, RH: 32.9%
+2025-03-05 20:13:19,613 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:13:19,628 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:13:21,661 - WARNING - Warning: No sensor available
+2025-03-05 20:13:23,683 - INFO - Successful measurement at 20:13:23 - CO2: 548.48ppm, Temp: 21.62°C, RH: 32.86%
+2025-03-05 20:13:23,684 - INFO - Large temperature difference detected: current=21.62°C, setpoint=20.0°C
+2025-03-05 20:13:23,702 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:13:25,750 - INFO - Successful measurement at 20:13:25 - CO2: 548.7ppm, Temp: 21.64°C, RH: 32.84%
+2025-03-05 20:13:25,751 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:13:25,772 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:13:27,820 - INFO - Successful measurement at 20:13:27 - CO2: 548.77ppm, Temp: 21.64°C, RH: 32.87%
+2025-03-05 20:13:27,821 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:13:27,837 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:13:29,888 - INFO - Successful measurement at 20:13:29 - CO2: 549.22ppm, Temp: 21.65°C, RH: 32.96%
+2025-03-05 20:13:29,889 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:13:29,907 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:13:31,964 - INFO - Successful measurement at 20:13:31 - CO2: 549.0ppm, Temp: 21.65°C, RH: 33.05%
+2025-03-05 20:13:31,964 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:13:31,984 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:13:34,036 - INFO - Successful measurement at 20:13:34 - CO2: 548.62ppm, Temp: 21.65°C, RH: 33.05%
+2025-03-05 20:13:34,037 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:13:34,050 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:13:36,096 - INFO - Successful measurement at 20:13:36 - CO2: 549.29ppm, Temp: 21.64°C, RH: 33.02%
+2025-03-05 20:13:36,096 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:13:36,112 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:13:38,168 - INFO - Successful measurement at 20:13:38 - CO2: 549.32ppm, Temp: 21.64°C, RH: 33.0%
+2025-03-05 20:13:38,169 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:13:38,184 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:13:40,239 - INFO - Successful measurement at 20:13:40 - CO2: 549.56ppm, Temp: 21.64°C, RH: 33.0%
+2025-03-05 20:13:40,239 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:13:40,256 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:13:42,311 - INFO - Successful measurement at 20:13:42 - CO2: 549.07ppm, Temp: 21.65°C, RH: 33.05%
+2025-03-05 20:13:42,311 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:13:42,326 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:13:44,364 - WARNING - Warning: No sensor available
+2025-03-05 20:13:46,389 - INFO - Successful measurement at 20:13:46 - CO2: 549.01ppm, Temp: 21.65°C, RH: 32.99%
+2025-03-05 20:13:46,390 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:13:46,413 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:13:48,464 - INFO - Successful measurement at 20:13:48 - CO2: 548.99ppm, Temp: 21.64°C, RH: 33.07%
+2025-03-05 20:13:48,465 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:13:48,481 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:13:50,527 - INFO - Successful measurement at 20:13:50 - CO2: 549.4ppm, Temp: 21.65°C, RH: 33.08%
+2025-03-05 20:13:50,528 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:13:50,544 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:13:52,593 - INFO - Successful measurement at 20:13:52 - CO2: 549.37ppm, Temp: 21.65°C, RH: 33.13%
+2025-03-05 20:13:52,593 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:13:52,610 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:13:54,657 - INFO - Successful measurement at 20:13:54 - CO2: 549.5ppm, Temp: 21.66°C, RH: 33.15%
+2025-03-05 20:13:54,657 - INFO - Large temperature difference detected: current=21.66°C, setpoint=20.0°C
+2025-03-05 20:13:54,674 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:13:56,723 - INFO - Successful measurement at 20:13:56 - CO2: 549.94ppm, Temp: 21.64°C, RH: 33.14%
+2025-03-05 20:13:56,724 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:13:56,740 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:13:58,786 - INFO - Successful measurement at 20:13:58 - CO2: 550.5ppm, Temp: 21.66°C, RH: 33.26%
+2025-03-05 20:13:58,787 - INFO - Large temperature difference detected: current=21.66°C, setpoint=20.0°C
+2025-03-05 20:13:58,799 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:14:00,847 - INFO - Successful measurement at 20:14:00 - CO2: 550.89ppm, Temp: 21.64°C, RH: 33.26%
+2025-03-05 20:14:00,848 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:14:00,864 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:14:02,912 - INFO - Successful measurement at 20:14:02 - CO2: 550.56ppm, Temp: 21.64°C, RH: 33.29%
+2025-03-05 20:14:02,913 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:14:02,930 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:14:04,977 - INFO - Successful measurement at 20:14:04 - CO2: 550.92ppm, Temp: 21.64°C, RH: 33.24%
+2025-03-05 20:14:04,978 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:14:04,995 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:14:07,029 - WARNING - Warning: No sensor available
+2025-03-05 20:14:09,052 - INFO - Successful measurement at 20:14:09 - CO2: 551.05ppm, Temp: 21.65°C, RH: 33.37%
+2025-03-05 20:14:09,053 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:14:09,067 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:14:11,117 - INFO - Successful measurement at 20:14:11 - CO2: 551.3ppm, Temp: 21.66°C, RH: 33.34%
+2025-03-05 20:14:11,118 - INFO - Large temperature difference detected: current=21.66°C, setpoint=20.0°C
+2025-03-05 20:14:11,132 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:14:13,180 - INFO - Successful measurement at 20:14:13 - CO2: 551.55ppm, Temp: 21.64°C, RH: 33.39%
+2025-03-05 20:14:13,180 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:14:13,193 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:14:15,243 - INFO - Successful measurement at 20:14:15 - CO2: 551.91ppm, Temp: 21.64°C, RH: 33.34%
+2025-03-05 20:14:15,244 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:14:15,259 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:14:17,308 - INFO - Successful measurement at 20:14:17 - CO2: 552.19ppm, Temp: 21.65°C, RH: 33.3%
+2025-03-05 20:14:17,308 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:14:17,324 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:14:19,372 - INFO - Successful measurement at 20:14:19 - CO2: 552.0ppm, Temp: 21.64°C, RH: 33.3%
+2025-03-05 20:14:19,372 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:14:19,385 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:14:21,432 - INFO - Successful measurement at 20:14:21 - CO2: 552.46ppm, Temp: 21.64°C, RH: 33.32%
+2025-03-05 20:14:21,432 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:14:21,447 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:14:23,494 - INFO - Successful measurement at 20:14:23 - CO2: 552.75ppm, Temp: 21.64°C, RH: 33.32%
+2025-03-05 20:14:23,495 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:14:23,510 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:14:25,556 - INFO - Successful measurement at 20:14:25 - CO2: 553.4ppm, Temp: 21.64°C, RH: 33.32%
+2025-03-05 20:14:25,557 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:14:25,573 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:14:27,609 - WARNING - Warning: No sensor available
+2025-03-05 20:14:29,633 - INFO - Successful measurement at 20:14:29 - CO2: 553.62ppm, Temp: 21.64°C, RH: 33.3%
+2025-03-05 20:14:29,633 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:14:29,648 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:14:31,694 - INFO - Successful measurement at 20:14:31 - CO2: 554.19ppm, Temp: 21.62°C, RH: 33.32%
+2025-03-05 20:14:31,695 - INFO - Large temperature difference detected: current=21.62°C, setpoint=20.0°C
+2025-03-05 20:14:31,710 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:14:33,758 - INFO - Successful measurement at 20:14:33 - CO2: 554.27ppm, Temp: 21.65°C, RH: 33.34%
+2025-03-05 20:14:33,758 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:14:33,771 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:14:35,818 - INFO - Successful measurement at 20:14:35 - CO2: 555.1ppm, Temp: 21.64°C, RH: 33.3%
+2025-03-05 20:14:35,819 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:14:35,834 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:14:37,883 - INFO - Successful measurement at 20:14:37 - CO2: 555.45ppm, Temp: 21.64°C, RH: 33.24%
+2025-03-05 20:14:37,884 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:14:37,902 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:14:39,953 - INFO - Successful measurement at 20:14:39 - CO2: 556.02ppm, Temp: 21.65°C, RH: 33.26%
+2025-03-05 20:14:39,954 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:14:39,969 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:14:42,019 - INFO - Successful measurement at 20:14:42 - CO2: 555.83ppm, Temp: 21.64°C, RH: 33.24%
+2025-03-05 20:14:42,019 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:14:42,034 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:14:44,080 - INFO - Successful measurement at 20:14:44 - CO2: 556.3ppm, Temp: 21.64°C, RH: 33.35%
+2025-03-05 20:14:44,081 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:14:44,095 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:14:46,142 - INFO - Successful measurement at 20:14:46 - CO2: 556.72ppm, Temp: 21.64°C, RH: 33.34%
+2025-03-05 20:14:46,142 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:14:46,162 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:14:48,213 - INFO - Successful measurement at 20:14:48 - CO2: 556.96ppm, Temp: 21.64°C, RH: 33.4%
+2025-03-05 20:14:48,213 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:14:48,229 - INFO - Heater state forced to OFF due to large setpoint change
