@@ -1,0 +1,66 @@
+Metadata-Version: 2.1
+Name: sensirion-i2c-driver
+Version: 1.0.0
+Summary: Base Driver for Communicating With I2C Devices
+Home-page: https://github.com/sensirion/python-i2c-driver
+Author: Urban Bruhin
+Author-email: urban.bruhin@sensirion.com
+License: BSD
+Keywords: sensirion i2c driver
+Platform: UNKNOWN
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Topic :: System :: Hardware :: Hardware Drivers
+Requires-Python: >=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, <4
+Provides-Extra: test
+Requires-Dist: flake8 (~=3.6.0) ; extra == 'test'
+Requires-Dist: mock (~=3.0.0) ; extra == 'test'
+Requires-Dist: pytest (~=3.10.0) ; extra == 'test'
+Requires-Dist: pytest-cov (~=2.6.0) ; extra == 'test'
+
+sensirion-i2c-driver
+====================
+
+This package contains the base IÂ²C driver for various Sensirion sensors.
+It handles low-level things like type conversions, checksum calculation,
+error handling etc.
+
+
+Note
+----
+
+Normally you shouldn't use this driver directly - instead you should use the
+device-specific driver for your actual device as it provides easy-to-use
+commands. But this driver is still useful if you want to transceive raw IÂ²C
+frames, or if there is no specific driver available yet for your device.
+
+
+Installation and Usage
+----------------------
+
+The user manual is available at https://sensirion.github.io/python-i2c-driver/.
+
+CHANGELOG
+---------
+
+1.0.0
+:::::
+- First public release
+- Add support for post processing time of commands
+- Add property ``is_multi_channel`` to ``I2cConnection``
+- Make API of ``SensirionWordI2cCommand`` byte-oriented
+- Rename class ``SensirionWordI2cCommand`` to ``SensirionI2cCommand``
+- Remove methods ``read()`` and ``write()`` from ``I2cConnection``
+- Remove asynchronous mode (including the ``read()`` method) from ``I2cDevice``
+- Log transceived raw data with ``log.debug()``
+- Various documentation improvements
+
+0.1.0
+:::::
+- Initial release
+
+

@@ -1,32 +1,71 @@
 {
+    "available_devices": [
+        {
+            "ip": "192.168.8.181",
+            "mac": "B0-19-21-C4-C9-9D",
+            "model": "P115",
+            "name": "Humidifier",
+            "role": "humidifier",
+            "state": true,
+            "type": "SMART.TAPOPLUG"
+        },
+        {
+            "ip": "192.168.8.164",
+            "mac": "B0-19-21-C4-CE-97",
+            "model": "P115",
+            "name": "heatmat",
+            "role": "heater",
+            "state": true,
+            "type": "SMART.TAPOPLUG"
+        }
+    ],
+    "co2": {
+        "pid": {
+            "Kd": 0,
+            "Ki": -0.01,
+            "Kp": -1
+        }
+    },
     "environment": {
-        "current_phase": "growing",
+        "current_phase": "colonisation",
         "phases": {
+            "cake": {
+                "co2_setpoint": 500,
+                "rh_setpoint": 0.0,
+                "temp_hysteresis": 0.5,
+                "temp_setpoint": 19.0
+            },
+            "colonisation": {
+                "co2_setpoint": 400,
+                "rh_setpoint": 20.0,
+                "temp_hysteresis": 0.5,
+                "temp_setpoint": 20.0
+            },
             "growing": {
-                "temp_min": 22,
-                "temp_max": 22.1,
-                "co2_max": 600,
-                "rh_setpoint": 60
+                "co2_setpoint": 550,
+                "rh_setpoint": 85.0,
+                "temp_hysteresis": 0.5,
+                "temp_setpoint": 19.0
             }
         }
     },
     "humidifier": {
-        "burst_min": 2,
-        "burst_max": 30,
+        "break_time": 180,
         "burst_interval": 60,
-        "rh_hysteresis": 2,
+        "burst_max": 30,
+        "burst_min": 2,
         "pid": {
-            "Kp": 0.2,
+            "Kd": 0,
             "Ki": 0.01,
-            "Kd": 0
+            "Kp": 0.2
         },
-        "break_time": 180
+        "rh_hysteresis": 2
     },
-    "co2": {
-        "pid": {
-            "Kp": -1.0,
-            "Ki": -0.01,
-            "Kd": 0.0
-        }
+    "logging": {
+        "enabled": true,
+        "interval": 30
+    },
+    "sensor": {
+        "measurement_interval": 2
     }
 }

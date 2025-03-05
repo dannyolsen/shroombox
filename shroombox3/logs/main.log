@@ -1,0 +1,585 @@
+2025-03-05 19:01:46,111 - shroombox - INFO - Attempting to render index.html
+2025-03-05 19:01:46,475 - shroombox - INFO - Successful measurement at 19:01:46 - CO2: 552.89ppm, Temp: 21.68°C, RH: 31.44%
+2025-03-05 19:01:46,475 - shroombox - INFO - Live measurements - Temp: 21.68°C, RH: 31.44%, CO2: 552.89ppm
+2025-03-05 19:01:46,498 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:01:46,499 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:01:46,549 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.5, 'co2': 553.2}
+2025-03-05 19:02:02,766 - shroombox - INFO - Attempting to render index.html
+2025-03-05 19:02:02,909 - shroombox - INFO - Successful measurement at 19:02:02 - CO2: 552.35ppm, Temp: 21.69°C, RH: 31.5%
+2025-03-05 19:02:02,910 - shroombox - INFO - Live measurements - Temp: 21.69°C, RH: 31.5%, CO2: 552.35ppm
+2025-03-05 19:02:02,928 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:02:02,928 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:02:02,979 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.5, 'co2': 552.2}
+2025-03-05 19:02:54,813 - shroombox - INFO - Attempting to render index.html
+2025-03-05 19:02:55,301 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:02:55,301 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:02:55,389 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 556.7}
+2025-03-05 19:02:55,410 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:02:55,410 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:02:55,468 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 556.7}
+2025-03-05 19:30:23,952 - shroombox - INFO - Attempting to render index.html
+2025-03-05 19:38:37,841 - shroombox - INFO - Received shutdown signal, cleaning up...
+2025-03-05 19:38:37,879 - shroombox - INFO - 
+=== Cleaning up resources ===
+2025-03-05 19:38:37,880 - shroombox - INFO - ✓ Fan stopped
+2025-03-05 19:38:37,880 - shroombox - ERROR - ❌ Error turning off heater: 'EnvironmentController' object has no attribute 'control_heater'
+2025-03-05 19:38:37,880 - shroombox - ERROR - ❌ Error turning off humidifier: 'EnvironmentController' object has no attribute 'control_humidifier'
+2025-03-05 19:38:37,881 - shroombox - INFO - ✓ InfluxDB client closed
+2025-03-05 19:38:37,881 - shroombox - INFO - ✓ Cleanup completed
+2025-03-05 19:38:42,885 - shroombox - INFO - 
+=== Cleaning up resources ===
+2025-03-05 19:38:42,885 - shroombox - INFO - ✓ Fan stopped
+2025-03-05 19:38:42,885 - shroombox - ERROR - ❌ Error turning off heater: 'EnvironmentController' object has no attribute 'control_heater'
+2025-03-05 19:38:42,886 - shroombox - ERROR - ❌ Error turning off humidifier: 'EnvironmentController' object has no attribute 'control_humidifier'
+2025-03-05 19:38:42,886 - shroombox - INFO - ✓ InfluxDB client closed
+2025-03-05 19:38:42,887 - shroombox - INFO - ✓ Cleanup completed
+2025-03-05 19:38:46,274 - shroombox - INFO - Environment variables loaded:
+2025-03-05 19:38:46,274 - shroombox - INFO - INFLUXDB_URL: http://localhost:8086
+2025-03-05 19:38:46,275 - shroombox - INFO - INFLUXDB_ORG: supershrooms
+2025-03-05 19:38:46,275 - shroombox - INFO - INFLUXDB_BUCKET: test
+2025-03-05 19:38:46,275 - shroombox - INFO - ==================================================
+2025-03-05 19:38:46,299 - shroombox - INFO - Checking I2C bus before sensor initialization...
+2025-03-05 19:38:46,301 - shroombox - WARNING - Could not check I2C bus: [Errno 2] No such file or directory: 'i2cdetect'
+2025-03-05 19:38:46,301 - shroombox - INFO - Initializing SCD30 sensor...
+2025-03-05 19:38:46,323 - shroombox - INFO - SCD30 sensor initialized successfully
+2025-03-05 19:38:46,330 - shroombox - WARNING - SCD30 sensor not available (expected at address 0x61), continuing in monitoring-only mode
+2025-03-05 19:38:46,330 - shroombox - INFO - Please check: 
+1. Power connections to the sensor
+2. I2C connections (SDA and SCL)
+3. Pull-up resistors on I2C lines
+2025-03-05 19:38:46,331 - shroombox - INFO - Current working directory: /home/danny/Github/shroombox/shroombox3
+2025-03-05 19:38:46,331 - shroombox - INFO - Looking for config at: /home/danny/Github/shroombox/shroombox3/config/settings.json
+2025-03-05 19:38:46,331 - shroombox - INFO - Loading config from: /home/danny/Github/shroombox/shroombox3/config/settings.json
+2025-03-05 19:38:46,332 - shroombox - INFO - Initializing SCD30 sensor...
+2025-03-05 19:38:46,354 - shroombox - INFO - SCD30 sensor initialized successfully
+2025-03-05 19:38:46,354 - shroombox - INFO - Loaded device assignments - Heater: 192.168.8.164, Humidifier: 192.168.8.181
+2025-03-05 19:38:46,355 - shroombox - INFO - 
+Initializing PIDs:
+2025-03-05 19:38:46,355 - shroombox - INFO - Phase: colonisation
+2025-03-05 19:38:46,355 - shroombox - INFO - RH Setpoint: 60.0
+2025-03-05 19:38:46,356 - shroombox - INFO - CO2 Setpoint: 10000
+2025-03-05 19:38:46,356 - shroombox - INFO - 
+=== Initializing InfluxDB Client ===
+2025-03-05 19:38:46,356 - shroombox - INFO - URL: http://localhost:8086
+2025-03-05 19:38:46,357 - shroombox - INFO - Organization: supershrooms
+2025-03-05 19:38:46,357 - shroombox - INFO - Bucket: test
+2025-03-05 19:38:46,380 - shroombox - INFO - ✓ InfluxDB connection test successful
+2025-03-05 19:38:46,381 - shroombox - INFO - Controller initialized successfully (monitoring-only mode)
+2025-03-05 19:39:05,733 - shroombox - INFO - Attempting to render index.html
+2025-03-05 19:39:06,198 - shroombox - INFO - Successful measurement at 19:39:06 - CO2: 532.27ppm, Temp: 21.66°C, RH: 31.42%
+2025-03-05 19:39:06,199 - shroombox - INFO - Live measurements - Temp: 21.66°C, RH: 31.42%, CO2: 532.27ppm
+2025-03-05 19:39:06,214 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:39:06,215 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:39:06,271 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 532.3}
+2025-03-05 19:39:10,800 - shroombox - INFO - Settings updated successfully: colonisation phase
+2025-03-05 19:39:20,805 - shroombox - INFO - Settings updated successfully: growing phase
+2025-03-05 19:39:20,863 - shroombox - INFO - Settings updated successfully: growing phase
+2025-03-05 19:39:21,045 - shroombox - INFO - Attempting to render index.html
+2025-03-05 19:39:21,746 - shroombox - INFO - Successful measurement at 19:39:21 - CO2: 531.67ppm, Temp: 21.68°C, RH: 31.44%
+2025-03-05 19:39:21,747 - shroombox - INFO - Live measurements - Temp: 21.68°C, RH: 31.44%, CO2: 531.67ppm
+2025-03-05 19:39:21,765 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:39:21,765 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:39:21,806 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 531.5}
+2025-03-05 19:39:24,368 - shroombox - INFO - Settings updated successfully: colonisation phase
+2025-03-05 19:39:24,373 - shroombox - INFO - Settings updated successfully: colonisation phase
+2025-03-05 19:39:24,520 - shroombox - INFO - Attempting to render index.html
+2025-03-05 19:39:24,893 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:39:24,894 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:39:24,949 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 531.9}
+2025-03-05 19:39:24,974 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:39:24,975 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:39:25,022 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 531.9}
+2025-03-05 19:39:28,005 - shroombox - INFO - Settings updated successfully: colonisation phase
+2025-03-05 19:39:51,268 - shroombox - INFO - Settings updated successfully: colonisation phase
+2025-03-05 19:39:55,661 - shroombox - INFO - Settings updated successfully: colonisation phase
+2025-03-05 19:43:34,179 - shroombox - INFO - Received shutdown signal, cleaning up...
+2025-03-05 19:43:34,189 - shroombox - INFO - 
+=== Cleaning up resources ===
+2025-03-05 19:43:34,190 - shroombox - INFO - ✓ Fan stopped
+2025-03-05 19:43:34,190 - shroombox - ERROR - ❌ Error turning off heater: 'EnvironmentController' object has no attribute 'control_heater'
+2025-03-05 19:43:34,190 - shroombox - ERROR - ❌ Error turning off humidifier: 'EnvironmentController' object has no attribute 'control_humidifier'
+2025-03-05 19:43:34,191 - shroombox - INFO - ✓ InfluxDB client closed
+2025-03-05 19:43:34,191 - shroombox - INFO - ✓ Cleanup completed
+2025-03-05 19:43:39,194 - shroombox - INFO - 
+=== Cleaning up resources ===
+2025-03-05 19:43:39,195 - shroombox - INFO - ✓ Fan stopped
+2025-03-05 19:43:39,195 - shroombox - ERROR - ❌ Error turning off heater: 'EnvironmentController' object has no attribute 'control_heater'
+2025-03-05 19:43:39,196 - shroombox - ERROR - ❌ Error turning off humidifier: 'EnvironmentController' object has no attribute 'control_humidifier'
+2025-03-05 19:43:39,196 - shroombox - INFO - ✓ InfluxDB client closed
+2025-03-05 19:43:39,196 - shroombox - INFO - ✓ Cleanup completed
+2025-03-05 19:43:42,585 - shroombox - INFO - Environment variables loaded:
+2025-03-05 19:43:42,586 - shroombox - INFO - INFLUXDB_URL: http://localhost:8086
+2025-03-05 19:43:42,586 - shroombox - INFO - INFLUXDB_ORG: supershrooms
+2025-03-05 19:43:42,586 - shroombox - INFO - INFLUXDB_BUCKET: test
+2025-03-05 19:43:42,587 - shroombox - INFO - ==================================================
+2025-03-05 19:43:42,610 - shroombox - INFO - Checking I2C bus before sensor initialization...
+2025-03-05 19:43:42,612 - shroombox - WARNING - Could not check I2C bus: [Errno 2] No such file or directory: 'i2cdetect'
+2025-03-05 19:43:42,612 - shroombox - INFO - Initializing SCD30 sensor...
+2025-03-05 19:43:42,626 - shroombox - INFO - SCD30 sensor initialized successfully
+2025-03-05 19:43:42,632 - shroombox - WARNING - SCD30 sensor not available (expected at address 0x61), continuing in monitoring-only mode
+2025-03-05 19:43:42,632 - shroombox - INFO - Please check: 
+1. Power connections to the sensor
+2. I2C connections (SDA and SCL)
+3. Pull-up resistors on I2C lines
+2025-03-05 19:43:42,633 - shroombox - INFO - Current working directory: /home/danny/Github/shroombox/shroombox3
+2025-03-05 19:43:42,633 - shroombox - INFO - Looking for config at: /home/danny/Github/shroombox/shroombox3/config/settings.json
+2025-03-05 19:43:42,633 - shroombox - INFO - Loading config from: /home/danny/Github/shroombox/shroombox3/config/settings.json
+2025-03-05 19:43:42,634 - shroombox - INFO - Initializing SCD30 sensor...
+2025-03-05 19:43:42,646 - shroombox - INFO - SCD30 sensor initialized successfully
+2025-03-05 19:43:42,647 - shroombox - INFO - Loaded device assignments - Heater: 192.168.8.164, Humidifier: 192.168.8.181
+2025-03-05 19:43:42,647 - shroombox - INFO - 
+Initializing PIDs:
+2025-03-05 19:43:42,647 - shroombox - INFO - Phase: colonisation
+2025-03-05 19:43:42,647 - shroombox - INFO - RH Setpoint: 60.0
+2025-03-05 19:43:42,648 - shroombox - INFO - CO2 Setpoint: 10000
+2025-03-05 19:43:42,648 - shroombox - INFO - 
+=== Initializing InfluxDB Client ===
+2025-03-05 19:43:42,648 - shroombox - INFO - URL: http://localhost:8086
+2025-03-05 19:43:42,648 - shroombox - INFO - Organization: supershrooms
+2025-03-05 19:43:42,649 - shroombox - INFO - Bucket: test
+2025-03-05 19:43:42,667 - shroombox - INFO - ✓ InfluxDB connection test successful
+2025-03-05 19:43:42,668 - shroombox - INFO - Controller initialized successfully (monitoring-only mode)
+2025-03-05 19:43:48,214 - shroombox - INFO - Attempting to render index.html
+2025-03-05 19:43:48,979 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:43:48,980 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:43:49,034 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 535.8}
+2025-03-05 19:43:49,057 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:43:49,058 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:43:49,108 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 535.8}
+2025-03-05 19:43:53,889 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:43:53,889 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:43:53,944 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 536.2}
+2025-03-05 19:43:53,965 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:43:53,966 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:43:54,018 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 536.2}
+2025-03-05 19:43:58,931 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:43:58,932 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:43:58,993 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 538.0}
+2025-03-05 19:43:59,007 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:43:59,007 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:43:59,059 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 538.0}
+2025-03-05 19:44:07,755 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:44:07,755 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:44:07,817 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 537.9}
+2025-03-05 19:44:07,857 - shroombox - INFO - Successful measurement at 19:44:07 - CO2: 537.56ppm, Temp: 21.66°C, RH: 31.41%
+2025-03-05 19:44:07,857 - shroombox - INFO - Live measurements - Temp: 21.66°C, RH: 31.41%, CO2: 537.56ppm
+2025-03-05 19:44:12,781 - shroombox - INFO - Successful measurement at 19:44:12 - CO2: 537.8ppm, Temp: 21.69°C, RH: 31.46%
+2025-03-05 19:44:12,782 - shroombox - INFO - Live measurements - Temp: 21.69°C, RH: 31.46%, CO2: 537.8ppm
+2025-03-05 19:44:12,792 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:44:12,792 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:44:12,832 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 537.6}
+2025-03-05 19:44:19,359 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:44:19,360 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:44:19,417 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.5, 'co2': 538.0}
+2025-03-05 19:44:19,482 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:44:19,483 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:44:19,560 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.5, 'co2': 538.0}
+2025-03-05 19:44:22,946 - shroombox - INFO - Successful measurement at 19:44:22 - CO2: 537.65ppm, Temp: 21.68°C, RH: 31.47%
+2025-03-05 19:44:22,946 - shroombox - INFO - Live measurements - Temp: 21.68°C, RH: 31.47%, CO2: 537.65ppm
+2025-03-05 19:44:22,954 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:44:22,955 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:44:22,991 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.5, 'co2': 538.0}
+2025-03-05 19:44:36,234 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:44:36,235 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:44:36,272 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 536.1}
+2025-03-05 19:44:36,315 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:44:36,316 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:44:36,355 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 536.1}
+2025-03-05 19:44:44,373 - shroombox - INFO - Successful measurement at 19:44:44 - CO2: 536.57ppm, Temp: 21.69°C, RH: 31.42%
+2025-03-05 19:44:44,374 - shroombox - INFO - Live measurements - Temp: 21.69°C, RH: 31.42%, CO2: 536.57ppm
+2025-03-05 19:44:44,496 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:44:44,497 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:44:44,543 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 536.3}
+2025-03-05 19:45:01,904 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:45:01,905 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:45:01,948 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 536.9}
+2025-03-05 19:45:01,999 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:45:02,000 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:45:02,051 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 536.9}
+2025-03-05 19:45:08,714 - shroombox - INFO - Received shutdown signal, cleaning up...
+2025-03-05 19:45:08,738 - shroombox - INFO - 
+=== Cleaning up resources ===
+2025-03-05 19:45:08,738 - shroombox - INFO - ✓ Fan stopped
+2025-03-05 19:45:08,739 - shroombox - ERROR - ❌ Error turning off heater: 'EnvironmentController' object has no attribute 'control_heater'
+2025-03-05 19:45:08,740 - shroombox - ERROR - ❌ Error turning off humidifier: 'EnvironmentController' object has no attribute 'control_humidifier'
+2025-03-05 19:45:08,740 - shroombox - INFO - ✓ InfluxDB client closed
+2025-03-05 19:45:08,741 - shroombox - INFO - ✓ Cleanup completed
+2025-03-05 19:45:13,816 - shroombox - INFO - 
+=== Cleaning up resources ===
+2025-03-05 19:45:13,817 - shroombox - INFO - ✓ Fan stopped
+2025-03-05 19:45:13,817 - shroombox - ERROR - ❌ Error turning off heater: 'EnvironmentController' object has no attribute 'control_heater'
+2025-03-05 19:45:13,818 - shroombox - ERROR - ❌ Error turning off humidifier: 'EnvironmentController' object has no attribute 'control_humidifier'
+2025-03-05 19:45:13,818 - shroombox - INFO - ✓ InfluxDB client closed
+2025-03-05 19:45:13,819 - shroombox - INFO - ✓ Cleanup completed
+2025-03-05 19:45:16,999 - shroombox - INFO - Environment variables loaded:
+2025-03-05 19:45:16,999 - shroombox - INFO - INFLUXDB_URL: http://localhost:8086
+2025-03-05 19:45:17,000 - shroombox - INFO - INFLUXDB_ORG: supershrooms
+2025-03-05 19:45:17,000 - shroombox - INFO - INFLUXDB_BUCKET: test
+2025-03-05 19:45:17,000 - shroombox - INFO - ==================================================
+2025-03-05 19:45:17,024 - shroombox - INFO - Checking I2C bus before sensor initialization...
+2025-03-05 19:45:17,026 - shroombox - WARNING - Could not check I2C bus: [Errno 2] No such file or directory: 'i2cdetect'
+2025-03-05 19:45:17,026 - shroombox - INFO - Initializing SCD30 sensor...
+2025-03-05 19:45:17,048 - shroombox - INFO - SCD30 sensor initialized successfully
+2025-03-05 19:45:17,055 - shroombox - WARNING - SCD30 sensor not available (expected at address 0x61), continuing in monitoring-only mode
+2025-03-05 19:45:17,055 - shroombox - INFO - Please check: 
+1. Power connections to the sensor
+2. I2C connections (SDA and SCL)
+3. Pull-up resistors on I2C lines
+2025-03-05 19:45:17,055 - shroombox - INFO - Current working directory: /home/danny/Github/shroombox/shroombox3
+2025-03-05 19:45:17,056 - shroombox - INFO - Looking for config at: /home/danny/Github/shroombox/shroombox3/config/settings.json
+2025-03-05 19:45:17,056 - shroombox - INFO - Loading config from: /home/danny/Github/shroombox/shroombox3/config/settings.json
+2025-03-05 19:45:17,056 - shroombox - INFO - Initializing SCD30 sensor...
+2025-03-05 19:45:17,078 - shroombox - INFO - SCD30 sensor initialized successfully
+2025-03-05 19:45:17,078 - shroombox - INFO - Loaded device assignments - Heater: 192.168.8.164, Humidifier: 192.168.8.181
+2025-03-05 19:45:17,078 - shroombox - INFO - 
+Initializing PIDs:
+2025-03-05 19:45:17,079 - shroombox - INFO - Phase: colonisation
+2025-03-05 19:45:17,079 - shroombox - INFO - RH Setpoint: 60.0
+2025-03-05 19:45:17,079 - shroombox - INFO - CO2 Setpoint: 10000
+2025-03-05 19:45:17,079 - shroombox - INFO - 
+=== Initializing InfluxDB Client ===
+2025-03-05 19:45:17,080 - shroombox - INFO - URL: http://localhost:8086
+2025-03-05 19:45:17,080 - shroombox - INFO - Organization: supershrooms
+2025-03-05 19:45:17,080 - shroombox - INFO - Bucket: test
+2025-03-05 19:45:17,098 - shroombox - INFO - ✓ InfluxDB connection test successful
+2025-03-05 19:45:17,099 - shroombox - INFO - Controller initialized successfully (monitoring-only mode)
+2025-03-05 19:45:18,887 - shroombox - INFO - Attempting to render index.html
+2025-03-05 19:45:19,423 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:45:19,423 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:45:19,460 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 537.5}
+2025-03-05 19:45:19,477 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:45:19,478 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:45:19,516 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 537.5}
+2025-03-05 19:45:24,344 - shroombox - INFO - Successful measurement at 19:45:24 - CO2: 537.85ppm, Temp: 21.68°C, RH: 31.39%
+2025-03-05 19:45:24,345 - shroombox - INFO - Live measurements - Temp: 21.68°C, RH: 31.39%, CO2: 537.85ppm
+2025-03-05 19:45:24,362 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:45:24,362 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:45:24,445 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 537.8}
+2025-03-05 19:45:29,320 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:45:29,320 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:45:29,357 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 538.1}
+2025-03-05 19:45:29,397 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:45:29,397 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:45:29,434 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 538.1}
+2025-03-05 19:45:38,129 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:45:38,130 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:45:38,185 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 537.6}
+2025-03-05 19:45:38,199 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:45:38,200 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:45:38,250 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 537.6}
+2025-03-05 19:45:39,308 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:45:39,308 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:45:39,344 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 537.9}
+2025-03-05 19:45:39,357 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:45:39,357 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:45:39,395 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 537.9}
+2025-03-05 19:45:44,355 - shroombox - INFO - Successful measurement at 19:45:44 - CO2: 537.59ppm, Temp: 21.71°C, RH: 31.44%
+2025-03-05 19:45:44,356 - shroombox - INFO - Live measurements - Temp: 21.71°C, RH: 31.44%, CO2: 537.59ppm
+2025-03-05 19:45:44,370 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:45:44,370 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:45:44,429 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 538.0}
+2025-03-05 19:45:49,649 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:45:49,650 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:45:49,700 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 538.3}
+2025-03-05 19:45:49,732 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:45:49,733 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:45:49,785 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 538.3}
+2025-03-05 19:45:54,301 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:45:54,302 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:45:54,358 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 538.2}
+2025-03-05 19:45:54,373 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:45:54,374 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:45:54,420 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 538.2}
+2025-03-05 19:45:59,316 - shroombox - INFO - Successful measurement at 19:45:59 - CO2: 539.44ppm, Temp: 21.66°C, RH: 31.41%
+2025-03-05 19:45:59,316 - shroombox - INFO - Live measurements - Temp: 21.66°C, RH: 31.41%, CO2: 539.44ppm
+2025-03-05 19:45:59,328 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:45:59,328 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:45:59,365 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 539.2}
+2025-03-05 19:45:59,925 - shroombox - INFO - Settings updated successfully: colonisation phase
+2025-03-05 19:46:04,330 - shroombox - INFO - Successful measurement at 19:46:04 - CO2: 539.91ppm, Temp: 21.69°C, RH: 31.46%
+2025-03-05 19:46:04,330 - shroombox - INFO - Live measurements - Temp: 21.69°C, RH: 31.46%, CO2: 539.91ppm
+2025-03-05 19:46:04,344 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:46:04,345 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:46:04,397 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 539.6}
+2025-03-05 19:46:06,597 - shroombox - INFO - Settings updated successfully: colonisation phase
+2025-03-05 19:46:09,335 - shroombox - INFO - Successful measurement at 19:46:09 - CO2: 538.98ppm, Temp: 21.69°C, RH: 31.37%
+2025-03-05 19:46:09,335 - shroombox - INFO - Live measurements - Temp: 21.69°C, RH: 31.37%, CO2: 538.98ppm
+2025-03-05 19:46:09,351 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:46:09,352 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:46:09,410 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 539.7}
+2025-03-05 19:46:14,316 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:46:14,316 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:46:14,352 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 539.0}
+2025-03-05 19:46:14,362 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:46:14,362 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:46:14,400 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 539.0}
+2025-03-05 19:46:19,310 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:46:19,311 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:46:19,370 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 539.2}
+2025-03-05 19:46:19,383 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:46:19,384 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:46:19,452 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 539.2}
+2025-03-05 19:46:20,579 - shroombox - INFO - Settings updated successfully: colonisation phase
+2025-03-05 19:46:24,361 - shroombox - INFO - Successful measurement at 19:46:24 - CO2: 539.29ppm, Temp: 21.66°C, RH: 31.44%
+2025-03-05 19:46:24,362 - shroombox - INFO - Live measurements - Temp: 21.66°C, RH: 31.44%, CO2: 539.29ppm
+2025-03-05 19:46:24,372 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:46:24,373 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:46:24,411 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 539.6}
+2025-03-05 19:46:29,321 - shroombox - INFO - Successful measurement at 19:46:29 - CO2: 539.23ppm, Temp: 21.69°C, RH: 31.47%
+2025-03-05 19:46:29,322 - shroombox - INFO - Live measurements - Temp: 21.69°C, RH: 31.47%, CO2: 539.23ppm
+2025-03-05 19:46:29,338 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:46:29,339 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:46:29,396 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 539.2}
+2025-03-05 19:46:34,303 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:46:34,303 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:46:34,355 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 539.0}
+2025-03-05 19:46:34,371 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:46:34,372 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:46:34,419 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 539.0}
+2025-03-05 19:46:39,347 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:46:39,347 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:46:39,383 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 539.2}
+2025-03-05 19:46:39,395 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:46:39,396 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:46:39,464 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 539.2}
+2025-03-05 19:46:44,334 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:46:44,335 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:46:44,370 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 537.6}
+2025-03-05 19:46:44,381 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:46:44,382 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:46:44,419 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 537.6}
+2025-03-05 19:46:49,351 - shroombox - INFO - Successful measurement at 19:46:49 - CO2: 537.95ppm, Temp: 21.68°C, RH: 31.44%
+2025-03-05 19:46:49,352 - shroombox - INFO - Live measurements - Temp: 21.68°C, RH: 31.44%, CO2: 537.95ppm
+2025-03-05 19:46:49,364 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:46:49,365 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:46:49,439 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 537.7}
+2025-03-05 19:46:54,758 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:46:54,758 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:46:54,797 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.5, 'co2': 538.1}
+2025-03-05 19:46:54,850 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:46:54,851 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:46:54,897 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.5, 'co2': 538.1}
+2025-03-05 19:47:00,236 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:47:00,237 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:47:00,295 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 538.4}
+2025-03-05 19:47:00,333 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:47:00,334 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:47:00,370 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 538.4}
+2025-03-05 19:47:07,741 - shroombox - INFO - Successful measurement at 19:47:07 - CO2: 539.52ppm, Temp: 21.69°C, RH: 31.39%
+2025-03-05 19:47:07,741 - shroombox - INFO - Live measurements - Temp: 21.69°C, RH: 31.39%, CO2: 539.52ppm
+2025-03-05 19:47:07,802 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:47:07,803 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:47:07,844 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 539.0}
+2025-03-05 19:47:21,592 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:47:21,592 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:47:21,632 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 538.8}
+2025-03-05 19:47:21,645 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:47:21,645 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:47:21,682 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 538.8}
+2025-03-05 19:47:38,903 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:47:38,903 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:47:38,939 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 538.9}
+2025-03-05 19:47:39,006 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:47:39,007 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:47:39,060 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 538.9}
+2025-03-05 19:47:52,025 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:47:52,026 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:47:52,069 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.3, 'co2': 538.3}
+2025-03-05 19:47:52,140 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:47:52,140 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:47:52,194 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.3, 'co2': 538.3}
+2025-03-05 19:47:57,000 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:47:57,001 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:47:57,046 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 538.4}
+2025-03-05 19:47:57,060 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:47:57,060 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:47:57,099 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 538.4}
+2025-03-05 19:48:03,376 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:48:03,377 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:48:03,414 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 538.0}
+2025-03-05 19:48:03,443 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:48:03,443 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:48:03,488 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 538.0}
+2025-03-05 19:48:14,189 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:48:14,190 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:48:14,226 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 537.5}
+2025-03-05 19:48:14,265 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:48:14,266 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:48:14,302 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 537.5}
+2025-03-05 19:48:27,167 - shroombox - INFO - Successful measurement at 19:48:27 - CO2: 538.01ppm, Temp: 21.69°C, RH: 31.36%
+2025-03-05 19:48:27,168 - shroombox - INFO - Live measurements - Temp: 21.69°C, RH: 31.36%, CO2: 538.01ppm
+2025-03-05 19:48:27,232 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:48:27,233 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:48:27,303 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.3, 'co2': 538.1}
+2025-03-05 19:48:36,937 - shroombox - INFO - Received shutdown signal, cleaning up...
+2025-03-05 19:48:36,985 - shroombox - INFO - 
+=== Cleaning up resources ===
+2025-03-05 19:48:36,986 - shroombox - INFO - ✓ Fan stopped
+2025-03-05 19:48:36,986 - shroombox - ERROR - ❌ Error turning off heater: 'EnvironmentController' object has no attribute 'control_heater'
+2025-03-05 19:48:36,986 - shroombox - ERROR - ❌ Error turning off humidifier: 'EnvironmentController' object has no attribute 'control_humidifier'
+2025-03-05 19:48:36,986 - shroombox - INFO - ✓ InfluxDB client closed
+2025-03-05 19:48:36,987 - shroombox - INFO - ✓ Cleanup completed
+2025-03-05 19:48:41,990 - shroombox - INFO - 
+=== Cleaning up resources ===
+2025-03-05 19:48:41,991 - shroombox - INFO - ✓ Fan stopped
+2025-03-05 19:48:41,991 - shroombox - ERROR - ❌ Error turning off heater: 'EnvironmentController' object has no attribute 'control_heater'
+2025-03-05 19:48:41,992 - shroombox - ERROR - ❌ Error turning off humidifier: 'EnvironmentController' object has no attribute 'control_humidifier'
+2025-03-05 19:48:41,992 - shroombox - INFO - ✓ InfluxDB client closed
+2025-03-05 19:48:41,993 - shroombox - INFO - ✓ Cleanup completed
+2025-03-05 19:48:45,164 - shroombox - INFO - Environment variables loaded:
+2025-03-05 19:48:45,164 - shroombox - INFO - INFLUXDB_URL: http://localhost:8086
+2025-03-05 19:48:45,164 - shroombox - INFO - INFLUXDB_ORG: supershrooms
+2025-03-05 19:48:45,165 - shroombox - INFO - INFLUXDB_BUCKET: test
+2025-03-05 19:48:45,165 - shroombox - INFO - ==================================================
+2025-03-05 19:48:45,187 - shroombox - INFO - Checking I2C bus before sensor initialization...
+2025-03-05 19:48:45,189 - shroombox - WARNING - Could not check I2C bus: [Errno 2] No such file or directory: 'i2cdetect'
+2025-03-05 19:48:45,190 - shroombox - INFO - Initializing SCD30 sensor...
+2025-03-05 19:48:45,211 - shroombox - INFO - SCD30 sensor initialized successfully
+2025-03-05 19:48:45,218 - shroombox - INFO - Current working directory: /home/danny/Github/shroombox/shroombox3
+2025-03-05 19:48:45,218 - shroombox - INFO - Looking for config at: /home/danny/Github/shroombox/shroombox3/config/settings.json
+2025-03-05 19:48:45,219 - shroombox - INFO - Loading config from: /home/danny/Github/shroombox/shroombox3/config/settings.json
+2025-03-05 19:48:45,219 - shroombox - INFO - Initializing SCD30 sensor...
+2025-03-05 19:48:45,240 - shroombox - INFO - SCD30 sensor initialized successfully
+2025-03-05 19:48:45,241 - shroombox - INFO - Loaded device assignments - Heater: 192.168.8.164, Humidifier: 192.168.8.181
+2025-03-05 19:48:45,241 - shroombox - INFO - 
+Initializing PIDs:
+2025-03-05 19:48:45,241 - shroombox - INFO - Phase: colonisation
+2025-03-05 19:48:45,242 - shroombox - INFO - RH Setpoint: 20.0
+2025-03-05 19:48:45,242 - shroombox - INFO - CO2 Setpoint: 400
+2025-03-05 19:48:45,242 - shroombox - INFO - 
+=== Initializing InfluxDB Client ===
+2025-03-05 19:48:45,242 - shroombox - INFO - URL: http://localhost:8086
+2025-03-05 19:48:45,243 - shroombox - INFO - Organization: supershrooms
+2025-03-05 19:48:45,243 - shroombox - INFO - Bucket: test
+2025-03-05 19:48:45,295 - shroombox - INFO - ✓ InfluxDB connection test successful
+2025-03-05 19:48:45,296 - shroombox - INFO - Controller initialized successfully
+2025-03-05 19:48:46,052 - shroombox - INFO - Attempting to render index.html
+2025-03-05 19:48:46,611 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:48:46,611 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:48:46,649 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 537.5}
+2025-03-05 19:48:46,662 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:48:46,756 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:48:46,794 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 537.5}
+2025-03-05 19:48:51,481 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:48:51,481 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:48:51,538 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 537.1}
+2025-03-05 19:48:51,554 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:48:51,554 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:48:51,604 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 537.1}
+2025-03-05 19:48:52,032 - shroombox - INFO - Settings updated successfully: colonisation phase
+2025-03-05 19:48:56,498 - shroombox - INFO - Successful measurement at 19:48:56 - CO2: 536.56ppm, Temp: 21.69°C, RH: 31.31%
+2025-03-05 19:48:56,498 - shroombox - INFO - Live measurements - Temp: 21.69°C, RH: 31.31%, CO2: 536.56ppm
+2025-03-05 19:48:56,512 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:48:56,512 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:48:56,567 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 536.8}
+2025-03-05 19:49:01,497 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:49:01,497 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:49:01,533 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.3, 'co2': 536.1}
+2025-03-05 19:49:01,544 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:49:01,545 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:49:01,583 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.3, 'co2': 536.1}
+2025-03-05 19:49:04,952 - shroombox - INFO - Settings updated successfully: colonisation phase
+2025-03-05 19:49:06,517 - shroombox - INFO - Successful measurement at 19:49:06 - CO2: 536.0ppm, Temp: 21.69°C, RH: 31.34%
+2025-03-05 19:49:06,518 - shroombox - INFO - Live measurements - Temp: 21.69°C, RH: 31.34%, CO2: 536.0ppm
+2025-03-05 19:49:06,532 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:49:06,533 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:49:06,588 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.3, 'co2': 535.9}
+2025-03-05 19:49:11,518 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:49:11,528 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:49:11,571 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.3, 'co2': 535.6}
+2025-03-05 19:49:11,595 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:49:11,595 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:49:11,672 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.3, 'co2': 535.6}
+2025-03-05 19:49:16,493 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:49:16,494 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:49:16,530 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 535.4}
+2025-03-05 19:49:16,542 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:49:16,542 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:49:16,579 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 535.4}
+2025-03-05 19:49:21,525 - shroombox - INFO - Successful measurement at 19:49:21 - CO2: 535.39ppm, Temp: 21.71°C, RH: 31.37%
+2025-03-05 19:49:21,526 - shroombox - INFO - Live measurements - Temp: 21.71°C, RH: 31.37%, CO2: 535.39ppm
+2025-03-05 19:49:21,541 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:49:21,542 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:49:21,600 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 535.3}
+2025-03-05 19:49:26,511 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:49:26,512 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:49:26,564 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 535.4}
+2025-03-05 19:49:26,578 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:49:26,579 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:49:26,637 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 535.4}
+2025-03-05 19:49:31,569 - shroombox - INFO - Successful measurement at 19:49:31 - CO2: 536.15ppm, Temp: 21.68°C, RH: 31.42%
+2025-03-05 19:49:31,570 - shroombox - INFO - Live measurements - Temp: 21.68°C, RH: 31.42%, CO2: 536.15ppm
+2025-03-05 19:49:31,580 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:49:31,581 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:49:31,618 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 535.9}
+2025-03-05 19:49:37,783 - shroombox - INFO - Successful measurement at 19:49:37 - CO2: 535.44ppm, Temp: 21.68°C, RH: 31.34%
+2025-03-05 19:49:37,783 - shroombox - INFO - Live measurements - Temp: 21.68°C, RH: 31.34%, CO2: 535.44ppm
+2025-03-05 19:49:37,857 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:49:37,858 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:49:37,895 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 535.9}
+2025-03-05 19:49:42,762 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:49:42,762 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:49:42,799 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 535.6}
+2025-03-05 19:49:42,811 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:49:42,811 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:49:42,868 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 535.6}
+2025-03-05 19:49:47,762 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:49:47,762 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:49:47,798 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.3, 'co2': 536.4}
+2025-03-05 19:49:47,810 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:49:47,810 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:49:47,847 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.3, 'co2': 536.4}
+2025-03-05 19:49:52,795 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:49:52,796 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:49:52,848 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 536.1}
+2025-03-05 19:49:53,225 - shroombox - INFO - Successful measurement at 19:49:53 - CO2: 536.73ppm, Temp: 21.71°C, RH: 31.37%
+2025-03-05 19:49:53,226 - shroombox - INFO - Live measurements - Temp: 21.71°C, RH: 31.37%, CO2: 536.73ppm
+2025-03-05 19:49:57,786 - shroombox - INFO - Successful measurement at 19:49:57 - CO2: 537.52ppm, Temp: 21.71°C, RH: 31.36%
+2025-03-05 19:49:57,786 - shroombox - INFO - Live measurements - Temp: 21.71°C, RH: 31.36%, CO2: 537.52ppm
+2025-03-05 19:49:57,795 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:49:57,796 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:49:57,832 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 537.2}
+2025-03-05 19:50:02,919 - shroombox - INFO - Successful measurement at 19:50:02 - CO2: 537.47ppm, Temp: 21.69°C, RH: 31.33%
+2025-03-05 19:50:02,919 - shroombox - INFO - Live measurements - Temp: 21.69°C, RH: 31.33%, CO2: 537.47ppm
+2025-03-05 19:50:03,015 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:50:03,016 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:50:03,051 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 537.5}
+2025-03-05 19:50:09,238 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:50:09,239 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:50:09,277 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 537.4}
+2025-03-05 19:50:09,346 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:50:09,346 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:50:09,386 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 537.4}
+2025-03-05 19:50:16,382 - shroombox - INFO - Successful measurement at 19:50:16 - CO2: 537.07ppm, Temp: 21.66°C, RH: 31.39%
+2025-03-05 19:50:16,383 - shroombox - INFO - Live measurements - Temp: 21.66°C, RH: 31.39%, CO2: 537.07ppm
+2025-03-05 19:50:16,455 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:50:16,455 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:50:16,494 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 537.1}
+2025-03-05 19:50:36,873 - shroombox - INFO - Successful measurement at 19:50:36 - CO2: 536.07ppm, Temp: 21.68°C, RH: 31.39%
+2025-03-05 19:50:36,874 - shroombox - INFO - Live measurements - Temp: 21.68°C, RH: 31.39%, CO2: 536.07ppm
+2025-03-05 19:50:36,932 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:50:36,933 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:50:36,997 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.3, 'co2': 536.8}
+2025-03-05 19:50:55,924 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:50:55,925 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:50:55,961 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 536.9}
+2025-03-05 19:50:56,016 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:50:56,017 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:50:56,054 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 536.9}
+2025-03-05 19:51:13,985 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:51:13,986 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:51:14,032 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 536.6}
+2025-03-05 19:51:14,117 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:51:14,118 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:51:14,168 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 536.6}
+2025-03-05 19:51:18,959 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:51:18,960 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:51:19,024 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.3, 'co2': 536.5}
+2025-03-05 19:51:19,038 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:51:19,039 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:51:19,087 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.3, 'co2': 536.5}
+2025-03-05 19:51:25,528 - shroombox - INFO - Successful measurement at 19:51:25 - CO2: 535.99ppm, Temp: 21.68°C, RH: 31.36%
+2025-03-05 19:51:25,529 - shroombox - INFO - Live measurements - Temp: 21.68°C, RH: 31.36%, CO2: 535.99ppm
+2025-03-05 19:51:25,637 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:51:25,638 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:51:25,710 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.3, 'co2': 535.9}
