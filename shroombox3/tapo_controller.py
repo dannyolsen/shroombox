@@ -443,6 +443,22 @@ class TapoController:
             logger.error(f"Error getting device state for {ip}: {e}")
             return False
 
+    async def update_device_states(self):
+        """Update the states of connected devices."""
+        try:
+            if self.heater_ip:
+                previous_state = self.heater_on
+                self.heater_on = await self.get_device_state(self.heater_ip)
+                if previous_state != self.heater_on:
+                    logger.info(f"Heater state changed: {previous_state} -> {self.heater_on}")
+            if self.humidifier_ip:
+                previous_state = self.humidifier_on
+                self.humidifier_on = await self.get_device_state(self.humidifier_ip)
+                if previous_state != self.humidifier_on:
+                    logger.info(f"Humidifier state changed: {previous_state} -> {self.humidifier_on}")
+        except Exception as e:
+            logger.error(f"Error updating device states: {e}")
+
 async def test_device_scanning():
     """Test function to verify device scanning functionality."""
     import os

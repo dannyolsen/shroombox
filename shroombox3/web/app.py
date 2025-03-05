@@ -542,6 +542,71 @@ async def service_worker():
         logger.error(f"Error serving service worker: {e}")
         return "", 404
 
+@app.route('/api/logs/stream')
+async def log_stream():
+    """Stream logs to the frontend."""
+    async def generate():
+        log_file = os.path.join(BASE_DIR, 'logs', 'main.log')
+        
+        # Create logs directory if it doesn't exist
+        os.makedirs(os.path.dirname(log_file), exist_ok=True)
+        
+        # Create log file if it doesn't exist
+        if not os.path.exists(log_file):
+            open(log_file, 'a').close()
+        
+        # Send initial connection message
+        yield "data: Connected to log stream\n\n"
+        
+        try:
+            last_position = 0
+            last_size = 0
+            
+            while True:
+                try:
+                    # Check if file exists and get current size
+                    current_size = os.path.getsize(log_file) if os.path.exists(log_file) else 0
+                    
+                    # If file was truncated or deleted, reset position
+                    if current_size < last_size:
+                        last_position = 0
+                        last_size = 0
+                        yield "data: Log file was truncated, resetting...\n\n"
+                    
+                    # If file has new content
+                    if current_size > last_position:
+                        with open(log_file, 'r') as f:
+                            f.seek(last_position)
+                            new_lines = f.readlines()
+                            for line in new_lines:
+                                if line.strip():
+                                    yield f"data: {line.strip()}\n\n"
+                            last_position = f.tell()
+                            last_size = current_size
+                    
+                    # Send heartbeat every 5 seconds
+                    await asyncio.sleep(5)
+                    yield "data: ♥\n\n"
+                    
+                except Exception as e:
+                    logger.error(f"Error reading log file: {e}")
+                    yield f"data: Error reading log file: {e}\n\n"
+                    await asyncio.sleep(5)  # Wait before retrying
+            
+        except Exception as e:
+            yield f"data: Error in log stream: {str(e)}\n\n"
+            logger.error(f"Error in log stream: {e}")
+
+    return Response(
+        generate(),
+        mimetype='text/event-stream',
+        headers={
+            'Cache-Control': 'no-cache',
+            'Connection': 'keep-alive',
+            'Content-Type': 'text/event-stream'
+        }
+    )
+
 if __name__ == '__main__':
     config = Config()
     config.bind = ["0.0.0.0:5000"]

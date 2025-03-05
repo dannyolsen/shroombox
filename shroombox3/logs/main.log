@@ -583,3 +583,1136 @@ Initializing PIDs:
 2025-03-05 19:51:25,637 - shroombox - WARNING - Warning: No sensor available
 2025-03-05 19:51:25,638 - shroombox - INFO - Using InfluxDB for measurements
 2025-03-05 19:51:25,710 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.3, 'co2': 535.9}
+2025-03-05 19:51:33,266 - shroombox - INFO - Successful measurement at 19:51:33 - CO2: 535.47ppm, Temp: 21.69°C, RH: 31.44%
+2025-03-05 19:51:33,267 - shroombox - INFO - Live measurements - Temp: 21.69°C, RH: 31.44%, CO2: 535.47ppm
+2025-03-05 19:51:33,306 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:51:33,307 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:51:33,363 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 535.6}
+2025-03-05 19:51:41,916 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:51:41,916 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:51:41,994 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 535.7}
+2025-03-05 19:51:42,016 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:51:42,016 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:51:42,055 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 535.7}
+2025-03-05 19:51:52,708 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:51:52,709 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:51:52,761 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 535.5}
+2025-03-05 19:51:52,820 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:51:52,821 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:51:52,869 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 535.5}
+2025-03-05 19:51:58,461 - shroombox - INFO - Successful measurement at 19:51:58 - CO2: 535.32ppm, Temp: 21.66°C, RH: 31.37%
+2025-03-05 19:51:58,461 - shroombox - INFO - Live measurements - Temp: 21.66°C, RH: 31.37%, CO2: 535.32ppm
+2025-03-05 19:51:58,561 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:51:58,562 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:51:58,599 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 535.5}
+2025-03-05 19:52:33,389 - shroombox - INFO - Successful measurement at 19:52:33 - CO2: 533.63ppm, Temp: 21.68°C, RH: 31.39%
+2025-03-05 19:52:33,390 - shroombox - INFO - Live measurements - Temp: 21.68°C, RH: 31.39%, CO2: 533.63ppm
+2025-03-05 19:52:33,468 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:52:33,468 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:52:33,504 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 533.4}
+2025-03-05 19:52:56,628 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:52:56,629 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:52:56,679 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 534.8}
+2025-03-05 19:52:56,704 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:52:56,704 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:52:56,751 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 534.8}
+2025-03-05 19:53:36,520 - shroombox - INFO - Successful measurement at 19:53:36 - CO2: 538.13ppm, Temp: 21.69°C, RH: 31.37%
+2025-03-05 19:53:36,521 - shroombox - INFO - Live measurements - Temp: 21.69°C, RH: 31.37%, CO2: 538.13ppm
+2025-03-05 19:53:36,627 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:53:36,627 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:53:36,708 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 537.4}
+2025-03-05 19:53:41,614 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:53:41,615 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:53:41,661 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 538.8}
+2025-03-05 19:53:41,679 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:53:41,679 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:53:41,735 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 538.8}
+2025-03-05 19:53:46,687 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:53:46,688 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:53:46,738 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.3, 'co2': 539.8}
+2025-03-05 19:53:46,753 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:53:46,754 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:53:46,806 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.3, 'co2': 539.8}
+2025-03-05 19:53:52,761 - shroombox - INFO - Successful measurement at 19:53:52 - CO2: 539.12ppm, Temp: 21.68°C, RH: 31.39%
+2025-03-05 19:53:52,762 - shroombox - INFO - Live measurements - Temp: 21.68°C, RH: 31.39%, CO2: 539.12ppm
+2025-03-05 19:53:52,846 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:53:52,847 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:53:52,896 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 539.6}
+2025-03-05 19:54:01,511 - shroombox - INFO - Successful measurement at 19:54:01 - CO2: 539.18ppm, Temp: 21.66°C, RH: 31.32%
+2025-03-05 19:54:01,511 - shroombox - INFO - Live measurements - Temp: 21.66°C, RH: 31.32%, CO2: 539.18ppm
+2025-03-05 19:54:01,575 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:54:01,575 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:54:01,626 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 539.5}
+2025-03-05 19:54:14,872 - shroombox - INFO - Successful measurement at 19:54:14 - CO2: 538.59ppm, Temp: 21.69°C, RH: 31.39%
+2025-03-05 19:54:14,872 - shroombox - INFO - Live measurements - Temp: 21.69°C, RH: 31.39%, CO2: 538.59ppm
+2025-03-05 19:54:15,003 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:54:15,003 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:54:15,040 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 538.5}
+2025-03-05 19:54:21,039 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:54:21,039 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:54:21,079 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 538.8}
+2025-03-05 19:54:21,273 - shroombox - INFO - Successful measurement at 19:54:21 - CO2: 539.01ppm, Temp: 21.69°C, RH: 31.41%
+2025-03-05 19:54:21,273 - shroombox - INFO - Live measurements - Temp: 21.69°C, RH: 31.41%, CO2: 539.01ppm
+2025-03-05 19:54:36,070 - shroombox - INFO - Successful measurement at 19:54:36 - CO2: 539.0ppm, Temp: 21.68°C, RH: 31.37%
+2025-03-05 19:54:36,070 - shroombox - INFO - Live measurements - Temp: 21.68°C, RH: 31.37%, CO2: 539.0ppm
+2025-03-05 19:54:36,130 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:54:36,131 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:54:36,200 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.3, 'co2': 539.6}
+2025-03-05 19:54:41,155 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:54:41,156 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:54:41,206 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 539.7}
+2025-03-05 19:54:41,219 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:54:41,220 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:54:41,270 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 539.7}
+2025-03-05 19:54:49,163 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:54:49,164 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:54:49,213 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 539.6}
+2025-03-05 19:54:49,257 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:54:49,258 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:54:49,308 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 539.6}
+2025-03-05 19:54:54,208 - shroombox - INFO - Successful measurement at 19:54:54 - CO2: 539.97ppm, Temp: 21.68°C, RH: 31.33%
+2025-03-05 19:54:54,209 - shroombox - INFO - Live measurements - Temp: 21.68°C, RH: 31.33%, CO2: 539.97ppm
+2025-03-05 19:54:54,228 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:54:54,228 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:54:54,276 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 539.8}
+2025-03-05 19:55:00,156 - shroombox - INFO - Successful measurement at 19:55:00 - CO2: 539.99ppm, Temp: 21.68°C, RH: 31.39%
+2025-03-05 19:55:00,157 - shroombox - INFO - Live measurements - Temp: 21.68°C, RH: 31.39%, CO2: 539.99ppm
+2025-03-05 19:55:00,221 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:55:00,222 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:55:00,270 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 540.7}
+2025-03-05 19:55:06,192 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:55:06,193 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:55:06,254 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 539.3}
+2025-03-05 19:55:06,291 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:55:06,291 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:55:06,342 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 539.3}
+2025-03-05 19:55:18,126 - shroombox - INFO - Successful measurement at 19:55:18 - CO2: 538.65ppm, Temp: 21.68°C, RH: 31.4%
+2025-03-05 19:55:18,127 - shroombox - INFO - Live measurements - Temp: 21.68°C, RH: 31.4%, CO2: 538.65ppm
+2025-03-05 19:55:18,212 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:55:18,212 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:55:18,284 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 539.2}
+2025-03-05 19:55:37,635 - shroombox - INFO - Successful measurement at 19:55:37 - CO2: 538.68ppm, Temp: 21.68°C, RH: 31.37%
+2025-03-05 19:55:37,636 - shroombox - INFO - Live measurements - Temp: 21.68°C, RH: 31.37%, CO2: 538.68ppm
+2025-03-05 19:55:37,731 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:55:37,732 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:55:37,783 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.3, 'co2': 539.0}
+2025-03-05 19:56:04,884 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:56:04,884 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:56:04,932 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.3, 'co2': 538.0}
+2025-03-05 19:56:05,026 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:56:05,027 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:56:05,075 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.3, 'co2': 538.0}
+2025-03-05 19:56:42,637 - shroombox - INFO - Successful measurement at 19:56:42 - CO2: 537.52ppm, Temp: 21.69°C, RH: 31.34%
+2025-03-05 19:56:42,638 - shroombox - INFO - Live measurements - Temp: 21.69°C, RH: 31.34%, CO2: 537.52ppm
+2025-03-05 19:56:42,719 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:56:42,719 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:56:42,773 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.3, 'co2': 537.2}
+2025-03-05 19:56:57,450 - shroombox - INFO - Successful measurement at 19:56:57 - CO2: 536.85ppm, Temp: 21.68°C, RH: 31.37%
+2025-03-05 19:56:57,451 - shroombox - INFO - Live measurements - Temp: 21.68°C, RH: 31.37%, CO2: 536.85ppm
+2025-03-05 19:56:57,615 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:56:57,616 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:56:57,664 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 536.5}
+2025-03-05 19:57:38,695 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:57:38,696 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:57:38,744 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 538.5}
+2025-03-05 19:57:38,757 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:57:38,757 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:57:38,804 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 538.5}
+2025-03-05 19:58:16,504 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:58:16,505 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:58:16,557 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 539.4}
+2025-03-05 19:58:16,641 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:58:16,641 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:58:16,693 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 539.4}
+2025-03-05 19:58:56,517 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:58:56,517 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:58:56,563 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 540.4}
+2025-03-05 19:58:56,586 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:58:56,587 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:58:56,637 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 540.4}
+2025-03-05 19:59:17,977 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:59:17,978 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:59:18,029 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.3, 'co2': 538.8}
+2025-03-05 19:59:18,092 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:59:18,092 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:59:18,167 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.3, 'co2': 538.8}
+2025-03-05 19:59:22,949 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:59:22,950 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:59:22,998 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.3, 'co2': 539.2}
+2025-03-05 19:59:23,015 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:59:23,016 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:59:23,070 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.3, 'co2': 539.2}
+2025-03-05 19:59:28,159 - shroombox - INFO - Successful measurement at 19:59:28 - CO2: 538.74ppm, Temp: 21.68°C, RH: 31.37%
+2025-03-05 19:59:28,160 - shroombox - INFO - Live measurements - Temp: 21.68°C, RH: 31.37%, CO2: 538.74ppm
+2025-03-05 19:59:28,268 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:59:28,268 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:59:28,317 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 539.0}
+2025-03-05 19:59:33,193 - shroombox - INFO - Successful measurement at 19:59:33 - CO2: 538.91ppm, Temp: 21.68°C, RH: 31.34%
+2025-03-05 19:59:33,194 - shroombox - INFO - Live measurements - Temp: 21.68°C, RH: 31.34%, CO2: 538.91ppm
+2025-03-05 19:59:33,207 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:59:33,208 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:59:33,254 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 539.0}
+2025-03-05 19:59:39,764 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:59:39,764 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:59:39,813 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 539.2}
+2025-03-05 19:59:39,850 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:59:39,851 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:59:39,899 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 539.2}
+2025-03-05 19:59:45,864 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:59:45,865 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:59:45,920 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 538.9}
+2025-03-05 19:59:45,937 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:59:45,938 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:59:45,999 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 538.9}
+2025-03-05 19:59:50,914 - shroombox - INFO - Successful measurement at 19:59:50 - CO2: 539.65ppm, Temp: 21.68°C, RH: 31.36%
+2025-03-05 19:59:50,919 - shroombox - INFO - Live measurements - Temp: 21.68°C, RH: 31.36%, CO2: 539.65ppm
+2025-03-05 19:59:50,939 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:59:50,940 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:59:51,065 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 539.6}
+2025-03-05 19:59:55,978 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:59:55,979 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:59:56,029 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 540.0}
+2025-03-05 19:59:56,051 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 19:59:56,052 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 19:59:56,111 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 540.0}
+2025-03-05 20:00:00,982 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:00:00,983 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:00:01,032 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 540.0}
+2025-03-05 20:00:01,044 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:00:01,044 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:00:01,092 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 540.0}
+2025-03-05 20:00:05,979 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:00:05,979 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:00:06,028 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.3, 'co2': 539.9}
+2025-03-05 20:00:06,519 - shroombox - INFO - Successful measurement at 20:00:06 - CO2: nanppm, Temp: nan°C, RH: nan%
+2025-03-05 20:00:06,520 - shroombox - INFO - Live measurements - Temp: nan°C, RH: nan%, CO2: nanppm
+2025-03-05 20:00:11,008 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:00:11,009 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:00:11,057 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 538.8}
+2025-03-05 20:00:11,087 - shroombox - INFO - Successful measurement at 20:00:11 - CO2: 539.33ppm, Temp: 21.68°C, RH: 31.37%
+2025-03-05 20:00:11,088 - shroombox - INFO - Live measurements - Temp: 21.68°C, RH: 31.37%, CO2: 539.33ppm
+2025-03-05 20:00:17,033 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:00:17,033 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:00:17,082 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 540.0}
+2025-03-05 20:00:17,125 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:00:17,126 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:00:17,178 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 540.0}
+2025-03-05 20:00:26,794 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:00:26,795 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:00:26,864 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.3, 'co2': 538.8}
+2025-03-05 20:00:26,891 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:00:26,893 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:00:26,949 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.3, 'co2': 538.8}
+2025-03-05 20:00:34,661 - shroombox - INFO - Successful measurement at 20:00:34 - CO2: 539.04ppm, Temp: 21.69°C, RH: 31.39%
+2025-03-05 20:00:34,661 - shroombox - INFO - Live measurements - Temp: 21.69°C, RH: 31.39%, CO2: 539.04ppm
+2025-03-05 20:00:34,723 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:00:34,723 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:00:34,771 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 539.2}
+2025-03-05 20:00:51,485 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:00:51,486 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:00:51,563 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.3, 'co2': 540.0}
+2025-03-05 20:00:51,580 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:00:51,581 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:00:51,628 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.3, 'co2': 540.0}
+2025-03-05 20:01:23,956 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:01:23,956 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:01:24,034 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.3, 'co2': 540.1}
+2025-03-05 20:01:24,106 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:01:24,107 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:01:24,178 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.3, 'co2': 540.1}
+2025-03-05 20:01:36,519 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:01:36,519 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:01:36,572 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 541.2}
+2025-03-05 20:01:36,683 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:01:36,684 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:01:36,739 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 541.2}
+2025-03-05 20:02:16,550 - shroombox - INFO - Successful measurement at 20:02:16 - CO2: 542.91ppm, Temp: 21.68°C, RH: 31.34%
+2025-03-05 20:02:16,551 - shroombox - INFO - Live measurements - Temp: 21.68°C, RH: 31.34%, CO2: 542.91ppm
+2025-03-05 20:02:16,614 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:02:16,615 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:02:16,666 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 542.8}
+2025-03-05 20:02:56,555 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:02:56,555 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:02:56,605 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 541.5}
+2025-03-05 20:02:56,762 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:02:56,762 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:02:56,816 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 541.5}
+2025-03-05 20:03:36,511 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:03:36,512 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:03:36,560 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.2, 'co2': 537.3}
+2025-03-05 20:03:36,602 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:03:36,603 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:03:36,648 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.2, 'co2': 537.3}
+2025-03-05 20:04:16,603 - shroombox - INFO - Successful measurement at 20:04:16 - CO2: 533.14ppm, Temp: 21.65°C, RH: 31.32%
+2025-03-05 20:04:16,603 - shroombox - INFO - Live measurements - Temp: 21.65°C, RH: 31.32%, CO2: 533.14ppm
+2025-03-05 20:04:16,674 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:04:16,675 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:04:16,736 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.3, 'co2': 532.7}
+2025-03-05 20:04:43,992 - shroombox - INFO - Received shutdown signal, cleaning up...
+2025-03-05 20:04:44,004 - shroombox - INFO - 
+=== Cleaning up resources ===
+2025-03-05 20:04:44,004 - shroombox - INFO - ✓ Fan stopped
+2025-03-05 20:04:44,005 - shroombox - ERROR - ❌ Error turning off heater: 'EnvironmentController' object has no attribute 'control_heater'
+2025-03-05 20:04:44,005 - shroombox - ERROR - ❌ Error turning off humidifier: 'EnvironmentController' object has no attribute 'control_humidifier'
+2025-03-05 20:04:44,005 - shroombox - INFO - ✓ InfluxDB client closed
+2025-03-05 20:04:44,005 - shroombox - INFO - ✓ Cleanup completed
+2025-03-05 20:04:49,009 - shroombox - INFO - 
+=== Cleaning up resources ===
+2025-03-05 20:04:49,011 - shroombox - INFO - ✓ Fan stopped
+2025-03-05 20:04:49,012 - shroombox - ERROR - ❌ Error turning off heater: 'EnvironmentController' object has no attribute 'control_heater'
+2025-03-05 20:04:49,012 - shroombox - ERROR - ❌ Error turning off humidifier: 'EnvironmentController' object has no attribute 'control_humidifier'
+2025-03-05 20:04:49,013 - shroombox - INFO - ✓ InfluxDB client closed
+2025-03-05 20:04:49,014 - shroombox - INFO - ✓ Cleanup completed
+2025-03-05 20:04:53,706 - shroombox - INFO - Environment variables loaded:
+2025-03-05 20:04:53,706 - shroombox - INFO - INFLUXDB_URL: http://localhost:8086
+2025-03-05 20:04:53,707 - shroombox - INFO - INFLUXDB_ORG: supershrooms
+2025-03-05 20:04:53,707 - shroombox - INFO - INFLUXDB_BUCKET: test
+2025-03-05 20:04:53,708 - shroombox - INFO - ==================================================
+2025-03-05 20:04:53,745 - shroombox - INFO - Checking I2C bus before sensor initialization...
+2025-03-05 20:04:53,751 - shroombox - WARNING - Could not check I2C bus: [Errno 2] No such file or directory: 'i2cdetect'
+2025-03-05 20:04:53,752 - shroombox - INFO - Initializing SCD30 sensor...
+2025-03-05 20:04:53,775 - shroombox - INFO - SCD30 sensor initialized successfully
+2025-03-05 20:04:53,782 - shroombox - WARNING - SCD30 sensor not available (expected at address 0x61), continuing in monitoring-only mode
+2025-03-05 20:04:53,782 - shroombox - INFO - Please check: 
+1. Power connections to the sensor
+2. I2C connections (SDA and SCL)
+3. Pull-up resistors on I2C lines
+2025-03-05 20:04:53,783 - shroombox - INFO - Current working directory: /home/danny/Github/shroombox/shroombox3
+2025-03-05 20:04:53,783 - shroombox - INFO - Looking for config at: /home/danny/Github/shroombox/shroombox3/config/settings.json
+2025-03-05 20:04:53,784 - shroombox - INFO - Loading config from: /home/danny/Github/shroombox/shroombox3/config/settings.json
+2025-03-05 20:04:53,785 - shroombox - INFO - Initializing SCD30 sensor...
+2025-03-05 20:04:53,807 - shroombox - INFO - SCD30 sensor initialized successfully
+2025-03-05 20:04:53,808 - shroombox - INFO - Loaded device assignments - Heater: 192.168.8.164, Humidifier: 192.168.8.181
+2025-03-05 20:04:53,808 - shroombox - INFO - 
+Initializing PIDs:
+2025-03-05 20:04:53,808 - shroombox - INFO - Phase: colonisation
+2025-03-05 20:04:53,809 - shroombox - INFO - RH Setpoint: 20.0
+2025-03-05 20:04:53,809 - shroombox - INFO - CO2 Setpoint: 400
+2025-03-05 20:04:53,810 - shroombox - INFO - 
+=== Initializing InfluxDB Client ===
+2025-03-05 20:04:53,810 - shroombox - INFO - URL: http://localhost:8086
+2025-03-05 20:04:53,811 - shroombox - INFO - Organization: supershrooms
+2025-03-05 20:04:53,812 - shroombox - INFO - Bucket: test
+2025-03-05 20:04:53,837 - shroombox - INFO - ✓ InfluxDB connection test successful
+2025-03-05 20:04:53,839 - shroombox - INFO - Controller initialized successfully (monitoring-only mode)
+2025-03-05 20:04:56,507 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:04:56,508 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:04:56,558 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 534.5}
+2025-03-05 20:04:56,651 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:04:56,652 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:04:56,706 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 534.5}
+2025-03-05 20:05:01,253 - shroombox - INFO - Attempting to render index.html
+2025-03-05 20:05:01,568 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:05:01,569 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:05:01,615 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 534.6}
+2025-03-05 20:05:01,733 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:05:01,733 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:05:01,788 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 534.6}
+2025-03-05 20:05:06,567 - shroombox - INFO - Successful measurement at 20:05:06 - CO2: 533.94ppm, Temp: 21.68°C, RH: 31.42%
+2025-03-05 20:05:06,568 - shroombox - INFO - Live measurements - Temp: 21.68°C, RH: 31.42%, CO2: 533.94ppm
+2025-03-05 20:05:06,584 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:05:06,585 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:05:06,634 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.4, 'co2': 534.9}
+2025-03-05 20:05:11,596 - shroombox - INFO - Successful measurement at 20:05:11 - CO2: 534.98ppm, Temp: 21.66°C, RH: 31.37%
+2025-03-05 20:05:11,597 - shroombox - INFO - Live measurements - Temp: 21.66°C, RH: 31.37%, CO2: 534.98ppm
+2025-03-05 20:05:11,698 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:05:11,699 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:05:11,753 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 534.7}
+2025-03-05 20:05:16,585 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:05:16,586 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:05:16,637 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.4, 'co2': 534.9}
+2025-03-05 20:05:16,649 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:05:16,650 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:05:16,736 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.4, 'co2': 534.9}
+2025-03-05 20:05:21,572 - shroombox - INFO - Successful measurement at 20:05:21 - CO2: 534.37ppm, Temp: 21.65°C, RH: 31.32%
+2025-03-05 20:05:21,573 - shroombox - INFO - Live measurements - Temp: 21.65°C, RH: 31.32%, CO2: 534.37ppm
+2025-03-05 20:05:21,588 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:05:21,588 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:05:21,640 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.4, 'co2': 534.6}
+2025-03-05 20:05:26,710 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:05:26,711 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:05:26,761 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 534.1}
+2025-03-05 20:05:26,849 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:05:26,849 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:05:26,904 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 534.1}
+2025-03-05 20:05:31,809 - shroombox - INFO - Successful measurement at 20:05:31 - CO2: 534.51ppm, Temp: 21.66°C, RH: 31.39%
+2025-03-05 20:05:31,810 - shroombox - INFO - Live measurements - Temp: 21.66°C, RH: 31.39%, CO2: 534.51ppm
+2025-03-05 20:05:31,844 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:05:31,845 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:05:31,916 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.4, 'co2': 534.7}
+2025-03-05 20:05:40,198 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:05:40,199 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:05:40,247 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 534.1}
+2025-03-05 20:05:40,274 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:05:40,275 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:05:40,324 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 534.1}
+2025-03-05 20:05:50,371 - shroombox - INFO - Successful measurement at 20:05:50 - CO2: nanppm, Temp: nan°C, RH: nan%
+2025-03-05 20:05:50,372 - shroombox - INFO - Live measurements - Temp: nan°C, RH: nan%, CO2: nanppm
+2025-03-05 20:05:50,433 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:05:50,433 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:05:50,490 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 534.6}
+2025-03-05 20:06:08,006 - shroombox - INFO - Successful measurement at 20:06:08 - CO2: 535.52ppm, Temp: 21.65°C, RH: 31.45%
+2025-03-05 20:06:08,007 - shroombox - INFO - Live measurements - Temp: 21.65°C, RH: 31.45%, CO2: 535.52ppm
+2025-03-05 20:06:08,074 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:06:08,075 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:06:08,133 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.4, 'co2': 535.6}
+2025-03-05 20:06:40,283 - shroombox - INFO - Received shutdown signal, cleaning up...
+2025-03-05 20:06:40,325 - shroombox - INFO - 
+=== Cleaning up resources ===
+2025-03-05 20:06:40,326 - shroombox - INFO - ✓ Fan stopped
+2025-03-05 20:06:40,326 - shroombox - ERROR - ❌ Error turning off heater: 'EnvironmentController' object has no attribute 'control_heater'
+2025-03-05 20:06:40,327 - shroombox - ERROR - ❌ Error turning off humidifier: 'EnvironmentController' object has no attribute 'control_humidifier'
+2025-03-05 20:06:40,327 - shroombox - INFO - ✓ InfluxDB client closed
+2025-03-05 20:06:40,328 - shroombox - INFO - ✓ Cleanup completed
+2025-03-05 20:06:45,331 - shroombox - INFO - 
+=== Cleaning up resources ===
+2025-03-05 20:06:45,332 - shroombox - INFO - ✓ Fan stopped
+2025-03-05 20:06:45,332 - shroombox - ERROR - ❌ Error turning off heater: 'EnvironmentController' object has no attribute 'control_heater'
+2025-03-05 20:06:45,333 - shroombox - ERROR - ❌ Error turning off humidifier: 'EnvironmentController' object has no attribute 'control_humidifier'
+2025-03-05 20:06:45,334 - shroombox - INFO - ✓ InfluxDB client closed
+2025-03-05 20:06:45,334 - shroombox - INFO - ✓ Cleanup completed
+2025-03-05 20:06:50,031 - shroombox - INFO - Environment variables loaded:
+2025-03-05 20:06:50,032 - shroombox - INFO - INFLUXDB_URL: http://localhost:8086
+2025-03-05 20:06:50,032 - shroombox - INFO - INFLUXDB_ORG: supershrooms
+2025-03-05 20:06:50,033 - shroombox - INFO - INFLUXDB_BUCKET: test
+2025-03-05 20:06:50,033 - shroombox - INFO - ==================================================
+2025-03-05 20:06:50,073 - shroombox - INFO - Checking I2C bus before sensor initialization...
+2025-03-05 20:06:50,075 - shroombox - WARNING - Could not check I2C bus: [Errno 2] No such file or directory: 'i2cdetect'
+2025-03-05 20:06:50,075 - shroombox - INFO - Initializing SCD30 sensor...
+2025-03-05 20:06:50,090 - shroombox - INFO - SCD30 sensor initialized successfully
+2025-03-05 20:06:50,101 - shroombox - WARNING - SCD30 sensor not available (expected at address 0x61), continuing in monitoring-only mode
+2025-03-05 20:06:50,101 - shroombox - INFO - Please check: 
+1. Power connections to the sensor
+2. I2C connections (SDA and SCL)
+3. Pull-up resistors on I2C lines
+2025-03-05 20:06:50,102 - shroombox - INFO - Current working directory: /home/danny/Github/shroombox/shroombox3
+2025-03-05 20:06:50,102 - shroombox - INFO - Looking for config at: /home/danny/Github/shroombox/shroombox3/config/settings.json
+2025-03-05 20:06:50,102 - shroombox - INFO - Loading config from: /home/danny/Github/shroombox/shroombox3/config/settings.json
+2025-03-05 20:06:50,103 - shroombox - INFO - Initializing SCD30 sensor...
+2025-03-05 20:06:50,116 - shroombox - INFO - SCD30 sensor initialized successfully
+2025-03-05 20:06:50,117 - shroombox - INFO - Loaded device assignments - Heater: 192.168.8.164, Humidifier: 192.168.8.181
+2025-03-05 20:06:50,118 - shroombox - INFO - 
+Initializing PIDs:
+2025-03-05 20:06:50,118 - shroombox - INFO - Phase: colonisation
+2025-03-05 20:06:50,119 - shroombox - INFO - RH Setpoint: 20.0
+2025-03-05 20:06:50,119 - shroombox - INFO - CO2 Setpoint: 400
+2025-03-05 20:06:50,120 - shroombox - INFO - 
+=== Initializing InfluxDB Client ===
+2025-03-05 20:06:50,121 - shroombox - INFO - URL: http://localhost:8086
+2025-03-05 20:06:50,121 - shroombox - INFO - Organization: supershrooms
+2025-03-05 20:06:50,122 - shroombox - INFO - Bucket: test
+2025-03-05 20:06:50,148 - shroombox - INFO - ✓ InfluxDB connection test successful
+2025-03-05 20:06:50,149 - shroombox - INFO - Controller initialized successfully (monitoring-only mode)
+2025-03-05 20:06:52,197 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:06:52,198 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:06:52,277 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 534.9}
+2025-03-05 20:06:52,340 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:06:52,341 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:06:52,394 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 534.9}
+2025-03-05 20:06:54,529 - shroombox - INFO - Attempting to render index.html
+2025-03-05 20:06:54,870 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:06:54,870 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:06:54,924 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.4, 'co2': 535.4}
+2025-03-05 20:06:54,986 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:06:54,986 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:06:55,081 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.4, 'co2': 535.4}
+2025-03-05 20:06:59,894 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:06:59,895 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:06:59,943 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.4, 'co2': 535.2}
+2025-03-05 20:06:59,955 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:06:59,955 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:07:00,007 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.4, 'co2': 535.2}
+2025-03-05 20:07:04,908 - shroombox - INFO - Successful measurement at 20:07:04 - CO2: 535.45ppm, Temp: 21.65°C, RH: 31.37%
+2025-03-05 20:07:04,909 - shroombox - INFO - Live measurements - Temp: 21.65°C, RH: 31.37%, CO2: 535.45ppm
+2025-03-05 20:07:04,921 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:07:04,922 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:07:04,976 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.4, 'co2': 535.1}
+2025-03-05 20:07:09,864 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:07:09,864 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:07:09,915 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.4, 'co2': 534.8}
+2025-03-05 20:07:09,927 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:07:09,927 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:07:09,980 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.4, 'co2': 534.8}
+2025-03-05 20:07:14,876 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:07:14,921 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:07:14,970 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.4, 'co2': 535.5}
+2025-03-05 20:07:14,985 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:07:14,986 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:07:15,064 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.4, 'co2': 535.5}
+2025-03-05 20:07:19,960 - shroombox - INFO - Successful measurement at 20:07:19 - CO2: 535.65ppm, Temp: 21.65°C, RH: 31.42%
+2025-03-05 20:07:19,962 - shroombox - INFO - Live measurements - Temp: 21.65°C, RH: 31.42%, CO2: 535.65ppm
+2025-03-05 20:07:19,988 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:07:19,989 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:07:20,061 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.4, 'co2': 535.1}
+2025-03-05 20:07:20,207 - INFO - Logging to: /home/danny/Github/shroombox/shroombox3/logs/main.log
+2025-03-05 20:07:20,210 - INFO - Environment variables loaded:
+2025-03-05 20:07:20,210 - INFO - INFLUXDB_URL: http://localhost:8086
+2025-03-05 20:07:20,211 - INFO - INFLUXDB_ORG: supershrooms
+2025-03-05 20:07:20,211 - INFO - INFLUXDB_BUCKET: test
+2025-03-05 20:07:20,211 - INFO - ==================================================
+2025-03-05 20:07:22,462 - INFO - 
+=== Starting Initial Device Scan ===
+2025-03-05 20:07:22,463 - INFO - 
+Before scan - Current settings in settings.json:
+2025-03-05 20:07:22,464 - INFO - Number of devices: 2
+2025-03-05 20:07:22,465 - INFO -   - heatmat (192.168.8.164) - Role: heater
+2025-03-05 20:07:22,465 - INFO -   - Humidifier (192.168.8.181) - Role: humidifier
+2025-03-05 20:07:22,466 - INFO - 
+Scanning for devices...
+2025-03-05 20:07:24,297 - shroombox - INFO - Attempting to render index.html
+2025-03-05 20:07:24,559 - shroombox - INFO - Successful measurement at 20:07:24 - CO2: 535.4ppm, Temp: 21.65°C, RH: 31.41%
+2025-03-05 20:07:24,560 - shroombox - INFO - Live measurements - Temp: 21.65°C, RH: 31.41%, CO2: 535.4ppm
+2025-03-05 20:07:24,624 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:07:24,624 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:07:24,672 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.4, 'co2': 535.1}
+2025-03-05 20:07:28,210 - INFO - 
+After scan - Updated settings in settings.json:
+2025-03-05 20:07:28,212 - INFO - 
+Found and saved 2 devices:
+2025-03-05 20:07:28,212 - INFO - 
+Device Details:
+2025-03-05 20:07:28,213 - INFO -   Name: Humidifier
+2025-03-05 20:07:28,214 - INFO -   IP: 192.168.8.181
+2025-03-05 20:07:28,215 - INFO -   MAC: B0-19-21-C4-C9-9D
+2025-03-05 20:07:28,216 - INFO -   Model: P115
+2025-03-05 20:07:28,216 - INFO -   Role: humidifier
+2025-03-05 20:07:28,216 - INFO -   State: ON
+2025-03-05 20:07:28,217 - INFO - 
+Device Details:
+2025-03-05 20:07:28,217 - INFO -   Name: heatmat
+2025-03-05 20:07:28,217 - INFO -   IP: 192.168.8.164
+2025-03-05 20:07:28,218 - INFO -   MAC: B0-19-21-C4-CE-97
+2025-03-05 20:07:28,218 - INFO -   Model: P115
+2025-03-05 20:07:28,219 - INFO -   Role: heater
+2025-03-05 20:07:28,219 - INFO -   State: ON
+2025-03-05 20:07:28,220 - INFO - 
+Changes detected in settings.json!
+2025-03-05 20:07:28,220 - INFO - Settings file has been updated with new device information.
+2025-03-05 20:07:28,220 - INFO - 
+=== Device Scan Complete ===
+
+2025-03-05 20:07:28,221 - INFO - Current working directory: /home/danny/Github/shroombox/shroombox3
+2025-03-05 20:07:28,221 - INFO - Looking for config at: /home/danny/Github/shroombox/shroombox3/config/settings.json
+2025-03-05 20:07:28,221 - INFO - Loading config from: /home/danny/Github/shroombox/shroombox3/config/settings.json
+2025-03-05 20:07:28,222 - INFO - Initializing SCD30 sensor...
+2025-03-05 20:07:28,236 - INFO - SCD30 sensor initialized successfully
+2025-03-05 20:07:28,237 - INFO - Loaded device assignments - Heater: 192.168.8.164, Humidifier: 192.168.8.181
+2025-03-05 20:07:28,237 - INFO - 
+Initializing PIDs:
+2025-03-05 20:07:28,238 - INFO - Phase: colonisation
+2025-03-05 20:07:28,238 - INFO - RH Setpoint: 20.0
+2025-03-05 20:07:28,238 - INFO - CO2 Setpoint: 400
+2025-03-05 20:07:28,239 - INFO - 
+=== Initializing InfluxDB Client ===
+2025-03-05 20:07:28,239 - INFO - URL: http://localhost:8086
+2025-03-05 20:07:28,240 - INFO - Organization: supershrooms
+2025-03-05 20:07:28,240 - INFO - Bucket: test
+2025-03-05 20:07:28,272 - INFO - ✓ InfluxDB connection test successful
+2025-03-05 20:07:29,559 - shroombox - INFO - Successful measurement at 20:07:29 - CO2: 535.03ppm, Temp: 21.65°C, RH: 31.39%
+2025-03-05 20:07:29,560 - shroombox - INFO - Live measurements - Temp: 21.65°C, RH: 31.39%, CO2: 535.03ppm
+2025-03-05 20:07:29,575 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:07:29,575 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:07:29,622 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.4, 'co2': 535.1}
+2025-03-05 20:07:33,382 - INFO - 
+=== Starting Main Control Loop ===
+2025-03-05 20:07:33,404 - INFO - Successful measurement at 20:07:33 - CO2: 535.46ppm, Temp: 21.64°C, RH: 31.5%
+2025-03-05 20:07:33,405 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:07:33,523 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:07:34,579 - shroombox - INFO - Successful measurement at 20:07:34 - CO2: 535.53ppm, Temp: 21.65°C, RH: 31.45%
+2025-03-05 20:07:34,579 - shroombox - INFO - Live measurements - Temp: 21.65°C, RH: 31.45%, CO2: 535.53ppm
+2025-03-05 20:07:34,591 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:07:34,592 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:07:34,640 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.5, 'co2': 535.5}
+2025-03-05 20:07:35,749 - WARNING - Warning: No sensor available
+2025-03-05 20:07:37,771 - INFO - Successful measurement at 20:07:37 - CO2: 535.83ppm, Temp: 21.65°C, RH: 31.45%
+2025-03-05 20:07:37,772 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:07:37,784 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:07:39,659 - shroombox - INFO - Successful measurement at 20:07:39 - CO2: 535.73ppm, Temp: 21.64°C, RH: 31.37%
+2025-03-05 20:07:39,660 - shroombox - INFO - Live measurements - Temp: 21.64°C, RH: 31.37%, CO2: 535.73ppm
+2025-03-05 20:07:39,670 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:07:39,670 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:07:39,707 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.4, 'co2': 535.8}
+2025-03-05 20:07:39,816 - WARNING - Warning: No sensor available
+2025-03-05 20:07:41,837 - INFO - Successful measurement at 20:07:41 - CO2: 535.84ppm, Temp: 21.64°C, RH: 31.46%
+2025-03-05 20:07:41,837 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:07:41,859 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:07:43,903 - INFO - Successful measurement at 20:07:43 - CO2: 535.92ppm, Temp: 21.64°C, RH: 31.4%
+2025-03-05 20:07:43,904 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:07:43,918 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:07:44,744 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:07:44,744 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:07:44,781 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.4, 'co2': 535.9}
+2025-03-05 20:07:44,863 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:07:44,863 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:07:44,899 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.4, 'co2': 535.9}
+2025-03-05 20:07:45,965 - INFO - Successful measurement at 20:07:45 - CO2: 535.94ppm, Temp: 21.64°C, RH: 31.4%
+2025-03-05 20:07:45,965 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:07:46,002 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:07:48,051 - INFO - Successful measurement at 20:07:48 - CO2: 536.43ppm, Temp: 21.66°C, RH: 31.44%
+2025-03-05 20:07:48,052 - INFO - Large temperature difference detected: current=21.66°C, setpoint=20.0°C
+2025-03-05 20:07:48,066 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:07:49,854 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:07:49,855 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:07:49,891 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 536.4}
+2025-03-05 20:07:49,903 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:07:49,903 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:07:49,947 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.4, 'co2': 536.4}
+2025-03-05 20:07:50,146 - INFO - Successful measurement at 20:07:50 - CO2: 536.34ppm, Temp: 21.66°C, RH: 31.41%
+2025-03-05 20:07:50,146 - INFO - Large temperature difference detected: current=21.66°C, setpoint=20.0°C
+2025-03-05 20:07:50,165 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:07:52,200 - WARNING - Warning: No sensor available
+2025-03-05 20:07:54,224 - INFO - Successful measurement at 20:07:54 - CO2: 536.18ppm, Temp: 21.65°C, RH: 31.45%
+2025-03-05 20:07:54,225 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:07:54,241 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:07:54,992 - shroombox - INFO - Successful measurement at 20:07:54 - CO2: 536.22ppm, Temp: 21.66°C, RH: 31.48%
+2025-03-05 20:07:54,993 - shroombox - INFO - Live measurements - Temp: 21.66°C, RH: 31.48%, CO2: 536.22ppm
+2025-03-05 20:07:55,144 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:07:55,146 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:07:55,198 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.4, 'co2': 536.2}
+2025-03-05 20:07:56,278 - WARNING - Warning: No sensor available
+2025-03-05 20:07:58,301 - INFO - Successful measurement at 20:07:58 - CO2: 536.36ppm, Temp: 21.64°C, RH: 31.5%
+2025-03-05 20:07:58,302 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:07:58,327 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:08:00,378 - INFO - Successful measurement at 20:08:00 - CO2: 536.34ppm, Temp: 21.64°C, RH: 31.45%
+2025-03-05 20:08:00,379 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:08:00,395 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:08:02,441 - INFO - Successful measurement at 20:08:02 - CO2: 536.57ppm, Temp: 21.61°C, RH: 31.4%
+2025-03-05 20:08:02,442 - INFO - Large temperature difference detected: current=21.61°C, setpoint=20.0°C
+2025-03-05 20:08:02,461 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:08:04,510 - INFO - Successful measurement at 20:08:04 - CO2: 536.81ppm, Temp: 21.65°C, RH: 31.41%
+2025-03-05 20:08:04,511 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:08:04,528 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:08:06,578 - INFO - Successful measurement at 20:08:06 - CO2: 537.04ppm, Temp: 21.65°C, RH: 31.42%
+2025-03-05 20:08:06,578 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:08:06,597 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:08:08,643 - INFO - Successful measurement at 20:08:08 - CO2: 537.18ppm, Temp: 21.65°C, RH: 31.44%
+2025-03-05 20:08:08,644 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:08:08,660 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:08:10,710 - INFO - Successful measurement at 20:08:10 - CO2: 537.38ppm, Temp: 21.66°C, RH: 31.52%
+2025-03-05 20:08:10,710 - INFO - Large temperature difference detected: current=21.66°C, setpoint=20.0°C
+2025-03-05 20:08:10,723 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:08:12,757 - WARNING - Warning: No sensor available
+2025-03-05 20:08:13,635 - shroombox - INFO - Successful measurement at 20:08:13 - CO2: 537.42ppm, Temp: 21.64°C, RH: 31.45%
+2025-03-05 20:08:13,636 - shroombox - INFO - Live measurements - Temp: 21.64°C, RH: 31.45%, CO2: 537.42ppm
+2025-03-05 20:08:13,725 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:08:13,726 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:08:13,773 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.5, 'co2': 537.4}
+2025-03-05 20:08:14,766 - WARNING - Warning: No sensor available
+2025-03-05 20:08:15,202 - shroombox - INFO - Received shutdown signal, cleaning up...
+2025-03-05 20:08:15,214 - shroombox - INFO - 
+=== Cleaning up resources ===
+2025-03-05 20:08:15,215 - shroombox - INFO - ✓ Fan stopped
+2025-03-05 20:08:15,216 - shroombox - ERROR - ❌ Error turning off heater: 'EnvironmentController' object has no attribute 'control_heater'
+2025-03-05 20:08:15,216 - shroombox - ERROR - ❌ Error turning off humidifier: 'EnvironmentController' object has no attribute 'control_humidifier'
+2025-03-05 20:08:15,216 - shroombox - INFO - ✓ InfluxDB client closed
+2025-03-05 20:08:15,217 - shroombox - INFO - ✓ Cleanup completed
+2025-03-05 20:08:16,789 - INFO - Successful measurement at 20:08:16 - CO2: 538.33ppm, Temp: 21.62°C, RH: 31.48%
+2025-03-05 20:08:16,789 - INFO - Large temperature difference detected: current=21.62°C, setpoint=20.0°C
+2025-03-05 20:08:16,812 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:08:18,859 - INFO - Successful measurement at 20:08:18 - CO2: 538.31ppm, Temp: 21.65°C, RH: 31.44%
+2025-03-05 20:08:18,860 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:08:18,876 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:08:20,222 - shroombox - INFO - 
+=== Cleaning up resources ===
+2025-03-05 20:08:20,222 - shroombox - INFO - ✓ Fan stopped
+2025-03-05 20:08:20,223 - shroombox - ERROR - ❌ Error turning off heater: 'EnvironmentController' object has no attribute 'control_heater'
+2025-03-05 20:08:20,224 - shroombox - ERROR - ❌ Error turning off humidifier: 'EnvironmentController' object has no attribute 'control_humidifier'
+2025-03-05 20:08:20,224 - shroombox - INFO - ✓ InfluxDB client closed
+2025-03-05 20:08:20,224 - shroombox - INFO - ✓ Cleanup completed
+2025-03-05 20:08:20,924 - INFO - Successful measurement at 20:08:20 - CO2: 538.61ppm, Temp: 21.62°C, RH: 31.4%
+2025-03-05 20:08:20,925 - INFO - Large temperature difference detected: current=21.62°C, setpoint=20.0°C
+2025-03-05 20:08:20,941 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:08:22,996 - INFO - Successful measurement at 20:08:22 - CO2: 539.12ppm, Temp: 21.64°C, RH: 31.46%
+2025-03-05 20:08:22,997 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:08:23,014 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:08:24,316 - shroombox - INFO - Environment variables loaded:
+2025-03-05 20:08:24,316 - shroombox - INFO - INFLUXDB_URL: http://localhost:8086
+2025-03-05 20:08:24,317 - shroombox - INFO - INFLUXDB_ORG: supershrooms
+2025-03-05 20:08:24,317 - shroombox - INFO - INFLUXDB_BUCKET: test
+2025-03-05 20:08:24,317 - shroombox - INFO - ==================================================
+2025-03-05 20:08:24,354 - shroombox - INFO - Checking I2C bus before sensor initialization...
+2025-03-05 20:08:24,356 - shroombox - WARNING - Could not check I2C bus: [Errno 2] No such file or directory: 'i2cdetect'
+2025-03-05 20:08:24,356 - shroombox - INFO - Initializing SCD30 sensor...
+2025-03-05 20:08:24,379 - shroombox - INFO - SCD30 sensor initialized successfully
+2025-03-05 20:08:24,385 - shroombox - INFO - Current working directory: /home/danny/Github/shroombox/shroombox3
+2025-03-05 20:08:24,386 - shroombox - INFO - Looking for config at: /home/danny/Github/shroombox/shroombox3/config/settings.json
+2025-03-05 20:08:24,386 - shroombox - INFO - Loading config from: /home/danny/Github/shroombox/shroombox3/config/settings.json
+2025-03-05 20:08:24,387 - shroombox - INFO - Initializing SCD30 sensor...
+2025-03-05 20:08:24,409 - shroombox - INFO - SCD30 sensor initialized successfully
+2025-03-05 20:08:24,409 - shroombox - INFO - Loaded device assignments - Heater: 192.168.8.164, Humidifier: 192.168.8.181
+2025-03-05 20:08:24,410 - shroombox - INFO - 
+Initializing PIDs:
+2025-03-05 20:08:24,410 - shroombox - INFO - Phase: colonisation
+2025-03-05 20:08:24,410 - shroombox - INFO - RH Setpoint: 20.0
+2025-03-05 20:08:24,411 - shroombox - INFO - CO2 Setpoint: 400
+2025-03-05 20:08:24,411 - shroombox - INFO - 
+=== Initializing InfluxDB Client ===
+2025-03-05 20:08:24,412 - shroombox - INFO - URL: http://localhost:8086
+2025-03-05 20:08:24,412 - shroombox - INFO - Organization: supershrooms
+2025-03-05 20:08:24,413 - shroombox - INFO - Bucket: test
+2025-03-05 20:08:24,468 - shroombox - INFO - ✓ InfluxDB connection test successful
+2025-03-05 20:08:24,469 - shroombox - INFO - Controller initialized successfully
+2025-03-05 20:08:25,039 - shroombox - INFO - Attempting to render index.html
+2025-03-05 20:08:25,076 - INFO - Successful measurement at 20:08:25 - CO2: 538.38ppm, Temp: 21.64°C, RH: 31.39%
+2025-03-05 20:08:25,076 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:08:25,090 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:08:25,842 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:08:25,842 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:08:25,898 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.4, 'co2': 538.4}
+2025-03-05 20:08:25,911 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:08:25,912 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:08:25,964 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.4, 'co2': 538.4}
+2025-03-05 20:08:27,137 - INFO - Successful measurement at 20:08:27 - CO2: 538.6ppm, Temp: 21.66°C, RH: 31.44%
+2025-03-05 20:08:27,138 - INFO - Large temperature difference detected: current=21.66°C, setpoint=20.0°C
+2025-03-05 20:08:27,156 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:08:29,203 - INFO - Successful measurement at 20:08:29 - CO2: 538.5ppm, Temp: 21.65°C, RH: 31.41%
+2025-03-05 20:08:29,203 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:08:29,219 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:08:31,266 - INFO - Successful measurement at 20:08:31 - CO2: 538.37ppm, Temp: 21.66°C, RH: 31.39%
+2025-03-05 20:08:31,266 - INFO - Large temperature difference detected: current=21.66°C, setpoint=20.0°C
+2025-03-05 20:08:31,282 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:08:33,329 - INFO - Successful measurement at 20:08:33 - CO2: 538.0ppm, Temp: 21.64°C, RH: 31.42%
+2025-03-05 20:08:33,329 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:08:33,349 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:08:35,388 - WARNING - Warning: No sensor available
+2025-03-05 20:08:37,409 - INFO - Successful measurement at 20:08:37 - CO2: 537.95ppm, Temp: 21.64°C, RH: 31.4%
+2025-03-05 20:08:37,410 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:08:37,427 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:08:39,473 - INFO - Successful measurement at 20:08:39 - CO2: 538.18ppm, Temp: 21.65°C, RH: 31.48%
+2025-03-05 20:08:39,474 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:08:39,490 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:08:39,778 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:08:39,779 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:08:39,821 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.5, 'co2': 538.2}
+2025-03-05 20:08:39,839 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:08:39,840 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:08:39,884 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.5, 'co2': 538.2}
+2025-03-05 20:08:40,059 - shroombox - INFO - Attempting to render index.html
+2025-03-05 20:08:40,410 - shroombox - INFO - Successful measurement at 20:08:40 - CO2: 538.58ppm, Temp: 21.62°C, RH: 31.43%
+2025-03-05 20:08:40,410 - shroombox - INFO - Live measurements - Temp: 21.62°C, RH: 31.43%, CO2: 538.58ppm
+2025-03-05 20:08:40,436 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:08:40,437 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:08:40,483 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.5, 'co2': 538.2}
+2025-03-05 20:08:41,526 - WARNING - Warning: No sensor available
+2025-03-05 20:08:43,548 - INFO - Successful measurement at 20:08:43 - CO2: 538.33ppm, Temp: 21.65°C, RH: 31.37%
+2025-03-05 20:08:43,548 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:08:43,565 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:08:45,614 - INFO - Successful measurement at 20:08:45 - CO2: 538.56ppm, Temp: 21.65°C, RH: 31.41%
+2025-03-05 20:08:45,615 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:08:45,629 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:08:47,674 - INFO - Successful measurement at 20:08:47 - CO2: 538.7ppm, Temp: 21.65°C, RH: 31.39%
+2025-03-05 20:08:47,675 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:08:47,695 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:08:49,743 - INFO - Successful measurement at 20:08:49 - CO2: 538.51ppm, Temp: 21.64°C, RH: 31.45%
+2025-03-05 20:08:49,743 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:08:49,757 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:08:51,845 - INFO - Successful measurement at 20:08:51 - CO2: 537.98ppm, Temp: 21.64°C, RH: 31.39%
+2025-03-05 20:08:51,847 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:08:51,864 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:08:53,915 - INFO - Successful measurement at 20:08:53 - CO2: 538.43ppm, Temp: 21.65°C, RH: 31.44%
+2025-03-05 20:08:53,915 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:08:53,931 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:08:55,468 - shroombox - INFO - Attempting to render index.html
+2025-03-05 20:08:55,884 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:08:55,885 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:08:55,941 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.4, 'co2': 538.4}
+2025-03-05 20:08:55,980 - shroombox - INFO - Successful measurement at 20:08:55 - CO2: nanppm, Temp: nan°C, RH: nan%
+2025-03-05 20:08:55,981 - shroombox - INFO - Live measurements - Temp: nan°C, RH: nan%, CO2: nanppm
+2025-03-05 20:08:55,982 - INFO - Successful measurement at 20:08:55 - CO2: nanppm, Temp: nan°C, RH: nan%
+2025-03-05 20:08:58,001 - WARNING - Warning: No sensor available
+2025-03-05 20:09:00,024 - INFO - Successful measurement at 20:09:00 - CO2: 538.38ppm, Temp: 21.64°C, RH: 31.45%
+2025-03-05 20:09:00,024 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:09:00,039 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:09:02,087 - INFO - Successful measurement at 20:09:02 - CO2: 538.7ppm, Temp: 21.62°C, RH: 31.47%
+2025-03-05 20:09:02,088 - INFO - Large temperature difference detected: current=21.62°C, setpoint=20.0°C
+2025-03-05 20:09:02,105 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:09:04,149 - INFO - Successful measurement at 20:09:04 - CO2: 538.1ppm, Temp: 21.62°C, RH: 31.47%
+2025-03-05 20:09:04,149 - INFO - Large temperature difference detected: current=21.62°C, setpoint=20.0°C
+2025-03-05 20:09:04,166 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:09:06,219 - INFO - Successful measurement at 20:09:06 - CO2: 538.63ppm, Temp: 21.62°C, RH: 31.42%
+2025-03-05 20:09:06,220 - INFO - Large temperature difference detected: current=21.62°C, setpoint=20.0°C
+2025-03-05 20:09:06,237 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:09:08,289 - INFO - Successful measurement at 20:09:08 - CO2: 538.85ppm, Temp: 21.64°C, RH: 31.45%
+2025-03-05 20:09:08,290 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:09:08,305 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:09:10,348 - INFO - Successful measurement at 20:09:10 - CO2: 538.44ppm, Temp: 21.65°C, RH: 31.47%
+2025-03-05 20:09:10,348 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:09:10,362 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:09:12,411 - INFO - Successful measurement at 20:09:12 - CO2: 538.24ppm, Temp: 21.65°C, RH: 31.45%
+2025-03-05 20:09:12,411 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:09:12,430 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:09:14,484 - INFO - Successful measurement at 20:09:14 - CO2: 538.59ppm, Temp: 21.65°C, RH: 31.42%
+2025-03-05 20:09:14,485 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:09:14,503 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:09:16,553 - INFO - Successful measurement at 20:09:16 - CO2: 538.59ppm, Temp: 21.62°C, RH: 31.45%
+2025-03-05 20:09:16,554 - INFO - Large temperature difference detected: current=21.62°C, setpoint=20.0°C
+2025-03-05 20:09:16,569 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:09:18,639 - WARNING - Warning: No sensor available
+2025-03-05 20:09:19,473 - shroombox - INFO - Successful measurement at 20:09:19 - CO2: 538.69ppm, Temp: 21.65°C, RH: 31.44%
+2025-03-05 20:09:19,473 - shroombox - INFO - Live measurements - Temp: 21.65°C, RH: 31.44%, CO2: 538.69ppm
+2025-03-05 20:09:19,487 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:09:19,488 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:09:19,543 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.4, 'co2': 538.6}
+2025-03-05 20:09:20,648 - WARNING - Warning: No sensor available
+2025-03-05 20:09:22,674 - INFO - Successful measurement at 20:09:22 - CO2: 538.52ppm, Temp: 21.65°C, RH: 31.5%
+2025-03-05 20:09:22,675 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:09:22,698 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:09:24,400 - shroombox - INFO - Successful measurement at 20:09:24 - CO2: 538.5ppm, Temp: 21.64°C, RH: 31.45%
+2025-03-05 20:09:24,400 - shroombox - INFO - Live measurements - Temp: 21.64°C, RH: 31.45%, CO2: 538.5ppm
+2025-03-05 20:09:24,411 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:09:24,411 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:09:24,448 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.5, 'co2': 538.5}
+2025-03-05 20:09:24,735 - WARNING - Warning: No sensor available
+2025-03-05 20:09:26,758 - INFO - Successful measurement at 20:09:26 - CO2: 538.66ppm, Temp: 21.61°C, RH: 31.48%
+2025-03-05 20:09:26,758 - INFO - Large temperature difference detected: current=21.61°C, setpoint=20.0°C
+2025-03-05 20:09:26,775 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:09:28,825 - INFO - Successful measurement at 20:09:28 - CO2: 538.71ppm, Temp: 21.64°C, RH: 31.45%
+2025-03-05 20:09:28,826 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:09:28,843 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:09:29,415 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:09:29,416 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:09:29,468 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.4, 'co2': 538.7}
+2025-03-05 20:09:29,482 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:09:29,482 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:09:29,531 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.4, 'co2': 538.7}
+2025-03-05 20:09:30,898 - INFO - Successful measurement at 20:09:30 - CO2: 539.25ppm, Temp: 21.65°C, RH: 31.45%
+2025-03-05 20:09:30,899 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:09:30,939 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:09:32,995 - INFO - Successful measurement at 20:09:32 - CO2: 539.41ppm, Temp: 21.64°C, RH: 31.46%
+2025-03-05 20:09:32,996 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:09:33,012 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:09:34,406 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:09:34,407 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:09:34,468 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.5, 'co2': 539.4}
+2025-03-05 20:09:34,484 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:09:34,484 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:09:34,525 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.5, 'co2': 539.4}
+2025-03-05 20:09:35,064 - INFO - Successful measurement at 20:09:35 - CO2: 538.99ppm, Temp: 21.64°C, RH: 31.42%
+2025-03-05 20:09:35,064 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:09:35,085 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:09:37,129 - INFO - Successful measurement at 20:09:37 - CO2: 538.48ppm, Temp: 21.64°C, RH: 31.42%
+2025-03-05 20:09:37,130 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:09:37,148 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:09:39,191 - INFO - Successful measurement at 20:09:39 - CO2: 539.33ppm, Temp: 21.68°C, RH: 31.48%
+2025-03-05 20:09:39,191 - INFO - Large temperature difference detected: current=21.68°C, setpoint=20.0°C
+2025-03-05 20:09:39,209 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:09:39,416 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:09:39,416 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:09:39,453 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.5, 'co2': 539.3}
+2025-03-05 20:09:39,464 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:09:39,465 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:09:39,504 - shroombox - INFO - Retrieved measurements: {'temperature': 21.7, 'humidity': 31.5, 'co2': 539.3}
+2025-03-05 20:09:41,240 - WARNING - Warning: No sensor available
+2025-03-05 20:09:43,266 - INFO - Successful measurement at 20:09:43 - CO2: 539.3ppm, Temp: 21.64°C, RH: 31.48%
+2025-03-05 20:09:43,267 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:09:43,283 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:09:44,433 - shroombox - INFO - Successful measurement at 20:09:44 - CO2: 539.26ppm, Temp: 21.65°C, RH: 31.47%
+2025-03-05 20:09:44,434 - shroombox - INFO - Live measurements - Temp: 21.65°C, RH: 31.47%, CO2: 539.26ppm
+2025-03-05 20:09:44,451 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:09:44,452 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:09:44,533 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.5, 'co2': 539.3}
+2025-03-05 20:09:45,321 - WARNING - Warning: No sensor available
+2025-03-05 20:09:47,343 - INFO - Successful measurement at 20:09:47 - CO2: 539.79ppm, Temp: 21.65°C, RH: 31.52%
+2025-03-05 20:09:47,343 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:09:47,365 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:09:48,882 - shroombox - INFO - Settings updated successfully: colonisation phase
+2025-03-05 20:09:49,409 - shroombox - INFO - Successful measurement at 20:09:49 - CO2: nanppm, Temp: nan°C, RH: nan%
+2025-03-05 20:09:49,409 - shroombox - INFO - Live measurements - Temp: nan°C, RH: nan%, CO2: nanppm
+2025-03-05 20:09:49,414 - INFO - Successful measurement at 20:09:49 - CO2: nanppm, Temp: nan°C, RH: nan%
+2025-03-05 20:09:49,422 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:09:49,425 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:09:49,463 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.5, 'co2': 539.8}
+2025-03-05 20:09:51,453 - INFO - Successful measurement at 20:09:51 - CO2: 539.57ppm, Temp: 21.64°C, RH: 31.55%
+2025-03-05 20:09:51,454 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:09:51,474 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:09:53,529 - INFO - Successful measurement at 20:09:53 - CO2: 539.49ppm, Temp: 21.65°C, RH: 31.52%
+2025-03-05 20:09:53,529 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:09:53,545 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:09:54,404 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:09:54,405 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:09:54,456 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.5, 'co2': 539.5}
+2025-03-05 20:09:54,470 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:09:54,471 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:09:54,521 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.5, 'co2': 539.5}
+2025-03-05 20:09:55,597 - INFO - Successful measurement at 20:09:55 - CO2: 539.19ppm, Temp: 21.64°C, RH: 31.53%
+2025-03-05 20:09:55,598 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:09:55,620 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:09:57,679 - INFO - Successful measurement at 20:09:57 - CO2: 538.97ppm, Temp: 21.64°C, RH: 31.55%
+2025-03-05 20:09:57,680 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:09:57,698 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:09:59,424 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:09:59,425 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:09:59,478 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.6, 'co2': 539.0}
+2025-03-05 20:09:59,490 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:09:59,490 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:09:59,540 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.6, 'co2': 539.0}
+2025-03-05 20:09:59,750 - INFO - Successful measurement at 20:09:59 - CO2: 538.9ppm, Temp: 21.65°C, RH: 31.53%
+2025-03-05 20:09:59,751 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:09:59,771 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:10:01,821 - INFO - Successful measurement at 20:10:01 - CO2: 538.54ppm, Temp: 21.62°C, RH: 31.59%
+2025-03-05 20:10:01,821 - INFO - Large temperature difference detected: current=21.62°C, setpoint=20.0°C
+2025-03-05 20:10:01,835 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:10:03,868 - WARNING - Warning: No sensor available
+2025-03-05 20:10:05,890 - INFO - Successful measurement at 20:10:05 - CO2: 538.3ppm, Temp: 21.61°C, RH: 31.62%
+2025-03-05 20:10:05,890 - INFO - Large temperature difference detected: current=21.61°C, setpoint=20.0°C
+2025-03-05 20:10:05,906 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:10:07,993 - INFO - Successful measurement at 20:10:07 - CO2: 538.41ppm, Temp: 21.64°C, RH: 31.66%
+2025-03-05 20:10:07,994 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:10:08,009 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:10:10,062 - INFO - Successful measurement at 20:10:10 - CO2: 538.11ppm, Temp: 21.64°C, RH: 31.62%
+2025-03-05 20:10:10,063 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:10:10,080 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:10:12,131 - INFO - Successful measurement at 20:10:12 - CO2: 538.31ppm, Temp: 21.65°C, RH: 31.64%
+2025-03-05 20:10:12,131 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:10:12,148 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:10:14,199 - INFO - Successful measurement at 20:10:14 - CO2: 538.22ppm, Temp: 21.64°C, RH: 31.66%
+2025-03-05 20:10:14,200 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:10:14,216 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:10:16,269 - INFO - Successful measurement at 20:10:16 - CO2: 538.19ppm, Temp: 21.61°C, RH: 31.61%
+2025-03-05 20:10:16,269 - INFO - Large temperature difference detected: current=21.61°C, setpoint=20.0°C
+2025-03-05 20:10:16,286 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:10:18,338 - INFO - Successful measurement at 20:10:18 - CO2: 538.35ppm, Temp: 21.61°C, RH: 31.58%
+2025-03-05 20:10:18,339 - INFO - Large temperature difference detected: current=21.61°C, setpoint=20.0°C
+2025-03-05 20:10:18,354 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:10:19,736 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:10:19,736 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:10:19,787 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.6, 'co2': 538.4}
+2025-03-05 20:10:19,802 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:10:19,802 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:10:19,853 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.6, 'co2': 538.4}
+2025-03-05 20:10:20,344 - shroombox - INFO - Settings updated successfully: colonisation phase
+2025-03-05 20:10:20,401 - INFO - Successful measurement at 20:10:20 - CO2: 538.2ppm, Temp: 21.65°C, RH: 31.61%
+2025-03-05 20:10:20,401 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:10:20,414 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:10:22,460 - INFO - Successful measurement at 20:10:22 - CO2: 537.86ppm, Temp: 21.64°C, RH: 31.55%
+2025-03-05 20:10:22,460 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:10:22,477 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:10:24,507 - WARNING - Warning: No sensor available
+2025-03-05 20:10:24,666 - shroombox - INFO - Successful measurement at 20:10:24 - CO2: 537.99ppm, Temp: 21.64°C, RH: 31.56%
+2025-03-05 20:10:24,666 - shroombox - INFO - Live measurements - Temp: 21.64°C, RH: 31.56%, CO2: 537.99ppm
+2025-03-05 20:10:24,678 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:10:24,678 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:10:24,714 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.6, 'co2': 537.9}
+2025-03-05 20:10:25,310 - shroombox - INFO - Settings updated successfully: colonisation phase
+2025-03-05 20:10:26,516 - WARNING - Warning: No sensor available
+2025-03-05 20:10:27,927 - shroombox - INFO - Settings updated successfully: colonisation phase
+2025-03-05 20:10:28,541 - INFO - Successful measurement at 20:10:28 - CO2: 538.2ppm, Temp: 21.65°C, RH: 31.66%
+2025-03-05 20:10:28,542 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:10:28,561 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:10:29,637 - shroombox - INFO - Successful measurement at 20:10:29 - CO2: 538.03ppm, Temp: 21.64°C, RH: 31.67%
+2025-03-05 20:10:29,638 - shroombox - INFO - Live measurements - Temp: 21.64°C, RH: 31.67%, CO2: 538.03ppm
+2025-03-05 20:10:29,654 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:10:29,654 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:10:29,727 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.7, 'co2': 538.2}
+2025-03-05 20:10:30,599 - WARNING - Warning: No sensor available
+2025-03-05 20:10:32,621 - INFO - Successful measurement at 20:10:32 - CO2: 538.5ppm, Temp: 21.64°C, RH: 31.66%
+2025-03-05 20:10:32,622 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:10:32,644 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:10:34,692 - INFO - Successful measurement at 20:10:34 - CO2: 539.45ppm, Temp: 21.65°C, RH: 31.63%
+2025-03-05 20:10:34,692 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:10:34,709 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:10:34,744 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:10:34,744 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:10:34,789 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.6, 'co2': 539.5}
+2025-03-05 20:10:34,852 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:10:34,853 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:10:34,911 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.6, 'co2': 539.5}
+2025-03-05 20:10:36,800 - INFO - Successful measurement at 20:10:36 - CO2: 539.34ppm, Temp: 21.64°C, RH: 31.59%
+2025-03-05 20:10:36,803 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:10:36,819 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:10:38,874 - INFO - Successful measurement at 20:10:38 - CO2: 539.37ppm, Temp: 21.64°C, RH: 31.61%
+2025-03-05 20:10:38,875 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:10:38,891 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:10:40,336 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:10:40,336 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:10:40,373 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.6, 'co2': 539.4}
+2025-03-05 20:10:40,384 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:10:40,385 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:10:40,421 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.6, 'co2': 539.4}
+2025-03-05 20:10:40,941 - INFO - Successful measurement at 20:10:40 - CO2: 540.06ppm, Temp: 21.65°C, RH: 31.66%
+2025-03-05 20:10:40,941 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:10:40,965 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:10:43,017 - INFO - Successful measurement at 20:10:43 - CO2: 540.27ppm, Temp: 21.64°C, RH: 31.66%
+2025-03-05 20:10:43,018 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:10:43,033 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:10:45,078 - INFO - Successful measurement at 20:10:45 - CO2: 539.82ppm, Temp: 21.65°C, RH: 31.67%
+2025-03-05 20:10:45,079 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:10:45,094 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:10:45,283 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:10:45,283 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:10:45,320 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.7, 'co2': 539.8}
+2025-03-05 20:10:45,331 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:10:45,331 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:10:45,372 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.7, 'co2': 539.8}
+2025-03-05 20:10:47,123 - WARNING - Warning: No sensor available
+2025-03-05 20:10:49,148 - INFO - Successful measurement at 20:10:49 - CO2: 539.96ppm, Temp: 21.64°C, RH: 31.74%
+2025-03-05 20:10:49,149 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:10:49,165 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:10:50,310 - shroombox - INFO - Successful measurement at 20:10:50 - CO2: 539.84ppm, Temp: 21.66°C, RH: 31.76%
+2025-03-05 20:10:50,311 - shroombox - INFO - Live measurements - Temp: 21.66°C, RH: 31.76%, CO2: 539.84ppm
+2025-03-05 20:10:50,326 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:10:50,327 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:10:50,384 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.7, 'co2': 540.0}
+2025-03-05 20:10:51,204 - WARNING - Warning: No sensor available
+2025-03-05 20:10:53,229 - INFO - Successful measurement at 20:10:53 - CO2: 540.13ppm, Temp: 21.65°C, RH: 31.74%
+2025-03-05 20:10:53,230 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:10:53,252 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:10:55,291 - WARNING - Warning: No sensor available
+2025-03-05 20:10:55,302 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:10:55,302 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:10:55,354 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.7, 'co2': 540.1}
+2025-03-05 20:10:56,378 - shroombox - INFO - Successful measurement at 20:10:56 - CO2: 540.25ppm, Temp: 21.65°C, RH: 31.64%
+2025-03-05 20:10:56,379 - shroombox - INFO - Live measurements - Temp: 21.65°C, RH: 31.64%, CO2: 540.25ppm
+2025-03-05 20:10:57,302 - WARNING - Warning: No sensor available
+2025-03-05 20:10:59,325 - INFO - Successful measurement at 20:10:59 - CO2: 540.65ppm, Temp: 21.64°C, RH: 31.64%
+2025-03-05 20:10:59,325 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:10:59,347 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:11:00,350 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:11:00,351 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:11:00,410 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.6, 'co2': 540.6}
+2025-03-05 20:11:00,423 - shroombox - WARNING - Warning: No sensor available
+2025-03-05 20:11:00,423 - shroombox - INFO - Using InfluxDB for measurements
+2025-03-05 20:11:00,467 - shroombox - INFO - Retrieved measurements: {'temperature': 21.6, 'humidity': 31.6, 'co2': 540.6}
+2025-03-05 20:11:01,392 - INFO - Successful measurement at 20:11:01 - CO2: 540.35ppm, Temp: 21.66°C, RH: 31.66%
+2025-03-05 20:11:01,393 - INFO - Large temperature difference detected: current=21.66°C, setpoint=20.0°C
+2025-03-05 20:11:01,413 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:11:03,500 - INFO - Successful measurement at 20:11:03 - CO2: 539.97ppm, Temp: 21.62°C, RH: 31.59%
+2025-03-05 20:11:03,501 - INFO - Large temperature difference detected: current=21.62°C, setpoint=20.0°C
+2025-03-05 20:11:03,515 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:11:05,560 - INFO - Successful measurement at 20:11:05 - CO2: 539.78ppm, Temp: 21.64°C, RH: 31.64%
+2025-03-05 20:11:05,561 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:11:05,573 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:11:07,601 - WARNING - Warning: No sensor available
+2025-03-05 20:11:09,623 - INFO - Successful measurement at 20:11:09 - CO2: 539.86ppm, Temp: 21.65°C, RH: 31.69%
+2025-03-05 20:11:09,624 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:11:09,636 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:11:11,680 - INFO - Successful measurement at 20:11:11 - CO2: 539.77ppm, Temp: 21.66°C, RH: 31.69%
+2025-03-05 20:11:11,681 - INFO - Large temperature difference detected: current=21.66°C, setpoint=20.0°C
+2025-03-05 20:11:11,698 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:11:13,746 - INFO - Successful measurement at 20:11:13 - CO2: 539.63ppm, Temp: 21.65°C, RH: 31.66%
+2025-03-05 20:11:13,746 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:11:13,766 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:11:15,817 - INFO - Successful measurement at 20:11:15 - CO2: 539.84ppm, Temp: 21.64°C, RH: 31.62%
+2025-03-05 20:11:15,817 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:11:15,833 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:11:17,882 - INFO - Successful measurement at 20:11:17 - CO2: 539.99ppm, Temp: 21.65°C, RH: 31.69%
+2025-03-05 20:11:17,883 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:11:17,899 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:11:19,945 - INFO - Successful measurement at 20:11:19 - CO2: 540.07ppm, Temp: 21.65°C, RH: 31.67%
+2025-03-05 20:11:19,945 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:11:19,959 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:11:22,005 - INFO - Successful measurement at 20:11:22 - CO2: 540.46ppm, Temp: 21.64°C, RH: 31.71%
+2025-03-05 20:11:22,005 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:11:22,021 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:11:24,070 - INFO - Successful measurement at 20:11:24 - CO2: 540.3ppm, Temp: 21.64°C, RH: 31.66%
+2025-03-05 20:11:24,071 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:11:24,087 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:11:26,138 - INFO - Successful measurement at 20:11:26 - CO2: 540.06ppm, Temp: 21.64°C, RH: 31.64%
+2025-03-05 20:11:26,139 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:11:26,154 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:11:28,225 - INFO - Successful measurement at 20:11:28 - CO2: 540.21ppm, Temp: 21.65°C, RH: 31.71%
+2025-03-05 20:11:28,226 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:11:28,241 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:11:30,277 - WARNING - Warning: No sensor available
+2025-03-05 20:11:32,301 - INFO - Successful measurement at 20:11:32 - CO2: 540.13ppm, Temp: 21.68°C, RH: 31.74%
+2025-03-05 20:11:32,302 - INFO - Large temperature difference detected: current=21.68°C, setpoint=20.0°C
+2025-03-05 20:11:32,316 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:11:34,371 - INFO - Successful measurement at 20:11:34 - CO2: 539.85ppm, Temp: 21.64°C, RH: 31.8%
+2025-03-05 20:11:34,372 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:11:34,387 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:11:36,439 - INFO - Successful measurement at 20:11:36 - CO2: 539.76ppm, Temp: 21.64°C, RH: 32.2%
+2025-03-05 20:11:36,439 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:11:36,460 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:11:38,508 - INFO - Successful measurement at 20:11:38 - CO2: 540.11ppm, Temp: 21.62°C, RH: 32.44%
+2025-03-05 20:11:38,508 - INFO - Large temperature difference detected: current=21.62°C, setpoint=20.0°C
+2025-03-05 20:11:38,524 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:11:40,578 - INFO - Successful measurement at 20:11:40 - CO2: 540.2ppm, Temp: 21.62°C, RH: 32.47%
+2025-03-05 20:11:40,580 - INFO - Large temperature difference detected: current=21.62°C, setpoint=20.0°C
+2025-03-05 20:11:40,596 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:11:42,646 - INFO - Successful measurement at 20:11:42 - CO2: 540.61ppm, Temp: 21.64°C, RH: 32.33%
+2025-03-05 20:11:42,647 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:11:42,663 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:11:44,712 - INFO - Successful measurement at 20:11:44 - CO2: 540.35ppm, Temp: 21.65°C, RH: 32.16%
+2025-03-05 20:11:44,713 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:11:44,732 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:11:46,784 - INFO - Successful measurement at 20:11:46 - CO2: 540.53ppm, Temp: 21.64°C, RH: 32.09%
+2025-03-05 20:11:46,785 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:11:46,803 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:11:48,855 - INFO - Successful measurement at 20:11:48 - CO2: 540.85ppm, Temp: 21.65°C, RH: 32.07%
+2025-03-05 20:11:48,855 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:11:48,872 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:11:50,920 - INFO - Successful measurement at 20:11:50 - CO2: 541.06ppm, Temp: 21.66°C, RH: 32.15%
+2025-03-05 20:11:50,921 - INFO - Large temperature difference detected: current=21.66°C, setpoint=20.0°C
+2025-03-05 20:11:50,936 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:11:52,973 - WARNING - Warning: No sensor available
+2025-03-05 20:11:54,996 - INFO - Successful measurement at 20:11:54 - CO2: 541.71ppm, Temp: 21.64°C, RH: 32.17%
+2025-03-05 20:11:54,997 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:11:55,015 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:11:57,063 - INFO - Successful measurement at 20:11:57 - CO2: 542.14ppm, Temp: 21.64°C, RH: 32.22%
+2025-03-05 20:11:57,064 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:11:57,078 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:11:59,126 - INFO - Successful measurement at 20:11:59 - CO2: 541.76ppm, Temp: 21.65°C, RH: 32.22%
+2025-03-05 20:11:59,127 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:11:59,141 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:12:01,192 - INFO - Successful measurement at 20:12:01 - CO2: 541.87ppm, Temp: 21.64°C, RH: 32.23%
+2025-03-05 20:12:01,193 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:12:01,206 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:12:03,256 - INFO - Successful measurement at 20:12:03 - CO2: 542.16ppm, Temp: 21.64°C, RH: 32.25%
+2025-03-05 20:12:03,257 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:12:03,277 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:12:05,323 - INFO - Successful measurement at 20:12:05 - CO2: 542.06ppm, Temp: 21.64°C, RH: 32.25%
+2025-03-05 20:12:05,324 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:12:05,337 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:12:07,386 - INFO - Successful measurement at 20:12:07 - CO2: 541.89ppm, Temp: 21.64°C, RH: 32.22%
+2025-03-05 20:12:07,386 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:12:07,406 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:12:09,455 - INFO - Successful measurement at 20:12:09 - CO2: 541.87ppm, Temp: 21.64°C, RH: 32.22%
+2025-03-05 20:12:09,456 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:12:09,473 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:12:11,524 - INFO - Successful measurement at 20:12:11 - CO2: 542.24ppm, Temp: 21.64°C, RH: 32.11%
+2025-03-05 20:12:11,525 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:12:11,541 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:12:13,576 - WARNING - Warning: No sensor available
+2025-03-05 20:12:15,600 - INFO - Successful measurement at 20:12:15 - CO2: 542.62ppm, Temp: 21.65°C, RH: 32.16%
+2025-03-05 20:12:15,601 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:12:15,617 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:12:17,674 - INFO - Successful measurement at 20:12:17 - CO2: 542.58ppm, Temp: 21.62°C, RH: 32.12%
+2025-03-05 20:12:17,675 - INFO - Large temperature difference detected: current=21.62°C, setpoint=20.0°C
+2025-03-05 20:12:17,691 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:12:19,759 - INFO - Successful measurement at 20:12:19 - CO2: 542.32ppm, Temp: 21.61°C, RH: 32.14%
+2025-03-05 20:12:19,759 - INFO - Large temperature difference detected: current=21.61°C, setpoint=20.0°C
+2025-03-05 20:12:19,775 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:12:21,821 - INFO - Successful measurement at 20:12:21 - CO2: 542.55ppm, Temp: 21.64°C, RH: 32.15%
+2025-03-05 20:12:21,822 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:12:21,837 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:12:23,888 - INFO - Successful measurement at 20:12:23 - CO2: 542.14ppm, Temp: 21.65°C, RH: 32.16%
+2025-03-05 20:12:23,889 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:12:23,905 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:12:25,956 - INFO - Successful measurement at 20:12:25 - CO2: 542.47ppm, Temp: 21.65°C, RH: 32.14%
+2025-03-05 20:12:25,957 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:12:25,974 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:12:28,030 - INFO - Successful measurement at 20:12:28 - CO2: 542.05ppm, Temp: 21.64°C, RH: 32.17%
+2025-03-05 20:12:28,031 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:12:28,047 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:12:30,105 - INFO - Successful measurement at 20:12:30 - CO2: 542.42ppm, Temp: 21.64°C, RH: 32.23%
+2025-03-05 20:12:30,105 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:12:30,122 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:12:32,172 - INFO - Successful measurement at 20:12:32 - CO2: 542.69ppm, Temp: 21.65°C, RH: 32.39%
+2025-03-05 20:12:32,173 - INFO - Large temperature difference detected: current=21.65°C, setpoint=20.0°C
+2025-03-05 20:12:32,186 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:12:34,240 - INFO - Successful measurement at 20:12:34 - CO2: 542.69ppm, Temp: 21.62°C, RH: 32.43%
+2025-03-05 20:12:34,240 - INFO - Large temperature difference detected: current=21.62°C, setpoint=20.0°C
+2025-03-05 20:12:34,254 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:12:36,289 - WARNING - Warning: No sensor available
+2025-03-05 20:12:38,312 - INFO - Successful measurement at 20:12:38 - CO2: 542.96ppm, Temp: 21.64°C, RH: 32.44%
+2025-03-05 20:12:38,312 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:12:38,331 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:12:40,379 - INFO - Successful measurement at 20:12:40 - CO2: 543.11ppm, Temp: 21.64°C, RH: 32.41%
+2025-03-05 20:12:40,380 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:12:40,396 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:12:42,444 - INFO - Successful measurement at 20:12:42 - CO2: 543.33ppm, Temp: 21.66°C, RH: 32.51%
+2025-03-05 20:12:42,445 - INFO - Large temperature difference detected: current=21.66°C, setpoint=20.0°C
+2025-03-05 20:12:42,461 - INFO - Heater state forced to OFF due to large setpoint change
+2025-03-05 20:12:44,510 - INFO - Successful measurement at 20:12:44 - CO2: 543.42ppm, Temp: 21.64°C, RH: 32.89%
+2025-03-05 20:12:44,511 - INFO - Large temperature difference detected: current=21.64°C, setpoint=20.0°C
+2025-03-05 20:12:44,558 - INFO - Heater state forced to OFF due to large setpoint change
