@@ -21,3 +21,7 @@ ENV/
 # OS specific files
 .DS_Store
 Thumbs.db
+
+# Configuration files
+config/settings.json
+.env
