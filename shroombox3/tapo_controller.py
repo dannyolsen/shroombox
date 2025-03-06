@@ -7,6 +7,7 @@ import logging
 from typing import Optional, Dict, Any
 import json
 import logging_setup
+import time
 
 logger = logging_setup.get_logger('shroombox.device')
 
@@ -19,7 +20,26 @@ class TapoController:
         self.password = password
         self.client = ApiClient(email, password)
         self._device_cache: Dict[str, Any] = {}  # Cache for device connections
+        self._last_session_refresh = time.time()
+        self._session_ttl = 3600  # Refresh session every hour
+        self._connection_retries = 3  # Number of retries for connection issues
+        self._retry_delay = 2  # Delay between retries in seconds
         
+    async def _refresh_session_if_needed(self):
+        """Refresh the Tapo session if it's expired."""
+        current_time = time.time()
+        if current_time - self._last_session_refresh > self._session_ttl:
+            logger.info("Refreshing Tapo session...")
+            try:
+                # Create a new client
+                self.client = ApiClient(self.email, self.password)
+                # Clear device cache to force reconnection
+                self._device_cache = {}
+                self._last_session_refresh = current_time
+                logger.info("Tapo session refreshed successfully")
+            except Exception as e:
+                logger.error(f"Error refreshing Tapo session: {e}")
+    
     async def verify_device(self, device_config: Dict[str, str]) -> bool:
         """
         Verify if a device's stored configuration is still valid.
@@ -110,33 +130,101 @@ class TapoController:
         Get a Tapo device instance by IP address.
         Uses cached connection if available.
         """
-        try:
-            # Return cached device if available
-            if ip_addr in self._device_cache:
-                return self._device_cache[ip_addr]
-            
-            # Create new connection if not cached
-            device = await self.client.p115(ip_addr)
-            self._device_cache[ip_addr] = device
-            return device
-        except Exception as e:
-            logger.error(f"Error connecting to device at {ip_addr}: {e}")
-            return None
+        await self._refresh_session_if_needed()
+        
+        for attempt in range(self._connection_retries):
+            try:
+                # Return cached device if available and not first retry
+                if ip_addr in self._device_cache and attempt == 0:
+                    return self._device_cache[ip_addr]
+                
+                # Create new connection
+                logger.debug(f"Connecting to device at {ip_addr} (attempt {attempt+1}/{self._connection_retries})")
+                device = await self.client.p115(ip_addr)
+                
+                # Test the connection with a simple command
+                try:
+                    await device.get_device_info()
+                    # If successful, update cache and return
+                    self._device_cache[ip_addr] = device
+                    return device
+                except Exception as e:
+                    logger.warning(f"Connection test failed for {ip_addr}: {e}")
+                    # If this is a session timeout, clear the cache entry
+                    if "SessionTimeout" in str(e):
+                        if ip_addr in self._device_cache:
+                            del self._device_cache[ip_addr]
+                        # Force session refresh
+                        self._last_session_refresh = 0
+                        await self._refresh_session_if_needed()
+                    raise e
+                    
+            except Exception as e:
+                if attempt < self._connection_retries - 1:
+                    logger.warning(f"Connection attempt {attempt+1} failed for {ip_addr}: {e}. Retrying...")
+                    await asyncio.sleep(self._retry_delay)
+                else:
+                    logger.error(f"All connection attempts failed for {ip_addr}: {e}")
+                    return None
+        
+        return None
     
     async def set_device_state(self, ip_addr: str, state: bool) -> bool:
         """Turn device on or off."""
-        try:
-            device = await self.get_device(ip_addr)
-            if device:
+        for attempt in range(self._connection_retries):
+            try:
+                device = await self.get_device(ip_addr)
+                if not device:
+                    logger.error(f"Could not get device at {ip_addr}")
+                    return False
+                
+                # Set the state
                 if state:
                     await device.on()
                 else:
                     await device.off()
-                return True
-            return False
-        except Exception as e:
-            logger.error(f"Error setting device state: {e}")
-            return False
+                
+                # Verify the state change
+                try:
+                    info = await device.get_device_info()
+                    actual_state = info.device_on
+                    
+                    if actual_state == state:
+                        logger.info(f"Successfully set device at {ip_addr} to {'ON' if state else 'OFF'}")
+                        return True
+                    else:
+                        logger.warning(f"State verification failed: requested {'ON' if state else 'OFF'}, but device reports {'ON' if actual_state else 'OFF'}")
+                        if attempt < self._connection_retries - 1:
+                            logger.info(f"Retrying state change (attempt {attempt+1}/{self._connection_retries})...")
+                            await asyncio.sleep(self._retry_delay)
+                            continue
+                        return False
+                        
+                except Exception as e:
+                    logger.warning(f"Error verifying state change: {e}")
+                    # If we can't verify, assume it worked
+                    return True
+                    
+            except Exception as e:
+                error_str = str(e)
+                if "SessionTimeout" in error_str:
+                    logger.warning(f"Session timeout when setting device state (attempt {attempt+1}): {e}")
+                    # Clear cache entry for this device
+                    if ip_addr in self._device_cache:
+                        del self._device_cache[ip_addr]
+                    # Force session refresh
+                    self._last_session_refresh = 0
+                    await self._refresh_session_if_needed()
+                else:
+                    logger.error(f"Error setting device state (attempt {attempt+1}): {e}")
+                
+                if attempt < self._connection_retries - 1:
+                    await asyncio.sleep(self._retry_delay)
+                else:
+                    logger.error(f"Failed to set device state after {self._connection_retries} attempts")
+                    return False
+        
+        return False
     
     async def get_device_info(self, ip_addr: str) -> Optional[Dict[str, Any]]:
         """Get detailed device information."""
@@ -427,22 +515,45 @@ class TapoController:
         logger.warning(f"Device {ip} appears to be offline after {retries} attempts")
         return False
 
-    async def get_device_state(self, ip: str) -> bool:
+    async def get_device_state(self, ip: str) -> Optional[bool]:
         """Get the current state (on/off) of a device.
         
         Args:
             ip: The IP address of the device
             
         Returns:
-            bool: True if device is on, False if off or error
+            bool: True if device is on, False if off, None if error
         """
-        try:
-            device = await self.client.p115(ip)
-            info = await device.get_device_info()
-            return info.device_on if info else False
-        except Exception as e:
-            logger.error(f"Error getting device state for {ip}: {e}")
-            return False
+        for attempt in range(self._connection_retries):
+            try:
+                device = await self.get_device(ip)
+                if not device:
+                    logger.error(f"Could not get device at {ip}")
+                    return None
+                
+                info = await device.get_device_info()
+                return info.device_on if info else None
+                
+            except Exception as e:
+                error_str = str(e)
+                if "SessionTimeout" in error_str:
+                    logger.warning(f"Session timeout when getting device state (attempt {attempt+1}): {e}")
+                    # Clear cache entry for this device
+                    if ip in self._device_cache:
+                        del self._device_cache[ip]
+                    # Force session refresh
+                    self._last_session_refresh = 0
+                    await self._refresh_session_if_needed()
+                else:
+                    logger.error(f"Error getting device state (attempt {attempt+1}): {e}")
+                
+                if attempt < self._connection_retries - 1:
+                    await asyncio.sleep(self._retry_delay)
+                else:
+                    logger.error(f"Failed to get device state after {self._connection_retries} attempts")
+                    return None
+        
+        return None
 
     async def update_device_states(self):
         """Update the states of connected devices."""

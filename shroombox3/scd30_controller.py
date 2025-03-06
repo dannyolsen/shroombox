@@ -1,6 +1,7 @@
 import logging
 import time
 import asyncio
+import math
 from typing import Optional, Tuple
 from datetime import datetime
 import scd30_i2c
@@ -10,101 +11,140 @@ import logging_setup
 logger = logging_setup.get_logger('shroombox.sensor')
 
 class SCD30Controller:
-    def __init__(self, measurement_interval: int = 5, max_retries: int = 3):
+    def __init__(self, measurement_interval: int = 5):
         """Initialize SCD30 controller.
         
         Args:
             measurement_interval: Time between measurements in seconds (minimum 2)
-            max_retries: Maximum number of retries for operations
         """
         self.sensor = None
         self.measurement_interval = max(2, measurement_interval)  # Ensure minimum 2 seconds
         self._last_measurement_time = 0
-        self._last_data_ready_check = 0
-        self._data_ready_check_interval = 0.5  # Check data readiness every 0.5 seconds
-        self.max_retries = max_retries
-        self._last_successful_measurement = None  # Store last successful measurement
-        self._consecutive_failures = 0  # Track consecutive failures
-        self._using_fallback = False  # Flag to indicate if using fallback
+        self._last_valid_measurement = None  # Store last valid measurement as fallback
+        self._consecutive_failures = 0
+        self._max_consecutive_failures = 3
+        self._initialized = False
+        self._initialization_time = 0
+        self._warmup_period = 10  # Sensor warmup period in seconds
+        self._initialization_attempts = 0
+        self._max_initialization_attempts = 5
         self.initialize_sensor()
 
     def initialize_sensor(self) -> bool:
         """Initialize the SCD30 sensor with error handling."""
-        for attempt in range(1, self.max_retries + 1):
-            try:
-                logger.info(f"Initializing SCD30 sensor (attempt {attempt}/{self.max_retries})...")
-                self.sensor = scd30_i2c.SCD30()
-                # Using default address (0x61)
-                
-                # Set measurement interval
-                self.sensor.set_measurement_interval(self.measurement_interval)
-                logger.info(f"Set measurement interval to {self.measurement_interval} seconds")
-                
-                # Start periodic measurement
-                self.sensor.start_periodic_measurement()
-                logger.info("Started periodic measurement")
-                
-                # Wait for the first measurement to be ready
-                logger.info(f"Waiting for first measurement (up to {self.measurement_interval * 2} seconds)...")
-                start_time = time.time()
-                while time.time() - start_time < self.measurement_interval * 2:
-                    if self._check_data_ready():
-                        logger.info("First measurement is ready")
-                        return True
-                    time.sleep(0.5)
-                
-                if attempt == self.max_retries:
-                    logger.warning("Timed out waiting for first measurement, but continuing anyway")
-                    return True
-                    
-                logger.warning("Timed out waiting for first measurement")
-                
-            except Exception as e:
-                logger.error(f"Failed to initialize SCD30 sensor (attempt {attempt}): {e}")
-                if attempt < self.max_retries:
-                    logger.info(f"Retrying in 1 second...")
-                    time.sleep(1)
-                else:
-                    self.sensor = None
-        
-        return False
-
-    def _check_data_ready(self) -> bool:
-        """Check if data is ready, respecting the sensor's timing requirements."""
-        if self.sensor is None:
-            return False
-            
-        # Limit how often we check data readiness to avoid overwhelming the sensor
-        current_time = time.time()
-        if current_time - self._last_data_ready_check < self._data_ready_check_interval:
-            return False
-            
-        self._last_data_ready_check = current_time
-        
         try:
-            return bool(self.sensor.get_data_ready())
+            self._initialization_attempts += 1
+            logger.info(f"Initializing SCD30 sensor (attempt {self._initialization_attempts}/{self._max_initialization_attempts})...")
+            
+            # If we've tried too many times, wait longer between attempts
+            if self._initialization_attempts > 2:
+                logger.info(f"Multiple initialization attempts, waiting 5 seconds before trying again...")
+                time.sleep(5)
+            
+            # Create a new sensor instance
+            self.sensor = scd30_i2c.SCD30()
+            
+            # Stop any existing measurements
+            try:
+                self.sensor.stop_periodic_measurement()
+                time.sleep(0.5)  # Wait for the command to take effect
+            except Exception as e:
+                logger.debug(f"Error stopping existing measurements (this is normal for first init): {e}")
+            
+            # Set measurement interval
+            self.sensor.set_measurement_interval(self.measurement_interval)
+            time.sleep(0.1)  # Wait for the command to take effect
+            
+            # Verify the measurement interval was set correctly
+            actual_interval = self.sensor.get_measurement_interval()
+            if actual_interval != self.measurement_interval:
+                logger.warning(f"Measurement interval mismatch: requested {self.measurement_interval}s, got {actual_interval}s")
+                # Try to set it again
+                self.sensor.set_measurement_interval(self.measurement_interval)
+                time.sleep(0.1)
+            
+            # Start periodic measurement
+            self.sensor.start_periodic_measurement()
+            
+            # Wait for the sensor to start up
+            time.sleep(1.0)  # Increased from 0.5 to 1.0 seconds
+            
+            # Check if automatic self-calibration is enabled
+            try:
+                asc_enabled = self.sensor.get_auto_self_calibration_active()
+                logger.info(f"Automatic self-calibration is {'enabled' if asc_enabled else 'disabled'}")
+            except Exception as e:
+                logger.warning(f"Could not check ASC status: {e}")
+            
+            # Record initialization time
+            self._initialization_time = time.time()
+            self._initialized = True
+            logger.info("SCD30 sensor initialized successfully")
+            
+            # Reset initialization attempts counter on success
+            self._initialization_attempts = 0
+            
+            return True
         except Exception as e:
-            logger.error(f"Error checking if data is ready: {e}")
+            logger.error(f"Failed to initialize SCD30 sensor: {e}")
+            self.sensor = None
+            self._initialized = False
+            
+            # If we've tried too many times, give up
+            if self._initialization_attempts >= self._max_initialization_attempts:
+                logger.error(f"Failed to initialize sensor after {self._max_initialization_attempts} attempts, giving up")
+                self._initialization_attempts = 0  # Reset for next time
+            
             return False
 
     def is_available(self) -> bool:
         """Check if the sensor is available and working."""
-        if self.sensor is None:
+        if not self.sensor:
             return False
             
-        for attempt in range(1, self.max_retries + 1):
-            try:
-                # Just check if we can communicate with the sensor
-                # Don't use get_data_ready here to avoid overwhelming the sensor
-                self.sensor.get_firmware_version()
-                return True
-            except Exception as e:
-                if attempt == 1:  # Only log on first attempt to reduce noise
-                    logger.error(f"Error checking sensor availability: {e}")
-                if attempt < self.max_retries:
-                    time.sleep(0.1)  # Short delay between retries
+        try:
+            # Check if the sensor is ready for reading
+            return self.sensor.get_data_ready()
+        except Exception as e:
+            logger.error(f"Error checking sensor availability: {e}")
+            return False
+            
+    def is_warmed_up(self) -> bool:
+        """Check if the sensor has completed its warmup period."""
+        if not self._initialized or self._initialization_time == 0:
+            return False
+            
+        current_time = time.time()
+        time_since_init = current_time - self._initialization_time
         
-        return False
+        return time_since_init >= self._warmup_period
+
+    def _validate_measurement(self, co2: float, temp: float, rh: float) -> bool:
+        """Validate measurement values are within reasonable ranges."""
+        # Check for NaN or None values
+        if any(x is None for x in [co2, temp, rh]):
+            logger.warning("Measurement contains None values")
+            return False
+            
+        # Check for NaN values
+        if math.isnan(co2) or math.isnan(temp) or math.isnan(rh):
+            logger.warning(f"Measurement contains NaN values: CO2={co2}, Temp={temp}, RH={rh}")
+            return False
+            
+        # Check for reasonable ranges
+        if not (300 <= co2 <= 10000):  # CO2 range: 300-10000 ppm
+            logger.warning(f"CO2 reading out of range: {co2} ppm")
+            return False
+            
+        if not (-10 <= temp <= 60):  # Temperature range: -10 to 60°C
+            logger.warning(f"Temperature reading out of range: {temp}°C")
+            return False
+            
+        if not (0 <= rh <= 100):  # Humidity range: 0-100%
+            logger.warning(f"Humidity reading out of range: {rh}%")
+            return False
+            
+        return True
 
     async def get_measurements(self) -> Optional[Tuple[float, float, float]]:
         """Get current CO2, temperature and humidity measurements.
@@ -112,44 +152,25 @@ class SCD30Controller:
         Returns:
             Tuple of (co2, temperature, humidity) or None if reading fails
         """
-        # First try to get new measurements
-        measurement = await self._try_get_measurements()
+        if not self.sensor:
+            logger.warning("No sensor initialized")
+            return None
         
-        # If successful, update last successful measurement and return
-        if measurement is not None:
-            self._last_successful_measurement = measurement
-            self._consecutive_failures = 0
-            self._using_fallback = False
-            return measurement
+        # Check if sensor is still in warmup period
+        if not self.is_warmed_up():
+            time_since_init = time.time() - self._initialization_time
+            remaining_warmup = max(0, self._warmup_period - time_since_init)
+            logger.info(f"Sensor still in warmup period, {remaining_warmup:.1f}s remaining")
             
-        # If we have a previous successful measurement, return that with a warning
-        if self._last_successful_measurement is not None:
-            self._consecutive_failures += 1
-            
-            # Only log warning every 5 failures to reduce noise
-            if self._consecutive_failures % 5 == 1:
-                logger.warning(f"Using last successful measurement as fallback (failure #{self._consecutive_failures})")
-            
-            self._using_fallback = True
-            return self._last_successful_measurement
-            
-        # No current or previous measurement available
-        self._consecutive_failures += 1
-        return None
-        
-    async def _try_get_measurements(self) -> Optional[Tuple[float, float, float]]:
-        """Internal method to try getting measurements with retries."""
-        if not self.is_available():
-            # Try to reinitialize if sensor is not available
-            if self.sensor is None:
-                logger.info("Sensor not initialized. Attempting to initialize...")
-                self.initialize_sensor()
-                if not self.is_available():
-                    logger.warning("Warning: No sensor available after reinitialization")
-                    return None
-            else:
-                logger.warning("Warning: No sensor available")
-                return None
+            # If we have a previous valid measurement, return it during warmup
+            if self._last_valid_measurement:
+                logger.info("Using last valid measurement during warmup period")
+                return self._last_valid_measurement
+                
+            # Otherwise wait for the warmup to complete
+            if remaining_warmup > 0:
+                logger.info(f"Waiting {remaining_warmup:.1f}s for sensor warmup to complete")
+                await asyncio.sleep(remaining_warmup)
         
         try:
             # First check when was the last measurement taken
@@ -157,67 +178,144 @@ class SCD30Controller:
             if self._last_measurement_time:
                 time_since_last = current_time - self._last_measurement_time
                 if time_since_last < self.measurement_interval:
-                    # Not enough time has passed since the last measurement
                     # Wait until the measurement interval has passed
                     wait_time = self.measurement_interval - time_since_last
                     logger.debug(f"Waiting {wait_time:.1f}s for next measurement interval")
                     await asyncio.sleep(wait_time)
             
-            # Wait for data to be ready with polling (respecting the sensor's timing)
+            # Wait for data to be ready with polling
             wait_start = time.time()
-            max_wait = self.measurement_interval * 2  # Maximum time to wait for data
+            max_wait = 10  # Increased maximum wait time from 5 to 10 seconds
+            max_attempts = 5  # Maximum number of measurement attempts
+            attempt = 0
             
-            while time.time() - wait_start < max_wait:
-                if self._check_data_ready():
-                    # Data is ready, read the measurement
-                    for read_attempt in range(1, self.max_retries + 1):
-                        try:
-                            measurement = self.sensor.read_measurement()
-                            if measurement is not None:
-                                co2, temp, rh = measurement
-                                co2 = round(co2, 2)
-                                temp = round(temp, 2)
-                                rh = round(rh, 2)
-                                
-                                # Store the measurement time
-                                self._last_measurement_time = time.time()
-                                
-                                # More detailed logging
-                                logger.info(f"Successful measurement at {datetime.now().strftime('%H:%M:%S')} - "
-                                          f"CO2: {co2}ppm, Temp: {temp}°C, RH: {rh}%")
-                                
-                                return co2, temp, rh
-                            else:
-                                if read_attempt < self.max_retries:
-                                    logger.warning(f"Measurement returned None (attempt {read_attempt}). Retrying...")
-                                    time.sleep(0.5)  # Longer delay between read attempts
-                        except Exception as e:
-                            if read_attempt < self.max_retries:
-                                logger.error(f"Error reading measurement (attempt {read_attempt}): {e}")
-                                time.sleep(0.5)  # Longer delay between read attempts
-                    
-                    # If we get here, all read attempts failed
-                    break
+            while time.time() - wait_start < max_wait and attempt < max_attempts:
+                attempt += 1
                 
-                # Data not ready yet, wait before checking again
-                # Use a longer sleep to avoid overwhelming the sensor
-                await asyncio.sleep(0.5)
+                # Check if data is ready
+                data_ready = False
+                try:
+                    data_ready = self.is_available()
+                except Exception as e:
+                    logger.warning(f"Error checking if data is ready (attempt {attempt}): {e}")
+                    await asyncio.sleep(1)  # Wait a bit longer after an error
+                    continue
+                
+                if not data_ready:
+                    logger.debug(f"Data not ready yet (attempt {attempt}/{max_attempts})")
+                    await asyncio.sleep(0.5)  # Increased from 0.1 to 0.5 seconds
+                    continue
+                
+                # Data is ready, try to read it
+                try:
+                    logger.debug(f"Reading measurement (attempt {attempt}/{max_attempts})")
+                    measurement = self.sensor.read_measurement()
+                    
+                    if measurement is None:
+                        logger.warning(f"Sensor returned None measurement (attempt {attempt}/{max_attempts})")
+                        self._consecutive_failures += 1
+                        await asyncio.sleep(1)  # Wait a bit longer after a None measurement
+                        continue
+                    
+                    co2, temp, rh = measurement
+                    
+                    # Check for NaN values before rounding
+                    if (math.isnan(co2) or math.isnan(temp) or math.isnan(rh)):
+                        logger.warning(f"Raw measurement contains NaN values (attempt {attempt}/{max_attempts}): CO2={co2}, Temp={temp}, RH={rh}")
+                        self._consecutive_failures += 1
+                        # Skip this measurement and wait for the next one
+                        await asyncio.sleep(1)
+                        continue
+                    
+                    # Round values for display
+                    co2 = round(co2, 2)
+                    temp = round(temp, 2)
+                    rh = round(rh, 2)
+                    
+                    # Validate the measurement
+                    if self._validate_measurement(co2, temp, rh):
+                        # Store the measurement time
+                        self._last_measurement_time = time.time()
+                        self._last_valid_measurement = (co2, temp, rh)
+                        self._consecutive_failures = 0
+                        
+                        # More detailed logging
+                        logger.info(f"Successful measurement at {datetime.now().strftime('%H:%M:%S')} - "
+                                  f"CO2: {co2}ppm, Temp: {temp}°C, RH: {rh}%")
+                        
+                        return co2, temp, rh
+                    else:
+                        logger.warning(f"Invalid measurement values (attempt {attempt}/{max_attempts}): CO2={co2}, Temp={temp}, RH={rh}")
+                        self._consecutive_failures += 1
+                        # Skip this measurement and wait for the next one
+                        await asyncio.sleep(1)
+                        continue
+                        
+                except Exception as e:
+                    logger.warning(f"Error reading measurement (attempt {attempt}/{max_attempts}): {e}")
+                    self._consecutive_failures += 1
+                    await asyncio.sleep(1)  # Wait a bit longer after an error
+                    continue
             
-            logger.warning("Sensor data not ready within timeout period")
+            # If we get here, we couldn't get a valid measurement
+            if attempt >= max_attempts:
+                logger.warning(f"Failed to get valid measurement after {max_attempts} attempts")
+            else:
+                logger.warning(f"Sensor data not ready within timeout period ({max_wait}s)")
+            
+            self._consecutive_failures += 1
+            
+            # If we have too many consecutive failures, try to reinitialize the sensor
+            if self._consecutive_failures >= self._max_consecutive_failures:
+                logger.warning(f"Too many consecutive failures ({self._consecutive_failures}), reinitializing sensor")
+                self.cleanup()
+                await asyncio.sleep(1)
+                self.initialize_sensor()
+                self._consecutive_failures = 0
+                
+                # Wait for the sensor to be ready after reinitialization
+                await asyncio.sleep(2)
+            
+            # Return last valid measurement as fallback if available
+            if self._last_valid_measurement:
+                logger.info("Returning last valid measurement as fallback")
+                return self._last_valid_measurement
+                
             return None
             
         except Exception as e:
             logger.error(f"Error reading measurements: {e}")
+            self._consecutive_failures += 1
+            
+            # Return last valid measurement as fallback if available
+            if self._last_valid_measurement:
+                logger.info("Returning last valid measurement as fallback after error")
+                return self._last_valid_measurement
+                
             return None
 
     def set_measurement_interval(self, interval: int) -> bool:
         """Set the measurement interval in seconds."""
         try:
             interval = max(2, interval)  # Ensure minimum 2 seconds
-            if self.sensor:
-                self.sensor.set_measurement_interval(interval)
-                self.measurement_interval = interval
-                return True
+            
+            # Only update if different from current interval
+            if interval != self.measurement_interval:
+                if self.sensor:
+                    logger.info(f"Changing measurement interval from {self.measurement_interval}s to {interval}s")
+                    self.sensor.set_measurement_interval(interval)
+                    self.measurement_interval = interval
+                    
+                    # Verify the interval was set correctly
+                    actual_interval = self.sensor.get_measurement_interval()
+                    if actual_interval != interval:
+                        logger.warning(f"Measurement interval mismatch: requested {interval}s, got {actual_interval}s")
+                        # Try again
+                        self.sensor.set_measurement_interval(interval)
+                    
+                    return True
+                else:
+                    logger.warning("Cannot set measurement interval: sensor not initialized")
             return False
         except Exception as e:
             logger.error(f"Error setting measurement interval: {e}")
@@ -225,61 +323,47 @@ class SCD30Controller:
 
     def cleanup(self):
         """Clean up sensor resources."""
-        self.sensor = None 
+        logger.info("Cleaning up SCD30 sensor resources")
+        if self.sensor:
+            try:
+                # Stop periodic measurement
+                self.sensor.stop_periodic_measurement()
+            except Exception as e:
+                logger.debug(f"Error stopping measurements during cleanup: {e}")
+        self.sensor = None
+        self._initialized = False
 
-if __name__ == "__main__":
-    import time
-    import signal
-    import sys
+# Test function to run when this file is executed directly
+async def test_scd30_sensor():
+    """Test function to verify SCD30 sensor functionality."""
+    print("Testing SCD30 sensor...")
+    controller = SCD30Controller()
     
-    def signal_handler(sig, frame):
-        print("\nExiting test. Cleaning up...")
-        if controller:
-            controller.cleanup()
-        sys.exit(0)
+    # Give the sensor time to initialize and collect data
+    print("Waiting for sensor to be ready...")
+    await asyncio.sleep(2)
     
-    # Register the signal handler for Ctrl+C
-    signal.signal(signal.SIGINT, signal_handler)
-    
-    print("Starting SCD30 sensor test. Press Ctrl+C to exit.")
-    
-    # Create and initialize the sensor controller with more retries
-    controller = SCD30Controller(measurement_interval=2, max_retries=3)
-    
-    # Check if sensor is available
-    if not controller.is_available():
-        print("Warning: SCD30 sensor not immediately available. Will keep trying...")
+    # Try to get measurements
+    for i in range(5):  # Try 5 times
+        print(f"Attempt {i+1} to read measurements...")
+        measurements = await controller.get_measurements()
+        
+        if measurements:
+            co2, temp, rh = measurements
+            print(f"CO2: {co2} ppm")
+            print(f"Temperature: {temp} °C")
+            print(f"Relative Humidity: {rh}%")
+            break
+        else:
+            print("Failed to get measurements, trying again...")
+            await asyncio.sleep(2)
     else:
-        print(f"SCD30 sensor initialized with measurement interval of {controller.measurement_interval} seconds.")
+        print("Could not get measurements after multiple attempts")
     
-    print("Taking continuous measurements. Press Ctrl+C to exit.")
-    print("Time\t\tStatus\t\tCO2 (ppm)\tTemperature (°C)\tHumidity (%)")
-    print("-" * 90)
-    
-    # Create event loop for async operations
-    loop = asyncio.get_event_loop()
-    
-    try:
-        while True:
-            # Get measurements
-            measurement = loop.run_until_complete(controller.get_measurements())
-            
-            if measurement:
-                co2, temp, humidity = measurement
-                current_time = datetime.now().strftime("%H:%M:%S")
-                
-                # Add status indicator
-                status = "FALLBACK" if controller._using_fallback else "LIVE"
-                
-                print(f"{current_time}\t{status}\t\t{co2:.2f}\t\t{temp:.2f}\t\t\t{humidity:.2f}")
-            else:
-                print(f"{datetime.now().strftime('%H:%M:%S')}\tFAILED\t\tNo measurement available")
-            
-            # Small delay to prevent excessive CPU usage
-            time.sleep(0.5)  # Longer delay to reduce sensor queries
-    
-    except Exception as e:
-        print(f"Error during test: {e}")
-    finally:
-        controller.cleanup()
-        print("Test completed and resources cleaned up.") 
+    # Clean up
+    controller.cleanup()
+    print("Test completed")
+
+# Run the test function when this file is executed directly
+if __name__ == "__main__":
+    asyncio.run(test_scd30_sensor()) 
