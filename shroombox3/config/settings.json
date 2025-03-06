@@ -6,7 +6,7 @@
             "model": "P115",
             "name": "Humidifier",
             "role": "humidifier",
-            "state": false,
+            "state": true,
             "type": "SMART.TAPOPLUG"
         },
         {
@@ -37,9 +37,9 @@
             },
             "colonisation": {
                 "co2_setpoint": 500,
-                "rh_setpoint": 10.0,
+                "rh_setpoint": 50.0,
                 "temp_hysteresis": 0.5,
-                "temp_setpoint": 18.0
+                "temp_setpoint": 10.0
             },
             "growing": {
                 "co2_setpoint": 550,
