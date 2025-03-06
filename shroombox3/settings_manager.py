@@ -277,19 +277,19 @@ class SettingsManager:
             return False
     
     async def get_device_by_role(self, role: str) -> Optional[Dict[str, Any]]:
-        """Get device information by role.
+        """Get a device by role.
         
         Args:
             role: The role of the device (e.g., 'heater', 'humidifier')
             
         Returns:
-            Dict: Device information, or None if not found
+            Dict: The device, or None if not found
         """
         settings = await self.load_settings()
         
         for device in settings.get('available_devices', []):
             if device.get('role') == role:
-                return copy.deepcopy(device)
+                return device
         
         return None
     
@@ -402,6 +402,53 @@ class SettingsManager:
         """Invalidate the settings cache, forcing next load to read from file."""
         self._last_read_time = 0
         logger.debug("Settings cache invalidated")
+    
+    async def get_fan_settings(self) -> Dict[str, Any]:
+        """Get fan control settings.
+        
+        Returns:
+            Dict: Fan control settings, or empty dict if not found
+        """
+        settings = await self.load_settings()
+        
+        # Return fan settings if they exist, otherwise return default settings
+        if 'fan' in settings:
+            return settings['fan']
+        else:
+            # Default fan settings
+            return {
+                'manual_control': False,
+                'speed': 0
+            }
+    
+    async def set_fan_settings(self, manual_control: bool, speed: float) -> bool:
+        """Set fan control settings.
+        
+        Args:
+            manual_control: Whether the fan is under manual control
+            speed: The fan speed (0-100)
+            
+        Returns:
+            bool: True if successful, False otherwise
+        """
+        try:
+            logger.info(f"SettingsManager: Setting fan settings - manual: {manual_control}, speed: {speed}")
+            settings = await self.load_settings(force_reload=True)
+            
+            # Create fan settings if they don't exist
+            if 'fan' not in settings:
+                settings['fan'] = {}
+            
+            # Update fan settings
+            settings['fan']['manual_control'] = manual_control
+            settings['fan']['speed'] = speed
+            
+            # Save the updated settings
+            return await self.save_settings(settings)
+            
+        except Exception as e:
+            logger.error(f"SettingsManager: Error setting fan settings: {e}")
+            return False
 
 # Example usage
 async def test_settings_manager():
