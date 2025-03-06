@@ -128,6 +128,14 @@ class EnvironmentController:
         self.config_check_interval = 5  # Check config every 5 seconds
         self.current_settings = self.load_config()
         
+        # Initialize config last modified time
+        try:
+            self.config_last_modified = os.path.getmtime(self.config_path)
+            logger.info(f"Config last modified: {datetime.fromtimestamp(self.config_last_modified)}")
+        except Exception as e:
+            logger.error(f"Error getting config modification time: {e}")
+            self.config_last_modified = 0
+        
         # Initialize logging settings FIRST
         self.logging_interval = self.current_settings.get('logging', {}).get('interval', 30)
         
@@ -255,8 +263,23 @@ class EnvironmentController:
         """Load settings from config file."""
         try:
             logger.info(f"Loading config from: {self.config_path}")
+            
+            # Check if file exists
+            if not os.path.exists(self.config_path):
+                logger.error(f"Config file does not exist: {self.config_path}")
+                return {}
+                
+            # Check file permissions
+            try:
+                file_stat = os.stat(self.config_path)
+                logger.info(f"Config file permissions: {oct(file_stat.st_mode)}")
+                logger.info(f"Config file owner: {file_stat.st_uid}, group: {file_stat.st_gid}")
+            except Exception as e:
+                logger.warning(f"Could not check file permissions: {e}")
+            
             with open(self.config_path, 'r') as f:
                 config = json.load(f)
+                logger.info(f"Successfully loaded config from {self.config_path}")
             
             # Ensure numeric values are properly converted
             if 'environment' in config and 'phases' in config['environment']:
@@ -267,10 +290,33 @@ class EnvironmentController:
                         phase_data['rh_setpoint'] = float(phase_data['rh_setpoint'])
                     if 'co2_setpoint' in phase_data:
                         phase_data['co2_setpoint'] = int(phase_data['co2_setpoint'])
+                
+                # Log the current phase settings
+                current_phase = config['environment']['current_phase']
+                if current_phase in config['environment']['phases']:
+                    phase_settings = config['environment']['phases'][current_phase]
+                    logger.info(f"Loaded settings for phase '{current_phase}':")
+                    logger.info(f"  Temperature setpoint: {phase_settings.get('temp_setpoint')}°C")
+                    logger.info(f"  Humidity setpoint: {phase_settings.get('rh_setpoint')}%")
+                    logger.info(f"  CO2 setpoint: {phase_settings.get('co2_setpoint')}ppm")
+                else:
+                    logger.warning(f"Current phase '{current_phase}' not found in config phases")
                     
             return config
+        except json.JSONDecodeError as e:
+            logger.error(f"Error parsing config file (invalid JSON): {e}")
+            # Try to read the raw file content for debugging
+            try:
+                with open(self.config_path, 'r') as f:
+                    content = f.read()
+                logger.error(f"Raw config file content: {content[:500]}...")
+            except Exception as read_error:
+                logger.error(f"Could not read raw config file: {read_error}")
+            return {}
         except Exception as e:
             logger.error(f"Error loading config: {e}")
+            import traceback
+            logger.error(f"Stack trace: {traceback.format_exc()}")
             return {}
 
     def get_logging_interval(self) -> int:
@@ -280,69 +326,165 @@ class EnvironmentController:
     def update_controllers(self):
         """Update controller settings from config."""
         if not self.current_settings:
+            logger.warning("No settings available to update controllers")
             return
 
-        phase = self.current_settings['environment']['current_phase']
-        phase_settings = self.current_settings['environment']['phases'][phase]
-        
-        # Convert setpoints to float
         try:
-            self.co2_pid.setpoint = float(phase_settings['co2_setpoint'])
-            self.humidity_pid.setpoint = float(phase_settings['rh_setpoint'])
-        except (ValueError, TypeError) as e:
-            logger.error(f"Error converting setpoints to float: {e}")
-            logger.error(f"CO2 setpoint: {phase_settings['co2_setpoint']}")
-            logger.error(f"RH setpoint: {phase_settings['rh_setpoint']}")
-            return
+            phase = self.current_settings['environment']['current_phase']
+            phase_settings = self.current_settings['environment']['phases'][phase]
+            
+            # Log the current phase and settings we're applying
+            logger.info(f"Updating controllers with phase: {phase}")
+            logger.info(f"Temperature setpoint: {phase_settings['temp_setpoint']}°C")
+            logger.info(f"Humidity setpoint: {phase_settings['rh_setpoint']}%")
+            logger.info(f"CO2 setpoint: {phase_settings['co2_setpoint']}ppm")
+            
+            # Convert setpoints to float
+            try:
+                # Update CO2 and humidity PID setpoints
+                self.co2_pid.setpoint = float(phase_settings['co2_setpoint'])
+                self.humidity_pid.setpoint = float(phase_settings['rh_setpoint'])
+                
+                # Note: Temperature doesn't use PID, it uses hysteresis control
+                # The temperature setpoint is applied directly in temperature_control method
+            except (ValueError, TypeError) as e:
+                logger.error(f"Error converting setpoints to float: {e}")
+                logger.error(f"CO2 setpoint: {phase_settings['co2_setpoint']}")
+                logger.error(f"RH setpoint: {phase_settings['rh_setpoint']}")
+                return
 
-        # Update logging interval
-        new_logging_interval = self.current_settings.get('logging', {}).get('interval', 30)
-        if new_logging_interval != self.logging_interval:
-            logger.info(f"\nUpdating logging interval: {self.logging_interval}s -> {new_logging_interval}s")
-            self.logging_interval = new_logging_interval
-            logger.info("✓ Logging interval updated")
+            # Update logging interval
+            new_logging_interval = self.current_settings.get('logging', {}).get('interval', 30)
+            if new_logging_interval != self.logging_interval:
+                logger.info(f"\nUpdating logging interval: {self.logging_interval}s -> {new_logging_interval}s")
+                self.logging_interval = new_logging_interval
+                logger.info("✓ Logging interval updated")
 
-        # Update humidity PID parameters
-        hum_pid_settings = self.current_settings['humidifier'].get('pid', {})
-        if hum_pid_settings:
-            self.humidity_pid.tunings = (
-                float(hum_pid_settings.get('Kp', 0.2)),
-                float(hum_pid_settings.get('Ki', 0.01)),
-                float(hum_pid_settings.get('Kd', 0.05))
-            )
+            # Update humidity PID parameters
+            hum_pid_settings = self.current_settings['humidifier'].get('pid', {})
+            if hum_pid_settings:
+                old_tunings = self.humidity_pid.tunings
+                new_tunings = (
+                    float(hum_pid_settings.get('Kp', 0.2)),
+                    float(hum_pid_settings.get('Ki', 0.01)),
+                    float(hum_pid_settings.get('Kd', 0.05))
+                )
+                
+                if old_tunings != new_tunings:
+                    logger.info(f"Updating humidity PID tunings: {old_tunings} -> {new_tunings}")
+                    self.humidity_pid.tunings = new_tunings
 
-        # Update CO2 PID parameters
-        co2_pid_settings = self.current_settings['co2'].get('pid', {})
-        if co2_pid_settings:
-            self.co2_pid.tunings = (
-                float(co2_pid_settings.get('Kp', -1.0)),
-                float(co2_pid_settings.get('Ki', -0.01)),
-                float(co2_pid_settings.get('Kd', 0.0))
-            )
+            # Update CO2 PID parameters
+            co2_pid_settings = self.current_settings['co2'].get('pid', {})
+            if co2_pid_settings:
+                old_tunings = self.co2_pid.tunings
+                new_tunings = (
+                    float(co2_pid_settings.get('Kp', -1.0)),
+                    float(co2_pid_settings.get('Ki', -0.01)),
+                    float(co2_pid_settings.get('Kd', 0.0))
+                )
+                
+                if old_tunings != new_tunings:
+                    logger.info(f"Updating CO2 PID tunings: {old_tunings} -> {new_tunings}")
+                    self.co2_pid.tunings = new_tunings
 
-        # Update sensor interval if changed
-        new_interval = self.current_settings.get('sensor', {}).get('measurement_interval', 5)
-        if new_interval != self.measurement_interval:
-            logger.info(f"\nUpdating sensor measurement interval: {self.measurement_interval}s -> {new_interval}s")
-            self.measurement_interval = new_interval
-            if self.sensor:
-                try:
-                    self.sensor.set_measurement_interval(self.measurement_interval)
-                    logger.info("✓ Sensor measurement interval updated")
-                except Exception as e:
-                    logger.error(f"✗ Error updating sensor interval: {e}")
+            # Update sensor interval if changed
+            new_interval = self.current_settings.get('sensor', {}).get('measurement_interval', 5)
+            if new_interval != self.measurement_interval:
+                logger.info(f"\nUpdating sensor measurement interval: {self.measurement_interval}s -> {new_interval}s")
+                self.measurement_interval = new_interval
+                if self.sensor:
+                    try:
+                        self.sensor.set_measurement_interval(self.measurement_interval)
+                        logger.info("✓ Sensor measurement interval updated")
+                    except Exception as e:
+                        logger.error(f"✗ Error updating sensor interval: {e}")
+                        
+            logger.info("Controllers updated successfully with new settings")
+        except Exception as e:
+            logger.error(f"Error in update_controllers: {e}")
+            import traceback
+            logger.error(f"Stack trace: {traceback.format_exc()}")
 
     async def check_config_updates(self):
-        """Check for configuration updates."""
-        current_time = time.time()
-        if current_time - self.last_config_check > self.config_check_interval:
-            new_settings = self.load_config()
-            if new_settings != self.current_settings:
-                logger.info("\nConfig changed, updating settings...")
-                self.current_settings = new_settings
-                self.update_controllers()
-                logger.info(f"New setpoints - RH: {self.humidity_pid.setpoint}%, CO2: {self.co2_pid.setpoint}ppm")
-            self.last_config_check = current_time
+        """Check for updates to config file and reload if necessary."""
+        try:
+            # Get the last modification time of the config file
+            config_mtime = os.path.getmtime(self.config_path)
+            current_time = time.time()
+            
+            logger.info(f"Checking config updates - File: {self.config_path}")
+            logger.info(f"Last modified time: {datetime.fromtimestamp(config_mtime).strftime('%Y-%m-%d %H:%M:%S')}")
+            logger.info(f"Last checked time: {datetime.fromtimestamp(self.config_last_modified).strftime('%Y-%m-%d %H:%M:%S') if self.config_last_modified > 0 else 'Never'}")
+            logger.info(f"Current time: {datetime.fromtimestamp(current_time).strftime('%Y-%m-%d %H:%M:%S')}")
+            
+            # If the file has been modified since last check, reload it
+            if config_mtime > self.config_last_modified:
+                logger.info(f"Config file modified at {datetime.fromtimestamp(config_mtime)}, reloading...")
+                
+                # Read the file content for debugging
+                try:
+                    with open(self.config_path, 'r') as f:
+                        file_content = f.read()
+                        logger.info(f"Current config file content (first 500 chars): {file_content[:500]}...")
+                except Exception as e:
+                    logger.error(f"Error reading config file for debug: {e}")
+                
+                old_settings = self.current_settings.copy() if self.current_settings else {}
+                self.current_settings = self.load_config()
+                self.config_last_modified = config_mtime
+                
+                # Log the changes to help with debugging
+                if old_settings:
+                    # Check if growth phase changed
+                    old_phase = old_settings.get('environment', {}).get('current_phase', 'unknown')
+                    new_phase = self.current_settings.get('environment', {}).get('current_phase', 'unknown')
+                    logger.info(f"CONFIG UPDATE: Phase changed: {old_phase} -> {new_phase}")
+                    
+                    # Always log temperature setpoint for the current phase, regardless of whether phase changed
+                    old_temp = old_settings.get('environment', {}).get('phases', {}).get(new_phase, {}).get('temp_setpoint', 'unknown')
+                    new_temp = self.current_settings.get('environment', {}).get('phases', {}).get(new_phase, {}).get('temp_setpoint', 'unknown')
+                    logger.info(f"CONFIG UPDATE: Temperature setpoint: {old_temp} -> {new_temp}")
+                    
+                    # Also log CO2 and humidity setpoints
+                    old_co2 = old_settings.get('environment', {}).get('phases', {}).get(new_phase, {}).get('co2_setpoint', 'unknown')
+                    new_co2 = self.current_settings.get('environment', {}).get('phases', {}).get(new_phase, {}).get('co2_setpoint', 'unknown')
+                    logger.info(f"CONFIG UPDATE: CO2 setpoint: {old_co2} -> {new_co2}")
+                    
+                    old_rh = old_settings.get('environment', {}).get('phases', {}).get(new_phase, {}).get('rh_setpoint', 'unknown')
+                    new_rh = self.current_settings.get('environment', {}).get('phases', {}).get(new_phase, {}).get('rh_setpoint', 'unknown')
+                    logger.info(f"CONFIG UPDATE: Humidity setpoint: {old_rh} -> {new_rh}")
+                    
+                    # Check heater device details
+                    old_devices = old_settings.get('available_devices', [])
+                    new_devices = self.current_settings.get('available_devices', [])
+                    
+                    old_heater = next((d for d in old_devices if d.get('role') == 'heater'), None)
+                    new_heater = next((d for d in new_devices if d.get('role') == 'heater'), None)
+                    
+                    if old_heater and new_heater:
+                        logger.info(f"CONFIG UPDATE: Heater state in config: {old_heater.get('state')} -> {new_heater.get('state')}")
+                        logger.info(f"CONFIG UPDATE: Heater IP: {old_heater.get('ip')} -> {new_heater.get('ip')}")
+                
+                # Update the controllers with the new settings
+                try:
+                    logger.info("Updating controllers with new settings...")
+                    self.update_controllers()
+                    
+                    # Force an immediate reevaluation of the heater state based on new settings
+                    if hasattr(self, 'diagnose_heater_control'):
+                        asyncio.create_task(self.diagnose_heater_control())
+                        logger.info("Running heater diagnostic with new settings")
+                except Exception as e:
+                    logger.error(f"Error updating controllers with new settings: {e}")
+            else:
+                logger.info(f"No changes detected in config file (last modified: {datetime.fromtimestamp(config_mtime).strftime('%Y-%m-%d %H:%M:%S')})")
+        except Exception as e:
+            logger.error(f"Error checking for config updates: {e}")
+            import traceback
+            logger.error(f"Stack trace: {traceback.format_exc()}")
+            # Don't update the config_last_modified time on error
+            # so we'll try again on the next check
 
     async def get_measurements(self) -> Optional[Tuple[float, float, float]]:
         """Get measurements from the sensor."""
@@ -413,24 +555,59 @@ class EnvironmentController:
     async def set_heater_state(self, state: bool) -> None:
         """Set heater state."""
         if self.heater_ip:
-            await self.tapo.set_device_state(self.heater_ip, state)
-            self.heater_on = state
-            
-            # Update state in settings.json
             try:
-                with open(self.config_path, 'r') as f:
-                    settings = json.load(f)
+                logger.info(f"Setting heater to {'ON' if state else 'OFF'}")
                 
-                # Update device state in settings
-                for device in settings.get('available_devices', []):
-                    if device.get('role') == 'heater':
-                        device['state'] = state
+                # Get current state before changing
+                current_state = await self.tapo.get_device_state(self.heater_ip)
                 
-                # Save updated settings
-                with open(self.config_path, 'w') as f:
-                    json.dump(settings, f, indent=4)
+                # Only send command if needed
+                if current_state != state:
+                    # Try to set the state
+                    success = await self.tapo.set_device_state(self.heater_ip, state)
+                    
+                    if success:
+                        logger.info(f"Successfully set heater to {'ON' if state else 'OFF'}")
+                    else:
+                        logger.error(f"Failed to set heater to {'ON' if state else 'OFF'}")
+                        return
+                else:
+                    logger.debug(f"Heater already {'ON' if state else 'OFF'}, no change needed")
+                
+                # Update internal tracking
+                self.heater_on = state
+                
+                # Verify the state change
+                try:
+                    actual_state = await self.tapo.get_device_state(self.heater_ip)
+                    if actual_state != state:
+                        logger.warning(f"Heater state verification failed! Expected {'ON' if state else 'OFF'} but got {'ON' if actual_state else 'OFF'}")
+                    else:
+                        logger.debug("Heater state verified successfully")
+                except Exception as e:
+                    logger.error(f"Error verifying heater state: {e}")
+                
+                # Update state in settings.json
+                try:
+                    with open(self.config_path, 'r') as f:
+                        settings = json.load(f)
+                    
+                    # Update device state in settings
+                    for device in settings.get('available_devices', []):
+                        if device.get('role') == 'heater':
+                            if device['state'] != state:
+                                device['state'] = state
+                                logger.debug(f"Updated heater state in settings.json to {'ON' if state else 'OFF'}")
+                    
+                    # Save updated settings
+                    with open(self.config_path, 'w') as f:
+                        json.dump(settings, f, indent=4)
+                except Exception as e:
+                    logger.error(f"Error updating heater state in settings: {e}")
             except Exception as e:
-                logger.error(f"Error updating heater state in settings: {e}")
+                logger.error(f"Error setting heater state: {e}")
+                import traceback
+                logger.error(f"Stack trace: {traceback.format_exc()}")
 
     async def connect_to_humidifier(self, retries=3):
         """Connect to humidifier with retries."""
@@ -575,7 +752,62 @@ class EnvironmentController:
         if not self.system_running:
             return  # Skip control logic if system is stopped
 
-        # ... rest of control logic ...
+        try:
+            # Check for config updates first to ensure we have current settings
+            await self.check_config_updates()
+            
+            # Log that control loop is executing
+            logger.debug("Control loop executing...")
+            
+            # Get current measurements
+            measurements = await self.get_measurements()
+            if not measurements:
+                logger.warning("No measurements available for control loop")
+                return
+                
+            co2, temperature, rh = measurements
+            
+            # Log current measurements and setpoints
+            current_phase = self.current_settings['environment']['current_phase']
+            temp_setpoint = float(self.current_settings['environment']['phases'][current_phase]['temp_setpoint'])
+            logger.info(f"Current readings - Temp: {temperature:.1f}°C (setpoint: {temp_setpoint:.1f}°C), RH: {rh:.1f}%, CO2: {co2:.0f}ppm")
+            
+            # FIRST update device states to get current actual state
+            logger.debug("Updating device states first...")
+            previous_heater_state = self.heater_on
+            await self.update_device_states()
+            
+            # Check if state changed externally and log it
+            if previous_heater_state != self.heater_on:
+                logger.warning(f"Heater state changed externally: {previous_heater_state} -> {self.heater_on}")
+            
+            # Calculate what heater state SHOULD be based on temperature
+            temp_hysteresis = float(self.current_settings['environment']['phases'][current_phase]['temp_hysteresis'])
+            temp_low = temp_setpoint - temp_hysteresis
+            should_heat = temperature < temp_low
+            
+            # Compare actual state with what it should be
+            if should_heat != self.heater_on:
+                logger.warning(f"STATE MISMATCH: Heater is {'ON' if self.heater_on else 'OFF'} but should be {'ON' if should_heat else 'OFF'} based on temperature")
+            else:
+                logger.debug(f"Heater state is correct: {'ON' if self.heater_on else 'OFF'} (Should be {'ON' if should_heat else 'OFF'})")
+            
+            # Run temperature control AFTER state update so it has the final say
+            logger.debug("Running temperature control (with final authority)...")
+            await self.temperature_control(temperature)
+            
+            # Run humidity control
+            logger.debug("Running humidity control...")
+            await self.humidity_control(rh)
+            
+            # Run CO2 control
+            logger.debug("Running CO2 control...")
+            await self.co2_control(co2, self.current_settings['environment']['phases'][current_phase]['co2_setpoint'])
+                        
+        except Exception as e:
+            logger.error(f"Error in control loop: {e}")
+            import traceback
+            logger.error(f"Stack trace: {traceback.format_exc()}")
 
     async def start(self):
         """Initialize async resources."""
@@ -593,13 +825,13 @@ class EnvironmentController:
             
             # Turn off devices
             try:
-                await self.control_heater(False)
+                await self.set_heater_state(False)
                 logger.info("✓ Heater turned off")
             except Exception as e:
                 logger.error(f"❌ Error turning off heater: {e}")
                 
             try:
-                await self.control_humidifier(False)
+                await self.set_humidifier_state(False)
                 logger.info("✓ Humidifier turned off")
             except Exception as e:
                 logger.error(f"❌ Error turning off humidifier: {e}")
@@ -701,33 +933,39 @@ class EnvironmentController:
             
             # Calculate temperature bounds
             temp_low = setpoint - hysteresis
-            temp_high = setpoint + hysteresis
+            
+            # Add detailed debug logging
+            logger.info(f"TEMP CONTROL DEBUG: Current temp={temperature:.1f}°C, Setpoint={setpoint:.1f}°C, Hysteresis={hysteresis:.1f}°C")
+            logger.info(f"TEMP CONTROL DEBUG: Turn on threshold={temp_low:.1f}°C, Current heater state={'ON' if self.heater_on else 'OFF'}")
             
             # Determine if heater should be on or off
             should_heat = temperature < temp_low
+            logger.info(f"TEMP CONTROL DEBUG: Should heat? {should_heat} (temp < threshold? {temperature:.1f} < {temp_low:.1f})")
             
-            # Only change state if needed
-            if should_heat != self.heater_on:
-                await self.set_heater_state(should_heat)
-                logger.info(f"Heater turned {'ON' if should_heat else 'OFF'} - Temp: {temperature}°C (Target: {setpoint}°C ±{hysteresis}°C)")
-                # Log the heater state to InfluxDB
-                self.log_heater_state(1 if should_heat else 0, temperature)
+            # Get ACTUAL current state directly from device for double-checking
+            actual_state = False
+            if self.heater_ip:
+                try:
+                    actual_state = await self.tapo.get_device_state(self.heater_ip)
+                    if actual_state != self.heater_on:
+                        logger.warning(f"TEMP CONTROL DEBUG: Tracked state ({self.heater_on}) differs from actual device state ({actual_state})")
+                except Exception as e:
+                    logger.error(f"Error checking actual device state: {e}")
             
-            # Force an immediate check if the setpoint has changed significantly
-            # This ensures the heater responds quickly to large setpoint changes
-            if abs(temperature - setpoint) > hysteresis * 2:
-                logger.info(f"Large temperature difference detected: current={temperature}°C, setpoint={setpoint}°C")
-                # Force heater state update based on current conditions
-                # Use the same hysteresis logic as in the regular check, don't just compare to setpoint
-                should_heat = temperature < temp_low
-                await self.set_heater_state(should_heat)
-                logger.info(f"Heater state forced to {'ON' if should_heat else 'OFF'} due to large setpoint change")
-                self.heater_on = should_heat
-                # Log the heater state to InfluxDB after forced update
-                self.log_heater_state(1 if should_heat else 0, temperature)
+            # ALWAYS apply the correct state - don't rely on state tracking
+            # This ensures the temperature control logic has authority
+            logger.info(f"TEMP CONTROL DEBUG: Enforcing heater state to {'ON' if should_heat else 'OFF'} based on temperature logic")
+            await self.set_heater_state(should_heat)
+            logger.info(f"Heater set to {'ON' if should_heat else 'OFF'} - Temp: {temperature}°C (Target: {setpoint}°C ±{hysteresis}°C)")
+            
+            # Log the heater state to InfluxDB
+            self.log_heater_state(1 if should_heat else 0, temperature)
                 
         except Exception as e:
             logger.error(f"Error in temperature control: {e}")
+            # Add stack trace for better debugging
+            import traceback
+            logger.error(f"Stack trace: {traceback.format_exc()}")
 
     async def diagnose_sensor(self):
         """Print sensor diagnostic information."""
@@ -835,6 +1073,61 @@ class EnvironmentController:
         # Clean up sensor
         self.sensor.cleanup()
         logger.info("System completely stopped")
+
+    async def diagnose_heater_control(self):
+        """Special diagnostic function to check heater control logic"""
+        try:
+            # Get current measurements
+            measurements = await self.get_measurements()
+            if not measurements:
+                logger.error("HEATER DIAGNOSTIC: No measurements available!")
+                return
+            
+            co2, temperature, rh = measurements
+            
+            # Get setpoint
+            current_phase = self.current_settings['environment']['current_phase']
+            setpoint = float(self.current_settings['environment']['phases'][current_phase]['temp_setpoint'])
+            hysteresis = float(self.current_settings['environment']['phases'][current_phase]['temp_hysteresis'])
+            
+            # Calculate threshold
+            temp_low = setpoint - hysteresis
+            
+            # Get current heater state
+            current_heater_state = await self.tapo.get_device_state(self.heater_ip) if self.heater_ip else False
+            
+            # What should the heater state be?
+            should_heat = temperature < temp_low
+            
+            logger.info("=================== HEATER DIAGNOSTIC ===================")
+            logger.info(f"Current temperature: {temperature:.1f}°C")
+            logger.info(f"Temperature setpoint: {setpoint:.1f}°C")
+            logger.info(f"Hysteresis: {hysteresis:.1f}°C")
+            logger.info(f"Heat-on threshold: {temp_low:.1f}°C")
+            logger.info(f"Criteria met for heating? {should_heat} (temp < threshold? {temperature:.1f} < {temp_low:.1f})")
+            logger.info(f"Current heater state according to Tapo: {'ON' if current_heater_state else 'OFF'}")
+            logger.info(f"Local tracking of heater state: {'ON' if self.heater_on else 'OFF'}")
+            logger.info("=======================================================")
+            
+            # Check for mismatch
+            if should_heat != current_heater_state:
+                logger.warning(f"HEATER DIAGNOSTIC: Detected state mismatch! Tapo shows {'ON' if current_heater_state else 'OFF'} but should be {'ON' if should_heat else 'OFF'}")
+                
+                # Fix the mismatch
+                logger.info(f"HEATER DIAGNOSTIC: Fixing state mismatch by setting heater to {'ON' if should_heat else 'OFF'}")
+                await self.set_heater_state(should_heat)
+                
+                # Verify the fix
+                new_state = await self.tapo.get_device_state(self.heater_ip) if self.heater_ip else False
+                logger.info(f"HEATER DIAGNOSTIC: Heater state after fix: {'ON' if new_state else 'OFF'}")
+                
+            else:
+                logger.info("HEATER DIAGNOSTIC: Heater state is correct according to control logic.")
+            
+        except Exception as e:
+            logger.error(f"Error during heater diagnostics: {e}")
+            import traceback
+            logger.error(f"Stack trace: {traceback.format_exc()}")
 
 class ShroomboxController:
     def __init__(self):

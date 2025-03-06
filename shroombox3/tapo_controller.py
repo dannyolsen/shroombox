@@ -519,6 +519,72 @@ async def test_device_scanning():
     except Exception as e:
         print(f"\nError during test: {e}")
 
+async def test_heater_control():
+    """Test function to control the heater plug."""
+    import os
+    from dotenv import load_dotenv
+    
+    # Load environment variables
+    load_dotenv()
+    
+    print("\n=== Testing Heater Control ===")
+    
+    # Initialize controller
+    tapo = TapoController(
+        email=os.getenv('TAPO_EMAIL'),
+        password=os.getenv('TAPO_PASSWORD')
+    )
+    
+    try:
+        # Get heater IP from settings.json
+        settings_file = 'config/settings.json'
+        if not os.path.exists(settings_file):
+            print(f"Error: Could not find settings file at {settings_file}")
+            return
+            
+        with open(settings_file, 'r') as f:
+            settings = json.load(f)
+        
+        # Find heater device
+        heater = next((d for d in settings.get('available_devices', []) if d.get('role') == 'heater'), None)
+        
+        if not heater:
+            print("Error: No heater device found in settings.json")
+            return
+            
+        heater_ip = heater['ip']
+        print(f"Found heater at IP: {heater_ip}")
+        
+        # Get current state
+        current_state = await tapo.get_device_state(heater_ip)
+        print(f"Current heater state: {'ON' if current_state else 'OFF'}")
+        
+        # Turn heater ON
+        print("Turning heater ON...")
+        success = await tapo.set_device_state(heater_ip, True)
+        
+        if success:
+            print("✓ Heater successfully turned ON")
+            
+            # Verify the state changed
+            new_state = await tapo.get_device_state(heater_ip)
+            print(f"Verified heater state: {'ON' if new_state else 'OFF'}")
+            
+            # Update settings.json with new state
+            for device in settings.get('available_devices', []):
+                if device.get('role') == 'heater':
+                    device['state'] = True
+            
+            with open(settings_file, 'w') as f:
+                json.dump(settings, f, indent=4)
+            print("✓ Settings.json updated with new state")
+            
+        else:
+            print("✗ Failed to turn heater ON")
+            
+    except Exception as e:
+        print(f"\nError during heater control test: {e}")
+
 if __name__ == "__main__":
     # Set up logging
     logging.basicConfig(
@@ -529,4 +595,9 @@ if __name__ == "__main__":
     # Run the test
     print("Starting device scanning test...")
     asyncio.run(test_device_scanning())
+    print("\nTest complete!")
+
+    # Run the heater control test
+    print("Starting heater control test...")
+    asyncio.run(test_heater_control())
     print("\nTest complete!")

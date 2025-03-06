@@ -128,6 +128,29 @@
                 }, 500); // Give a small delay to ensure Alpine has initialized components
             }
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add a flag to track page loading state
+            window.pageFullyLoaded = false;
+            
+            // Set the flag to true when the page is fully loaded
+            window.addEventListener('load', function() {
+                window.pageFullyLoaded = true;
+                console.log('Page fully loaded, all resources finished loading');
+                
+                // Remove any loading indicators
+                const loadingIndicators = document.querySelectorAll('.loading-indicator');
+                loadingIndicators.forEach(indicator => {
+                    indicator.style.display = 'none';
+                });
+                
+                // Enable all input fields
+                const inputs = document.querySelectorAll('input');
+                inputs.forEach(input => {
+                    input.disabled = false;
+                });
+            });
+        });
     </script>
     <style>
         [x-cloak] { display: none !important; }
@@ -169,12 +192,6 @@
         <p id="loading-error" class="mt-4 text-red-600 hidden"></p>
     </div>
 
-    <!-- Debug Panel -->
-    <div id="debug-panel" class="fixed bottom-0 right-0 bg-black bg-opacity-80 text-white p-4 rounded-tl-lg z-[9000] max-w-lg max-h-64 overflow-auto text-xs font-mono">
-        <h3 class="text-sm font-bold mb-2">Debug Panel</h3>
-        <div id="debug-log"></div>
-    </div>
-
     <div x-data="controlPanel()" x-init="init()" x-cloak class="max-w-6xl mx-auto space-y-6">
         <div class="flex justify-between items-center">
             <h1 class="text-2xl font-bold text-gray-800">Shroombox Control Panel</h1>
@@ -185,20 +202,28 @@
 
         <!-- Environment Controls -->
         <div class="bg-white rounded-lg shadow-sm p-6">
-            <div class="flex justify-between items-center mb-4">
+            <div class="flex justify-between items-center mb-6">
                 <h2 class="text-xl font-semibold text-gray-800">Environment Controls</h2>
                 <div class="flex items-center">
-                    <label class="block text-sm font-medium text-gray-700 mr-2">Growth Phase:</label>
-                    <select 
-                        id="phase-select"
-                        x-model="currentPhase" 
-                        @change="updatePhase"
-                        class="rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
-                    >
-                        <option value="colonisation">Colonisation</option>
-                        <option value="growing">Growing</option>
-                        <option value="cake">Cake</option>
-                    </select>
+                    <div class="loading-indicator mr-4 flex items-center text-blue-600">
+                        <svg class="animate-spin -ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span class="text-sm">Loading...</span>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Growth Phase:</label>
+                        <select 
+                            id="phase-select" 
+                            x-model="currentPhase" 
+                            @change="updatePhase"
+                            class="block w-full rounded-md border border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 p-2">
+                            <option value="colonisation">Colonisation</option>
+                            <option value="growing">Growing</option>
+                            <option value="cake">Cake</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             <div class="grid grid-cols-3 gap-6">
@@ -427,36 +452,6 @@
     </div>
 
     <script>
-        // Add debug logging function
-        function debugLog(message, type = 'info') {
-            const debugLog = document.getElementById('debug-log');
-            if (!debugLog) return;
-            
-            const timestamp = new Date().toLocaleTimeString();
-            const logEntry = document.createElement('div');
-            logEntry.className = type === 'error' ? 'text-red-400' : (type === 'warning' ? 'text-yellow-400' : 'text-green-400');
-            logEntry.textContent = `[${timestamp}] ${message}`;
-            
-            debugLog.appendChild(logEntry);
-            
-            // Keep only the last 50 entries
-            while (debugLog.children.length > 50) {
-                debugLog.removeChild(debugLog.firstChild);
-            }
-            
-            // Auto-scroll to bottom
-            debugLog.scrollTop = debugLog.scrollHeight;
-            
-            // Also log to console
-            if (type === 'error') {
-                console.error(message);
-            } else if (type === 'warning') {
-                console.warn(message);
-            } else {
-                console.log(message);
-            }
-        }
-
         function controlPanel() {
             return {
                 currentPhase: 'colonisation',
@@ -483,67 +478,67 @@
                 initErrors: [],
 
                 init() {
-                    debugLog('Initializing control panel...');
+                    console.log('Initializing control panel...');
                     
                     // Ensure loading overlay is hidden after initialization
                     setTimeout(() => {
                         const loadingOverlay = document.getElementById('loading-overlay');
                         if (loadingOverlay && loadingOverlay.style.display !== 'none') {
                             loadingOverlay.style.display = 'none';
-                            debugLog('Automatically hiding loading overlay after init timeout', 'warning');
+                            console.log('Automatically hiding loading overlay after init timeout', 'warning');
                         }
                     }, 5000);
                     
                     // Sequential initialization with error handling
                     this.loadCurrentPhase()
                         .then(() => {
-                            debugLog('Phase loaded successfully');
+                            console.log('Phase loaded successfully');
                             return this.loadSetpoints();
                         })
                         .then(() => {
-                            debugLog('Setpoints loaded successfully');
+                            console.log('Setpoints loaded successfully');
                             return this.updateMeasurements();
                         })
                         .then(() => {
-                            debugLog('Measurements updated successfully');
+                            console.log('Measurements updated successfully');
                             return this.loadAvailableDevices();
                         })
                         .then(() => {
-                            debugLog('Devices loaded successfully');
+                            console.log('Devices loaded successfully');
                             return this.initTerminal();
                         })
                         .then(() => {
-                            debugLog('Terminal initialized successfully');
+                            console.log('Terminal initialized successfully');
                             return this.updateSystemStatus();
                         })
                         .catch(error => {
-                            debugLog(`Initialization error: ${error.message || 'Unknown error'}`, 'error');
+                            console.log(`Initialization error: ${error.message || 'Unknown error'}`, 'error');
                             this.initErrors.push(error.message || 'Unknown error during initialization');
                             // Continue with partial functionality
                         })
                         .finally(() => {
-                            debugLog(`Initialization complete with status: ${JSON.stringify(this.initStatus)}`);
+                            console.log(`Initialization complete with status: ${JSON.stringify(this.initStatus)}`);
                             
                             // Set up periodic updates
                             setInterval(() => {
-                                this.updateMeasurements().catch(err => debugLog(`Error updating measurements: ${err.message}`, 'error'));
-                                this.updateSystemStatus().catch(err => debugLog(`Error updating system status: ${err.message}`, 'error'));
+                                this.updateMeasurements().catch(err => console.log(`Error updating measurements: ${err.message}`));
+                                this.updateSystemStatus().catch(err => console.log(`Error updating system status: ${err.message}`));
                             }, 5000);
                         });
                 },
 
                 async loadCurrentPhase() {
                     try {
-                        debugLog('Loading current phase...');
+                        console.log('Loading current phase...');
                         const response = await fetch('/api/settings');
                         if (!response.ok) throw new Error(`HTTP error ${response.status}`);
                         
                         const data = await response.json();
                         this.currentPhase = data.environment.current_phase;
                         this.initStatus.phase = true;
-                        debugLog('Current phase loaded:', this.currentPhase);
+                        console.log('Current phase loaded:', this.currentPhase);
                     } catch (error) {
-                        debugLog('Error loading current phase:', error, 'error');
+                        console.log('Error loading current phase:', error, 'error');
                         this.initErrors.push('Failed to load growth phase');
                         throw error;
                     }
@@ -551,7 +546,7 @@
 
                 async updatePhase() {
                     try {
-                        debugLog(`Updating growth phase to: ${this.currentPhase}...`);
+                        console.log(`Updating growth phase to: ${this.currentPhase}...`);
                         
                         // Show loading indicator
                         const phaseSelect = document.getElementById('phase-select');
@@ -574,9 +569,9 @@
                         }
 
                         await this.loadSetpoints();
-                        debugLog(`Updated growth phase to: ${this.currentPhase}`);
+                        console.log(`Updated growth phase to: ${this.currentPhase}`);
                     } catch (error) {
-                        debugLog('Error updating phase:', error, 'error');
+                        console.log('Error updating phase:', error, 'error');
                         alert(`Failed to update growth phase: ${error.message || 'Unknown error'}`);
                         await this.loadCurrentPhase(); // revert if failed
                     } finally {
@@ -588,7 +583,7 @@
 
                 async loadSetpoints() {
                     try {
-                        debugLog('Loading setpoints...');
+                        console.log('Loading setpoints...');
                         const response = await fetch('/api/settings');
                         if (!response.ok) throw new Error(`HTTP error ${response.status}`);
                         
@@ -600,7 +595,7 @@
                         }
 
                         // Log the raw values for debugging
-                        debugLog(`Raw phase settings: ${JSON.stringify(phaseSettings)}`);
+                        console.log(`Raw phase settings: ${JSON.stringify(phaseSettings)}`);
 
                         // Ensure we have valid numbers for all setpoints
                         this.setpoints = {
@@ -620,16 +615,16 @@
                                 if (co2Input) co2Input.value = this.setpoints.co2;
                                 if (humidityInput) humidityInput.value = this.setpoints.humidity;
                                 
-                                debugLog('Input values set directly in DOM');
+                                console.log('Input values set directly in DOM');
                             } catch (err) {
-                                debugLog(`Error setting input values: ${err.message}`, 'error');
+                                console.log(`Error setting input values: ${err.message}`, 'error');
                             }
                         }, 200);
                         
                         this.initStatus.setpoints = true;
-                        debugLog(`Loaded setpoints: ${JSON.stringify(this.setpoints)}`);
+                        console.log(`Loaded setpoints: ${JSON.stringify(this.setpoints)}`);
                     } catch (error) {
-                        debugLog(`Error loading setpoints: ${error.message}`, 'error');
+                        console.log(`Error loading setpoints: ${error.message}`, 'error');
                         this.initErrors.push('Failed to load setpoints');
                         throw error;
                     }
@@ -637,7 +632,40 @@
 
                 async updateSetpoint(type) {
                     try {
-                        debugLog(`Updating ${type} setpoint to ${this.setpoints[type]}...`);
+                        // Check if page is fully loaded
+                        if (!window.pageFullyLoaded) {
+                            console.log(`Page not fully loaded yet, delaying ${type} setpoint update`, 'warning');
+                            
+                            // Show a warning to the user
+                            const inputId = `${type}-setpoint`;
+                            const inputElement = document.getElementById(inputId);
+                            
+                            if (inputElement && inputElement.parentNode) {
+                                const warningDiv = document.createElement('div');
+                                warningDiv.className = 'mt-2 text-xs text-orange-600';
+                                warningDiv.textContent = 'Please wait for page to fully load...';
+                                warningDiv.id = `${type}-warning`;
+                                
+                                // Remove any existing warning
+                                const existingWarning = document.getElementById(`${type}-warning`);
+                                if (existingWarning && existingWarning.parentNode) {
+                                    existingWarning.parentNode.removeChild(existingWarning);
+                                }
+                                
+                                inputElement.parentNode.appendChild(warningDiv);
+                                
+                                // Remove warning after 3 seconds
+                                setTimeout(() => {
+                                    if (warningDiv.parentNode) {
+                                        warningDiv.parentNode.removeChild(warningDiv);
+                                    }
+                                }, 3000);
+                            }
+                            
+                            return;
+                        }
+                        
+                        console.log(`Updating ${type} setpoint to ${this.setpoints[type]}...`);
                         
                         // Get the input element by ID
                         let inputId = `${type}-setpoint`;
@@ -650,7 +678,7 @@
                         
                         if (inputElement) {
                             inputElement.disabled = true;
-                            debugLog(`Disabled ${type} input for update`);
+                            console.log(`Disabled ${type} input for update`);
                         }
                         
                         // Simplify the feedback - use a single approach
@@ -698,10 +726,13 @@
                         // Update settings
                         settings.environment.phases[this.currentPhase][fieldName] = value;
                         
+                        // Add a timestamp to help prevent caching issues
+                        const timestamp = new Date().getTime();
+                        
                         // Save updated settings
-                        const saveResponse = await fetch('/api/settings', {
+                        const saveResponse = await fetch(`/api/settings?_t=${timestamp}`, {
                             method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
+                            headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' },
                             body: JSON.stringify(settings)
                         });
 
@@ -709,7 +740,15 @@
                             throw new Error(`Failed to save setpoint: HTTP error ${saveResponse.status}`);
                         }
 
-                        debugLog(`Updated ${type} setpoint to ${value} successfully`);
+                        // Try to get the response body for debugging
+                        try {
+                            const responseData = await saveResponse.json();
+                            console.log(`Server response: ${JSON.stringify(responseData)}`);
+                        } catch (e) {
+                            console.log(`Could not parse server response: ${e.message}`, 'warning');
+                        }
+
+                        console.log(`Updated ${type} setpoint to ${value} successfully`);
                         
                         // Update feedback to show success
                         if (feedbackDiv) {
@@ -727,7 +766,7 @@
                             inputElement.value = value;
                         }
                     } catch (error) {
-                        debugLog(`Error updating ${type} setpoint: ${error.message}`, 'error');
+                        console.log(`Error updating ${type} setpoint: ${error.message}`, 'error');
                         
                         // Show error message
                         const inputId = `${type}-setpoint`;
@@ -759,7 +798,7 @@
 
                 async updateMeasurements() {
                     try {
-                        debugLog('Updating measurements...');
+                        console.log('Updating measurements...');
                         const response = await fetch('/api/measurements/latest');
                         if (!response.ok) throw new Error(`HTTP error ${response.status}`);
                         
@@ -772,9 +811,9 @@
                         };
                         
                         this.initStatus.measurements = true;
-                        debugLog('Measurements updated:', this.measurements);
+                        console.log('Measurements updated:', this.measurements);
                     } catch (error) {
-                        debugLog('Error updating measurements:', error, 'error');
+                        console.log('Error updating measurements:', error, 'error');
                         if (!this.initStatus.measurements) {
                             this.initErrors.push('Failed to load initial measurements');
                             throw error;
@@ -785,7 +824,7 @@
 
                 async loadAvailableDevices() {
                     try {
-                        debugLog('Loading available devices...');
+                        console.log('Loading available devices...');
                         const response = await fetch('/api/settings');
                         if (!response.ok) throw new Error(`HTTP error ${response.status}`);
                         
@@ -793,7 +832,7 @@
                         
                         if (data.available_devices && Array.isArray(data.available_devices)) {
                             this.availableDevices = data.available_devices;
-                            debugLog("Loaded available devices:", this.availableDevices);
+                            console.log("Loaded available devices:", this.availableDevices);
                             
                             // Set selected devices based on roles
                             this.availableDevices.forEach(device => {
@@ -806,11 +845,11 @@
                             
                             this.initStatus.devices = true;
                         } else {
-                            debugLog("No available_devices found in settings");
+                            console.log("No available_devices found in settings");
                             throw new Error("No available devices found");
                         }
                     } catch (error) {
-                        debugLog('Error loading available devices:', error, 'error');
+                        console.log('Error loading available devices:', error, 'error');
                         this.initErrors.push('Failed to load available devices');
                         throw error;
                     }
@@ -818,7 +857,7 @@
 
                 async updateDeviceRole(role) {
                     try {
-                        debugLog(`Updating ${role} assignment...`);
+                        console.log(`Updating ${role} assignment...`);
                         
                         // Disable the select while updating
                         const selectElement = role === 'heater' ? 
@@ -836,7 +875,7 @@
                         const selectedIp = role === 'heater' ? this.selectedHeater : this.selectedHumidifier;
                         
                         if (!selectedIp) {
-                            debugLog(`No device selected for ${role}`);
+                            console.log(`No device selected for ${role}`);
                             return;
                         }
                         
@@ -860,9 +899,9 @@
                             throw new Error(`Failed to update ${role} assignment: HTTP error ${saveResponse.status}`);
                         }
                         
-                        debugLog(`Updated ${role} assignment to device at ${selectedIp}`);
+                        console.log(`Updated ${role} assignment to device at ${selectedIp}`);
                     } catch (error) {
-                        debugLog(`Error updating ${role} assignment:`, error, 'error');
+                        console.log(`Error updating ${role} assignment:`, error, 'error');
                         alert(`Failed to update ${role} assignment: ${error.message || 'Unknown error'}`);
                     } finally {
                         // Re-enable the select
@@ -877,7 +916,7 @@
                 async rescanDevices() {
                     try {
                         this.isScanning = true;
-                        debugLog('Scanning for devices...');
+                        console.log('Scanning for devices...');
                         
                         const response = await fetch('/api/devices/scan', {
                             method: 'POST'
@@ -890,9 +929,9 @@
                         // Reload available devices after scan
                         await this.loadAvailableDevices();
                         
-                        debugLog("Device scan completed");
+                        console.log("Device scan completed");
                     } catch (error) {
-                        debugLog('Error during device scan:', error, 'error');
+                        console.log('Error during device scan:', error, 'error');
                         alert(`Device scan failed: ${error.message || 'Unknown error'}`);
                     } finally {
                         this.isScanning = false;
@@ -929,18 +968,18 @@
                             cpu_temp: data.cpu_temp
                         };
                         
-                        debugLog('System status updated:', this.systemStatus);
+                        console.log('System status updated:', this.systemStatus);
                     } catch (error) {
-                        debugLog('Error updating system status:', error, 'error');
+                        console.log('Error updating system status:', error, 'error');
                         // Don't show alerts for system status errors to avoid annoying the user
                     }
                 },
 
                 initTerminal() {
-                    debugLog('Initializing terminal...');
+                    console.log('Initializing terminal...');
                     const terminalOutput = document.getElementById('terminal-output');
                     if (!terminalOutput) {
-                        debugLog("Terminal output element not found", 'error');
+                        console.log("Terminal output element not found", 'error');
                         this.initErrors.push('Terminal output element not found');
                         return Promise.reject(new Error("Terminal output element not found"));
                     }
@@ -956,7 +995,7 @@
                         
                         // Special handling for Safari
                         if (isSafari) {
-                            debugLog("Safari detected - using modified log stream approach");
+                            console.log("Safari detected - using modified log stream approach");
                             // For Safari, we'll use periodic AJAX instead of EventSource
                             // This helps Safari complete the page load properly
                             terminalOutput.innerHTML += "Using Safari compatibility mode for logs\n";
@@ -990,7 +1029,7 @@
                             this.eventSource = new EventSource('/api/logs/stream');
                             
                             this.eventSource.onopen = () => {
-                                debugLog("Log stream connection established");
+                                console.log("Log stream connection established");
                                 terminalOutput.innerHTML += "Connected to log stream\n";
                                 this.initStatus.terminal = true;
                                 resolve();
@@ -1006,7 +1045,7 @@
                             };
                             
                             this.eventSource.onerror = (error) => {
-                                debugLog('EventSource error:', error, 'error');
+                                console.log('EventSource error:', error, 'error');
                                 terminalOutput.innerHTML += "Connection to log stream lost. Reconnecting...\n";
                                 
                                 // Close the current connection
@@ -1026,13 +1065,13 @@
                             // Set a timeout in case the connection hangs
                             setTimeout(() => {
                                 if (!this.initStatus.terminal) {
-                                    debugLog('Log stream connection timed out, continuing anyway');
+                                    console.log('Log stream connection timed out, continuing anyway');
                                     this.initStatus.terminal = true;
                                     resolve();
                                 }
                             }, 3000);
                         } catch (error) {
-                            debugLog('Error setting up EventSource:', error, 'error');
+                            console.log('Error setting up EventSource:', error, 'error');
                             terminalOutput.innerHTML += `Error connecting to log stream: ${error.message}\n`;
                             this.initErrors.push('Error setting up log stream');
                             reject(error);
@@ -1056,7 +1095,7 @@
                         this.eventSource = new EventSource('/api/logs/stream');
                         
                         this.eventSource.onopen = () => {
-                            debugLog("Log stream reconnected");
+                            console.log("Log stream reconnected");
                             terminalOutput.innerHTML += "Reconnected to log stream\n";
                         };
                         
@@ -1068,13 +1107,13 @@
                         };
                         
                         this.eventSource.onerror = () => {
-                            debugLog('EventSource reconnection error');
+                            console.log('EventSource reconnection error');
                             this.eventSource.close();
                             this.eventSource = null;
                             setTimeout(() => this.reconnectTerminal(), 5000);
                         };
                     } catch (error) {
-                        debugLog('Error reconnecting to log stream:', error, 'error');
+                        console.log('Error reconnecting to log stream:', error, 'error');
                         setTimeout(() => this.reconnectTerminal(), 5000);
                     }
                 },
@@ -1113,7 +1152,7 @@
                         const data = await response.json();
                         this.loggerLevels = data;
                     } catch (error) {
-                        debugLog('Error loading log levels:', error, 'error');
+                        console.log('Error loading log levels:', error, 'error');
                     }
                 },
                 
@@ -1132,9 +1171,9 @@
                             throw new Error('Failed to update log level');
                         }
                         
-                        debugLog(`Updated log level for ${logger} to ${this.loggerLevels[logger]}`);
+                        console.log(`Updated log level for ${logger} to ${this.loggerLevels[logger]}`);
                     } catch (error) {
-                        debugLog('Error updating log level:', error, 'error');
+                        console.log('Error updating log level:', error, 'error');
                         alert('Failed to update log level');
                     }
                 }

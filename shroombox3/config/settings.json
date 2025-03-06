@@ -1,20 +1,20 @@
 {
     "available_devices": [
         {
-            "ip": "192.168.8.164",
-            "mac": "B0-19-21-C4-CE-97",
-            "model": "P115",
-            "name": "Heatmat",
-            "role": "heater",
-            "state": true,
-            "type": "SMART.TAPOPLUG"
-        },
-        {
             "ip": "192.168.8.181",
             "mac": "B0-19-21-C4-C9-9D",
             "model": "P115",
             "name": "Humidifier",
             "role": "humidifier",
+            "state": false,
+            "type": "SMART.TAPOPLUG"
+        },
+        {
+            "ip": "192.168.8.164",
+            "mac": "B0-19-21-C4-CE-97",
+            "model": "P115",
+            "name": "Heatmat",
+            "role": "heater",
             "state": false,
             "type": "SMART.TAPOPLUG"
         }
@@ -33,19 +33,19 @@
                 "co2_setpoint": 500,
                 "rh_setpoint": 0.0,
                 "temp_hysteresis": 0.5,
-                "temp_setpoint": 19.0
+                "temp_setpoint": 17.0
             },
             "colonisation": {
-                "co2_setpoint": 400,
-                "rh_setpoint": 50.0,
+                "co2_setpoint": 500,
+                "rh_setpoint": 10.0,
                 "temp_hysteresis": 0.5,
-                "temp_setpoint": 19.5
+                "temp_setpoint": 18.0
             },
             "growing": {
                 "co2_setpoint": 550,
                 "rh_setpoint": 85.0,
                 "temp_hysteresis": 0.5,
-                "temp_setpoint": 19.0
+                "temp_setpoint": 17.0
             }
         }
     },

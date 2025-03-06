@@ -244,8 +244,12 @@ async def save_settings():
         # Get the request data
         data = await request.get_json()
         
+        # Log the received data for debugging
+        logger.info(f"Received settings update request with data: {json.dumps(data, indent=2)}")
+        
         # Validate the data structure
         if not isinstance(data, dict):
+            logger.error("Invalid settings format: not a dictionary")
             return jsonify({'error': 'Invalid settings format'}), 400
             
         # Ensure numeric values are properly converted
@@ -257,17 +261,113 @@ async def save_settings():
                     phase_data['rh_setpoint'] = float(phase_data['rh_setpoint'])
                 if 'co2_setpoint' in phase_data:
                     phase_data['co2_setpoint'] = int(phase_data['co2_setpoint'])
+        else:
+            logger.error("Missing environment or phases in settings data")
+            return jsonify({'error': 'Missing environment or phases in settings data'}), 400
             
-        # Save to file
+        # Load current settings first to compare and verify changes
         settings_file = os.path.join(BASE_DIR, 'config', 'settings.json')
-        with open(settings_file, 'w') as f:
-            json.dump(data, f, indent=4)
+        logger.info(f"Settings file path: {settings_file}")
+        
+        try:
+            with open(settings_file, 'r') as f:
+                current_settings = json.load(f)
+                logger.info(f"Successfully loaded current settings from {settings_file}")
+        except Exception as e:
+            logger.error(f"Error reading current settings file: {e}")
+            return jsonify({'error': f'Error reading settings file: {str(e)}'}), 500
             
-        logger.info(f"Settings updated successfully: {data['environment']['current_phase']} phase")
-        return jsonify({'success': True})
+        # Log what's changing for debugging purposes
+        if 'environment' in data and 'phases' in data['environment']:
+            current_phase = data['environment']['current_phase']
+            logger.info(f"Current phase: {current_phase}")
+            
+            if current_phase in data['environment']['phases'] and current_phase in current_settings['environment']['phases']:
+                old_settings = current_settings['environment']['phases'][current_phase]
+                new_settings = data['environment']['phases'][current_phase]
+                
+                logger.info(f"Old settings for {current_phase}: {json.dumps(old_settings, indent=2)}")
+                logger.info(f"New settings for {current_phase}: {json.dumps(new_settings, indent=2)}")
+                
+                for key in ['temp_setpoint', 'rh_setpoint', 'co2_setpoint']:
+                    if key in old_settings and key in new_settings:
+                        if old_settings[key] != new_settings[key]:
+                            logger.info(f"Changing {key} from {old_settings[key]} to {new_settings[key]} for {current_phase} phase")
+                        else:
+                            logger.info(f"No change for {key}: remains {old_settings[key]}")
+                    else:
+                        logger.warning(f"Key {key} missing in either old or new settings")
+            else:
+                logger.warning(f"Phase {current_phase} not found in both old and new settings")
+        
+        # Save to file with proper synchronization
+        try:
+            # First write to a temporary file
+            temp_file = f"{settings_file}.tmp"
+            with open(temp_file, 'w') as f:
+                json.dump(data, f, indent=4)
+                f.flush()
+                os.fsync(f.fileno())  # Force write to disk
+            
+            # Then rename the temporary file to the actual file (atomic operation)
+            os.replace(temp_file, settings_file)
+            
+            # Verify the file was written correctly
+            with open(settings_file, 'r') as f:
+                saved_data = json.load(f)
+                
+            # Check if the saved data matches what we intended to save
+            if saved_data['environment']['current_phase'] != data['environment']['current_phase']:
+                logger.error(f"Verification failed: current_phase mismatch after save")
+                return jsonify({'error': 'Settings verification failed after save'}), 500
+                
+            current_phase = data['environment']['current_phase']
+            for key in ['temp_setpoint', 'rh_setpoint', 'co2_setpoint']:
+                if saved_data['environment']['phases'][current_phase][key] != data['environment']['phases'][current_phase][key]:
+                    logger.error(f"Verification failed: {key} mismatch after save")
+                    return jsonify({'error': 'Settings verification failed after save'}), 500
+                    
+            logger.info(f"Successfully wrote and verified settings to {settings_file}")
+            
+        except Exception as e:
+            logger.error(f"Error writing settings file: {e}")
+            import traceback
+            logger.error(f"Stack trace: {traceback.format_exc()}")
+            return jsonify({'error': f'Error writing settings file: {str(e)}'}), 500
+            
+        logger.info(f"Settings updated successfully for {data['environment']['current_phase']} phase")
+        
+        # Force the controller to reload settings
+        if controller:
+            try:
+                # Update the last modified time to force a reload
+                controller.config_last_modified = 0
+                logger.info("Reset controller config_last_modified to 0")
+                
+                # Force an immediate check for config updates
+                asyncio.create_task(controller.check_config_updates())
+                logger.info("Created task to check config updates")
+                
+                # After settings update, force a state check to apply new settings
+                asyncio.create_task(controller.diagnose_heater_control())
+                logger.info("Running heater diagnostic to apply new settings")
+            except Exception as e:
+                logger.error(f"Error notifying controller of settings change: {e}")
+                return jsonify({'error': str(e), 'message': 'Settings saved but controller update failed'}), 500
+        else:
+            logger.warning("Controller not initialized, settings will be loaded on next startup")
+            
+        # Return success with the updated settings
+        return jsonify({
+            'success': True, 
+            'message': 'Settings updated successfully',
+            'settings': data
+        })
         
     except Exception as e:
         logger.error(f"Error saving settings: {e}")
+        import traceback
+        logger.error(f"Stack trace: {traceback.format_exc()}")
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/terminal')
@@ -765,6 +865,62 @@ async def get_latest_logs():
     except Exception as e:
         app.logger.error(f"Error fetching latest logs: {e}")
         return jsonify([f"Error fetching logs: {str(e)}"]), 500
+
+@app.route('/api/system/reload-config', methods=['POST'])
+async def reload_config():
+    """Force the controller to reload configuration and return current status."""
+    try:
+        if not controller:
+            await initialize_controller()
+            if not controller:  # If initialization failed
+                return jsonify({'error': 'Failed to initialize controller'}), 500
+        
+        # Reset the config last modified time to force a reload
+        controller.config_last_modified = 0
+        
+        # Force an immediate check for config updates
+        await controller.check_config_updates()
+        
+        # Run a heater diagnostic to ensure correct state
+        await controller.diagnose_heater_control()
+        
+        # Get the latest measurements
+        measurements = await controller.get_measurements()
+        if measurements:
+            co2, temp, rh = measurements
+        else:
+            co2, temp, rh = 0, 0, 0
+            
+        # Get the current settings
+        with open(os.path.join(BASE_DIR, 'config', 'settings.json'), 'r') as f:
+            settings = json.load(f)
+        
+        # Get current phase and setpoints
+        current_phase = settings['environment']['current_phase']
+        phase_settings = settings['environment']['phases'][current_phase]
+        
+        return jsonify({
+            'status': 'success',
+            'message': 'Config reloaded successfully',
+            'readings': {
+                'temperature': temp,
+                'humidity': rh,
+                'co2': co2
+            },
+            'devices': {
+                'heater': controller.heater_on,
+                'humidifier': controller.humidifier_on
+            },
+            'current_phase': current_phase,
+            'setpoints': {
+                'temperature': phase_settings['temp_setpoint'],
+                'humidity': phase_settings['rh_setpoint'],
+                'co2': phase_settings['co2_setpoint']
+            }
+        })
+    except Exception as e:
+        logger.error(f"Error reloading config: {e}")
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     config = Config()
