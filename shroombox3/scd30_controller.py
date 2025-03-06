@@ -4,9 +4,10 @@ import asyncio
 from typing import Optional, Tuple
 from datetime import datetime
 import scd30_i2c
+import logging_setup
 
 # Set up logging
-logger = logging.getLogger('shroombox')
+logger = logging_setup.get_logger('shroombox.sensor')
 
 class SCD30Controller:
     def __init__(self, measurement_interval: int = 5):

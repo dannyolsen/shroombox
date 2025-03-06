@@ -6,8 +6,9 @@ from kasa import Discover
 import logging
 from typing import Optional, Dict, Any
 import json
+import logging_setup
 
-logger = logging.getLogger(__name__)
+logger = logging_setup.get_logger('shroombox.device')
 
 class TapoController:
     """Controller class for managing Tapo devices."""

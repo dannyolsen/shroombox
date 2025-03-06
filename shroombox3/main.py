@@ -4,9 +4,13 @@ from dotenv import load_dotenv
 import logging
 from logging.handlers import RotatingFileHandler
 import scd30_i2c  # Import the module directly
+import logging_setup
+
+# Initialize logging first thing
+logging_setup.setup_logging()
+logger = logging_setup.get_logger('shroombox')
 
 # Set up logging ONCE at the module level
-logger = logging.getLogger('shroombox')
 logger.setLevel(logging.INFO)
 
 # Only add handlers if they don't exist
@@ -389,12 +393,44 @@ class EnvironmentController:
         if self.humidifier_ip:
             await self.tapo.set_device_state(self.humidifier_ip, state)
             self.humidifier_on = state
-    
+            
+            # Update state in settings.json
+            try:
+                with open(self.config_path, 'r') as f:
+                    settings = json.load(f)
+                
+                # Update device state in settings
+                for device in settings.get('available_devices', []):
+                    if device.get('role') == 'humidifier':
+                        device['state'] = state
+                
+                # Save updated settings
+                with open(self.config_path, 'w') as f:
+                    json.dump(settings, f, indent=4)
+            except Exception as e:
+                logger.error(f"Error updating humidifier state in settings: {e}")
+
     async def set_heater_state(self, state: bool) -> None:
         """Set heater state."""
         if self.heater_ip:
             await self.tapo.set_device_state(self.heater_ip, state)
             self.heater_on = state
+            
+            # Update state in settings.json
+            try:
+                with open(self.config_path, 'r') as f:
+                    settings = json.load(f)
+                
+                # Update device state in settings
+                for device in settings.get('available_devices', []):
+                    if device.get('role') == 'heater':
+                        device['state'] = state
+                
+                # Save updated settings
+                with open(self.config_path, 'w') as f:
+                    json.dump(settings, f, indent=4)
+            except Exception as e:
+                logger.error(f"Error updating heater state in settings: {e}")
 
     async def connect_to_humidifier(self, retries=3):
         """Connect to humidifier with retries."""
@@ -492,6 +528,32 @@ class EnvironmentController:
             
         except Exception as e:
             logger.error(f"❌ Error logging humidifier state: {e}")
+
+    def log_heater_state(self, state: int, current_temp: float) -> None:
+        """Log heater state to InfluxDB."""
+        try:
+            bucket = os.getenv('INFLUXDB_BUCKET')
+            if not bucket or not self.write_api:
+                return
+            
+            phase = self.current_settings['environment']['current_phase']
+            
+            # Get the current temperature setpoint
+            temp_setpoint = self.current_settings['environment']['phases'][phase]['temp_setpoint']
+            
+            # Create point with heater state
+            point = Point("heater_state") \
+                .tag("location", "shroombox") \
+                .tag("phase", phase) \
+                .field("state", state) \
+                .field("temperature", float(current_temp)) \
+                .field("setpoint", float(temp_setpoint))
+            
+            self.write_api.write(bucket=bucket, record=point)
+            logger.info(f"✓ Logged heater state: {'ON' if state == 1 else 'OFF'}")
+            
+        except Exception as e:
+            logger.error(f"❌ Error logging heater state: {e}")
 
     async def start_system(self):
         """Start environmental control system."""
@@ -648,16 +710,21 @@ class EnvironmentController:
             if should_heat != self.heater_on:
                 await self.set_heater_state(should_heat)
                 logger.info(f"Heater turned {'ON' if should_heat else 'OFF'} - Temp: {temperature}°C (Target: {setpoint}°C ±{hysteresis}°C)")
+                # Log the heater state to InfluxDB
+                self.log_heater_state(1 if should_heat else 0, temperature)
             
             # Force an immediate check if the setpoint has changed significantly
             # This ensures the heater responds quickly to large setpoint changes
             if abs(temperature - setpoint) > hysteresis * 2:
                 logger.info(f"Large temperature difference detected: current={temperature}°C, setpoint={setpoint}°C")
                 # Force heater state update based on current conditions
-                should_heat = temperature < setpoint
+                # Use the same hysteresis logic as in the regular check, don't just compare to setpoint
+                should_heat = temperature < temp_low
                 await self.set_heater_state(should_heat)
                 logger.info(f"Heater state forced to {'ON' if should_heat else 'OFF'} due to large setpoint change")
                 self.heater_on = should_heat
+                # Log the heater state to InfluxDB after forced update
+                self.log_heater_state(1 if should_heat else 0, temperature)
                 
         except Exception as e:
             logger.error(f"Error in temperature control: {e}")
@@ -1002,6 +1069,9 @@ async def main():
                     
                     # Control CO2/ventilation
                     controller.co2_control(co2, controller.current_settings['environment']['phases'][controller.current_settings['environment']['current_phase']]['co2_setpoint'])
+                    
+                    # Check for configuration updates
+                    await controller.check_config_updates()
                     
                     # Log data to InfluxDB
                     await controller.log_data(co2, temp, rh)

@@ -13,6 +13,8 @@ from datetime import datetime, timedelta
 from hypercorn.config import Config
 from hypercorn.asyncio import serve
 from dotenv import load_dotenv
+from typing import Optional, Dict, Any, List, Tuple
+from functools import wraps
 
 # Add parent directory to Python path so we can import from root
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -166,26 +168,63 @@ async def start_background_tasks():
 
 @app.route('/safari-check')
 async def safari_check():
-    """Special route to help Safari with caching issues."""
+    """Simple endpoint to check if Safari is working properly."""
     return jsonify({
-        'timestamp': time.time(),
-        'status': 'ok'
+        "status": "ok", 
+        "message": "Safari compatibility check successful",
+        "timestamp": datetime.now().isoformat()
     })
 
 @app.route('/')
 async def index():
-    """Render the main page."""
+    """Render the main index page."""
     try:
-        logger.info("Attempting to render index.html")
         response = await make_response(await render_template('index.html'))
-        response.headers['Content-Type'] = 'text/html; charset=utf-8'
-        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate'
+        
+        # Set cache control headers to prevent caching
+        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
         response.headers['Pragma'] = 'no-cache'
         response.headers['Expires'] = '0'
+        response.headers['Last-Modified'] = datetime.now().strftime('%a, %d %b %Y %H:%M:%S GMT')
+        
         return response
     except Exception as e:
         logger.error(f"Error rendering index: {e}", exc_info=True)
         return f"Error loading page: {str(e)}", 500
+
+@app.route('/test')
+async def test_page():
+    """Render a simple test page."""
+    try:
+        response = await make_response(await render_template('test.html'))
+        
+        # Set cache control headers to prevent caching
+        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+        response.headers['Pragma'] = 'no-cache'
+        response.headers['Expires'] = '0'
+        response.headers['Last-Modified'] = datetime.now().strftime('%a, %d %b %Y %H:%M:%S GMT')
+        
+        return response
+    except Exception as e:
+        logger.error(f"Error rendering test page: {e}", exc_info=True)
+        return f"Error loading test page: {str(e)}", 500
+
+@app.route('/simple')
+async def simple_page():
+    """Render a simplified control interface."""
+    try:
+        response = await make_response(await render_template('simple.html'))
+        
+        # Set cache control headers to prevent caching
+        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+        response.headers['Pragma'] = 'no-cache'
+        response.headers['Expires'] = '0'
+        response.headers['Last-Modified'] = datetime.now().strftime('%a, %d %b %Y %H:%M:%S GMT')
+        
+        return response
+    except Exception as e:
+        logger.error(f"Error rendering simple page: {e}", exc_info=True)
+        return f"Error loading simple page: {str(e)}", 500
 
 @app.route('/api/settings', methods=['GET'])
 async def get_settings():
@@ -363,8 +402,27 @@ async def get_system_status():
         if not controller:
             return jsonify({'error': 'Controller not initialized'}), 500
             
-        # Update device states
+        # Update device states from actual device status
         await controller.update_device_states()
+        
+        # Also update states in settings.json to keep it in sync
+        try:
+            settings_file = os.path.join(BASE_DIR, 'config', 'settings.json')
+            with open(settings_file, 'r') as f:
+                settings = json.load(f)
+                
+            # Update device states in settings
+            for device in settings.get('available_devices', []):
+                if device.get('role') == 'heater':
+                    device['state'] = controller.heater_on
+                elif device.get('role') == 'humidifier':
+                    device['state'] = controller.humidifier_on
+            
+            # Save updated settings
+            with open(settings_file, 'w') as f:
+                json.dump(settings, f, indent=4)
+        except Exception as e:
+            logger.error(f"Error updating device states in settings: {e}")
         
         # Get CPU temperature
         cpu_temp = controller.fan.get_cpu_temp() if controller.fan else None
@@ -520,6 +578,17 @@ async def add_cors_headers(response):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+    
+    # Add cache prevention headers to all API responses
+    if request.path.startswith('/api/'):
+        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+        response.headers['Pragma'] = 'no-cache'
+        response.headers['Expires'] = '0'
+        response.headers['X-Accel-Expires'] = '0'
+        
+        # Add a timestamp to prevent browser caching
+        response.headers['Last-Modified'] = datetime.now().strftime('%a, %d %b %Y %H:%M:%S GMT')
+    
     return response
 
 @app.route('/health')
@@ -606,6 +675,96 @@ async def log_stream():
             'Content-Type': 'text/event-stream'
         }
     )
+
+@app.route('/api/logging/levels', methods=['GET'])
+async def get_logging_levels():
+    """Get current logging levels for all loggers."""
+    loggers = {
+        'shroombox': logging.getLogger('shroombox').level,
+        'shroombox.sensor': logging.getLogger('shroombox.sensor').level,
+        'shroombox.device': logging.getLogger('shroombox.device').level,
+        'shroombox.web': logging.getLogger('shroombox.web').level
+    }
+    
+    # Convert numeric levels to names
+    level_names = {
+        logging.DEBUG: 'DEBUG',
+        logging.INFO: 'INFO',
+        logging.WARNING: 'WARNING',
+        logging.ERROR: 'ERROR',
+        logging.CRITICAL: 'CRITICAL'
+    }
+    
+    return jsonify({name: level_names.get(level, level) for name, level in loggers.items()})
+
+@app.route('/api/logging/levels', methods=['POST'])
+async def set_logging_levels():
+    """Set logging levels for specified loggers."""
+    data = await request.get_json()
+    
+    # Map level names to numeric values
+    level_values = {
+        'DEBUG': logging.DEBUG,
+        'INFO': logging.INFO,
+        'WARNING': logging.WARNING,
+        'ERROR': logging.ERROR,
+        'CRITICAL': logging.CRITICAL
+    }
+    
+    # Update logger levels
+    for logger_name, level_name in data.items():
+        if logger_name.startswith('shroombox') and level_name in level_values:
+            logger = logging.getLogger(logger_name)
+            logger.setLevel(level_values[level_name])
+            
+    return jsonify({'success': True})
+
+@app.route('/logging')
+async def logging_page():
+    """Render the logging control page."""
+    try:
+        response = await make_response(await render_template('logging.html'))
+        response.headers['Content-Type'] = 'text/html; charset=utf-8'
+        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate'
+        return response
+    except Exception as e:
+        logger.error(f"Error rendering logging page: {e}", exc_info=True)
+        return f"Error loading page: {str(e)}", 500
+
+# Add a route to explicitly serve the main.js file
+@app.route('/static/js/main.js')
+async def serve_main_js():
+    try:
+        with open(os.path.join(current_dir, 'static', 'js', 'main.js'), 'r') as f:
+            content = f.read()
+        
+        response = await make_response(content)
+        response.headers['Content-Type'] = 'application/javascript'
+        response.headers['Cache-Control'] = 'no-cache'
+        return response
+    except Exception as e:
+        logger.error(f"Error serving main.js: {e}")
+        return "", 404
+
+@app.route('/api/logs/latest')
+async def get_latest_logs():
+    """Endpoint for Safari browsers to fetch latest logs without streaming."""
+    try:
+        count = int(request.args.get('count', '10'))
+        # Cap the count to avoid excessive responses
+        count = min(count, 50)
+        
+        # Get the last N lines from the log buffer
+        latest_logs = []
+        with log_buffer_lock:
+            # Get the most recent logs from the circular buffer
+            if log_buffer:
+                latest_logs = list(log_buffer)[-count:]
+        
+        return jsonify(latest_logs)
+    except Exception as e:
+        app.logger.error(f"Error fetching latest logs: {e}")
+        return jsonify([f"Error fetching logs: {str(e)}"]), 500
 
 if __name__ == '__main__':
     config = Config()

@@ -4,7 +4,7 @@
             "ip": "192.168.8.164",
             "mac": "B0-19-21-C4-CE-97",
             "model": "P115",
-            "name": "heatmat",
+            "name": "Heatmat",
             "role": "heater",
             "state": true,
             "type": "SMART.TAPOPLUG"
@@ -15,7 +15,7 @@
             "model": "P115",
             "name": "Humidifier",
             "role": "humidifier",
-            "state": true,
+            "state": false,
             "type": "SMART.TAPOPLUG"
         }
     ],
@@ -39,7 +39,7 @@
                 "co2_setpoint": 400,
                 "rh_setpoint": 50.0,
                 "temp_hysteresis": 0.5,
-                "temp_setpoint": 22.0
+                "temp_setpoint": 19.5
             },
             "growing": {
                 "co2_setpoint": 550,

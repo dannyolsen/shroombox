@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shroombox Simple Control</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .card {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .reading {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, button {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 100%;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Shroombox Simple Control</h1>
+        
+        <div id="status" class="status" style="display: none;"></div>
+        
+        <h2>Current Readings</h2>
+        <div class="grid" id="readings">
+            <div class="card">
+                <h3>Temperature</h3>
+                <div class="reading" id="temp-reading">--°C</div>
+            </div>
+            <div class="card">
+                <h3>CO2</h3>
+                <div class="reading" id="co2-reading">--ppm</div>
+            </div>
+            <div class="card">
+                <h3>Humidity</h3>
+                <div class="reading" id="humidity-reading">--%</div>
+            </div>
+        </div>
+        
+        <h2>Growth Phase</h2>
+        <form id="phase-form">
+            <div class="form-group">
+                <label for="phase">Select Phase:</label>
+                <select id="phase" name="phase">
+                    <option value="colonisation">Colonisation</option>
+                    <option value="growing">Growing</option>
+                    <option value="cake">Cake</option>
+                </select>
+            </div>
+            <button type="submit">Update Phase</button>
+        </form>
+        
+        <h2>Setpoints</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>Temperature</h3>
+                <form id="temp-form">
+                    <div class="form-group">
+                        <label for="temp-setpoint">Setpoint (°C):</label>
+                        <input type="number" id="temp-setpoint" name="temp-setpoint" step="0.1" min="0" max="40">
+                    </div>
+                    <button type="submit">Update</button>
+                </form>
+            </div>
+            <div class="card">
+                <h3>CO2</h3>
+                <form id="co2-form">
+                    <div class="form-group">
+                        <label for="co2-setpoint">Setpoint (ppm):</label>
+                        <input type="number" id="co2-setpoint" name="co2-setpoint" step="10" min="0" max="20000">
+                    </div>
+                    <button type="submit">Update</button>
+                </form>
+            </div>
+            <div class="card">
+                <h3>Humidity</h3>
+                <form id="humidity-form">
+                    <div class="form-group">
+                        <label for="humidity-setpoint">Setpoint (%):</label>
+                        <input type="number" id="humidity-setpoint" name="humidity-setpoint" step="1" min="0" max="100">
+                    </div>
+                    <button type="submit">Update</button>
+                </form>
+            </div>
+        </div>
+        
+        <h2>System Status</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>Heater</h3>
+                <div class="reading" id="heater-status">--</div>
+            </div>
+            <div class="card">
+                <h3>Humidifier</h3>
+                <div class="reading" id="humidifier-status">--</div>
+            </div>
+            <div class="card">
+                <h3>Fan Speed</h3>
+                <div class="reading" id="fan-speed">--%</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to show status messages
+        function showStatus(message, isError = false) {
+            const statusElement = document.getElementById('status');
+            statusElement.textContent = message;
+            statusElement.className = isError ? 'status error' : 'status success';
+            statusElement.style.display = 'block';
+            
+            // Hide after 5 seconds
+            setTimeout(() => {
+                statusElement.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Function to load current readings
+        async function loadReadings() {
+            try {
+                const response = await fetch('/api/measurements/latest');
+                if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+                
+                const data = await response.json();
+                
+                document.getElementById('temp-reading').textContent = `${data.temperature}°C`;
+                document.getElementById('co2-reading').textContent = `${data.co2}ppm`;
+                document.getElementById('humidity-reading').textContent = `${data.humidity}%`;
+            } catch (error) {
+                console.error('Error loading readings:', error);
+                showStatus(`Error loading readings: ${error.message}`, true);
+            }
+        }
+        
+        // Function to load system status
+        async function loadSystemStatus() {
+            try {
+                const response = await fetch('/api/system/status');
+                if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+                
+                const data = await response.json();
+                
+                document.getElementById('heater-status').textContent = data.heater.text;
+                document.getElementById('heater-status').style.color = data.heater.state ? '#4CAF50' : '#999';
+                
+                document.getElementById('humidifier-status').textContent = data.humidifier.text;
+                document.getElementById('humidifier-status').style.color = data.humidifier.state ? '#4CAF50' : '#999';
+                
+                document.getElementById('fan-speed').textContent = `${data.fan_speed}%`;
+            } catch (error) {
+                console.error('Error loading system status:', error);
+                showStatus(`Error loading system status: ${error.message}`, true);
+            }
+        }
+        
+        // Function to load current settings
+        async function loadSettings() {
+            try {
+                const response = await fetch('/api/settings');
+                if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+                
+                const data = await response.json();
+                const phase = data.environment.current_phase;
+                const phaseSettings = data.environment.phases[phase];
+                
+                // Update phase select
+                document.getElementById('phase').value = phase;
+                
+                // Update setpoint inputs
+                document.getElementById('temp-setpoint').value = phaseSettings.temp_setpoint;
+                document.getElementById('co2-setpoint').value = phaseSettings.co2_setpoint;
+                document.getElementById('humidity-setpoint').value = phaseSettings.rh_setpoint;
+            } catch (error) {
+                console.error('Error loading settings:', error);
+                showStatus(`Error loading settings: ${error.message}`, true);
+            }
+        }
+        
+        // Function to update phase
+        document.getElementById('phase-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            const phase = document.getElementById('phase').value;
+            
+            try {
+                // Get current settings
+                const response = await fetch('/api/settings');
+                if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+                
+                const settings = await response.json();
+                settings.environment.current_phase = phase;
+                
+                // Save updated settings
+                const saveResponse = await fetch('/api/settings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(settings)
+                });
+                
+                if (!saveResponse.ok) {
+                    throw new Error(`Failed to save phase: HTTP error ${saveResponse.status}`);
+                }
+                
+                showStatus(`Growth phase updated to ${phase}`);
+                
+                // Reload settings to update setpoints for the new phase
+                await loadSettings();
+            } catch (error) {
+                console.error('Error updating phase:', error);
+                showStatus(`Error updating phase: ${error.message}`, true);
+            }
+        });
+        
+        // Function to update temperature setpoint
+        document.getElementById('temp-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            const value = parseFloat(document.getElementById('temp-setpoint').value);
+            
+            try {
+                // Get current settings
+                const response = await fetch('/api/settings');
+                if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+                
+                const settings = await response.json();
+                const phase = settings.environment.current_phase;
+                
+                // Update setpoint
+                settings.environment.phases[phase].temp_setpoint = value;
+                
+                // Save updated settings
+                const saveResponse = await fetch('/api/settings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(settings)
+                });
+                
+                if (!saveResponse.ok) {
+                    throw new Error(`Failed to save temperature setpoint: HTTP error ${saveResponse.status}`);
+                }
+                
+                showStatus(`Temperature setpoint updated to ${value}°C`);
+            } catch (error) {
+                console.error('Error updating temperature setpoint:', error);
+                showStatus(`Error updating temperature setpoint: ${error.message}`, true);
+            }
+        });
+        
+        // Function to update CO2 setpoint
+        document.getElementById('co2-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            const value = parseInt(document.getElementById('co2-setpoint').value);
+            
+            try {
+                // Get current settings
+                const response = await fetch('/api/settings');
+                if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+                
+                const settings = await response.json();
+                const phase = settings.environment.current_phase;
+                
+                // Update setpoint
+                settings.environment.phases[phase].co2_setpoint = value;
+                
+                // Save updated settings
+                const saveResponse = await fetch('/api/settings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(settings)
+                });
+                
+                if (!saveResponse.ok) {
+                    throw new Error(`Failed to save CO2 setpoint: HTTP error ${saveResponse.status}`);
+                }
+                
+                showStatus(`CO2 setpoint updated to ${value}ppm`);
+            } catch (error) {
+                console.error('Error updating CO2 setpoint:', error);
+                showStatus(`Error updating CO2 setpoint: ${error.message}`, true);
+            }
+        });
+        
+        // Function to update humidity setpoint
+        document.getElementById('humidity-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            const value = parseFloat(document.getElementById('humidity-setpoint').value);
+            
+            try {
+                // Get current settings
+                const response = await fetch('/api/settings');
+                if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+                
+                const settings = await response.json();
+                const phase = settings.environment.current_phase;
+                
+                // Update setpoint
+                settings.environment.phases[phase].rh_setpoint = value;
+                
+                // Save updated settings
+                const saveResponse = await fetch('/api/settings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(settings)
+                });
+                
+                if (!saveResponse.ok) {
+                    throw new Error(`Failed to save humidity setpoint: HTTP error ${saveResponse.status}`);
+                }
+                
+                showStatus(`Humidity setpoint updated to ${value}%`);
+            } catch (error) {
+                console.error('Error updating humidity setpoint:', error);
+                showStatus(`Error updating humidity setpoint: ${error.message}`, true);
+            }
+        });
+        
+        // Load initial data
+        window.addEventListener('DOMContentLoaded', () => {
+            loadReadings();
+            loadSystemStatus();
+            loadSettings();
+            
+            // Set up periodic updates
+            setInterval(() => {
+                loadReadings();
+                loadSystemStatus();
+            }, 5000);
+        });
+    </script>
+</body>
+</html> 

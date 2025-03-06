@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shroombox - Logging Control</title>
+
+    <!-- Load Alpine.js and Tailwind directly -->
+    <script src="https://unpkg.com/alpinejs@3.12.0/dist/cdn.min.js" defer></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-6">
+    <div class="max-w-6xl mx-auto space-y-6">
+        <div class="flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-gray-800">Shroombox Logging Control</h1>
+            <a href="/" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
+                Back to Dashboard
+            </a>
+        </div>
+
+        <!-- Logging Control -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold text-gray-800">Logging Levels</h2>
+                <button 
+                    id="apply-all"
+                    class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    x-data="{ level: 'WARNING' }"
+                    x-on:click="applyToAll(level)"
+                >
+                    <span>Apply to All:</span>
+                    <select 
+                        x-model="level"
+                        class="ml-2 bg-blue-700 text-white border-none focus:ring-0"
+                        onclick="event.stopPropagation()"
+                    >
+                        <option value="DEBUG">DEBUG</option>
+                        <option value="INFO">INFO</option>
+                        <option value="WARNING">WARNING</option>
+                        <option value="ERROR">ERROR</option>
+                        <option value="CRITICAL">CRITICAL</option>
+                    </select>
+                </button>
+            </div>
+            
+            <div x-data="loggingControl()">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <template x-for="(level, logger) in loggerLevels" :key="logger">
+                        <div class="p-6 bg-gray-50 rounded-lg">
+                            <div class="text-lg font-medium text-gray-800 mb-3" x-text="logger"></div>
+                            
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Current Level</label>
+                                <select 
+                                    :id="'level-' + logger"
+                                    x-model="loggerLevels[logger]"
+                                    @change="updateLogLevel(logger)"
+                                    class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+                                >
+                                    <option value="DEBUG">DEBUG</option>
+                                    <option value="INFO">INFO</option>
+                                    <option value="WARNING">WARNING</option>
+                                    <option value="ERROR">ERROR</option>
+                                    <option value="CRITICAL">CRITICAL</option>
+                                </select>
+                            </div>
+                            
+                            <div class="text-sm text-gray-600">
+                                <p class="mb-2">Messages shown at this level:</p>
+                                <ul class="list-disc pl-5 space-y-1">
+                                    <template x-if="level === 'DEBUG' || level === 'INFO' || level === 'WARNING' || level === 'ERROR' || level === 'CRITICAL'">
+                                        <li class="text-red-600">CRITICAL - Severe errors that may cause program failure</li>
+                                    </template>
+                                    <template x-if="level === 'DEBUG' || level === 'INFO' || level === 'WARNING' || level === 'ERROR'">
+                                        <li class="text-orange-600">ERROR - Serious problems preventing normal operation</li>
+                                    </template>
+                                    <template x-if="level === 'DEBUG' || level === 'INFO' || level === 'WARNING'">
+                                        <li class="text-yellow-600">WARNING - Unexpected situations that might need attention</li>
+                                    </template>
+                                    <template x-if="level === 'DEBUG' || level === 'INFO'">
+                                        <li class="text-green-600">INFO - Confirmation that things are working as expected</li>
+                                    </template>
+                                    <template x-if="level === 'DEBUG'">
+                                        <li class="text-blue-600">DEBUG - Detailed diagnostic information</li>
+                                    </template>
+                                </ul>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+                
+                <!-- Log File Viewer -->
+                <div class="mt-8">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Log File Viewer</h2>
+                    <div 
+                        id="log-viewer" 
+                        class="font-mono text-sm bg-black text-green-400 p-4 rounded-lg h-96 overflow-y-auto"
+                        style="white-space: pre-wrap; line-height: 1.4;"
+                        x-init="initLogViewer()"
+                    >
+                        Loading log file...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function loggingControl() {
+            return {
+                loggerLevels: {
+                    'shroombox': 'INFO',
+                    'shroombox.sensor': 'INFO',
+                    'shroombox.device': 'INFO',
+                    'shroombox.web': 'INFO'
+                },
+                eventSource: null,
+                
+                init() {
+                    this.loadLogLevels();
+                },
+                
+                async loadLogLevels() {
+                    try {
+                        const response = await fetch('/api/logging/levels');
+                        const data = await response.json();
+                        this.loggerLevels = data;
+                    } catch (error) {
+                        console.error('Error loading log levels:', error);
+                    }
+                },
+                
+                async updateLogLevel(logger) {
+                    try {
+                        const data = {};
+                        data[logger] = this.loggerLevels[logger];
+                        
+                        const response = await fetch('/api/logging/levels', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(data)
+                        });
+                        
+                        if (!response.ok) {
+                            throw new Error('Failed to update log level');
+                        }
+                        
+                        console.log(`Updated log level for ${logger} to ${this.loggerLevels[logger]}`);
+                    } catch (error) {
+                        console.error('Error updating log level:', error);
+                        alert('Failed to update log level');
+                    }
+                },
+                
+                applyToAll(level) {
+                    const loggers = Object.keys(this.loggerLevels);
+                    const updates = {};
+                    
+                    loggers.forEach(logger => {
+                        this.loggerLevels[logger] = level;
+                        updates[logger] = level;
+                    });
+                    
+                    // Update all loggers at once
+                    fetch('/api/logging/levels', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(updates)
+                    })
+                    .then(response => {
+                        if (!response.ok) throw new Error('Failed to update log levels');
+                        console.log(`Applied ${level} level to all loggers`);
+                    })
+                    .catch(error => {
+                        console.error('Error updating log levels:', error);
+                        alert('Failed to update log levels');
+                    });
+                },
+                
+                initLogViewer() {
+                    const logViewer = document.getElementById('log-viewer');
+                    if (!logViewer) return;
+                    
+                    // Set up EventSource for log updates
+                    try {
+                        this.eventSource = new EventSource('/api/logs/stream');
+                        
+                        this.eventSource.onopen = () => {
+                            console.log("Log stream connection established");
+                            logViewer.innerHTML = "Connected to log stream\n";
+                        };
+                        
+                        this.eventSource.onmessage = (event) => {
+                            // Skip heartbeat messages
+                            if (event.data === "♥") return;
+                            
+                            const logLine = event.data;
+                            logViewer.innerHTML += logLine + "\n";
+                            logViewer.scrollTop = logViewer.scrollHeight;
+                        };
+                        
+                        this.eventSource.onerror = (error) => {
+                            console.error('EventSource error:', error);
+                            logViewer.innerHTML += "Connection to log stream lost. Reconnecting...\n";
+                            
+                            // Close the current connection
+                            this.eventSource.close();
+                            this.eventSource = null;
+                            
+                            // Try to reconnect after a delay
+                            setTimeout(() => this.initLogViewer(), 5000);
+                        };
+                    } catch (error) {
+                        console.error('Error setting up EventSource:', error);
+                        logViewer.innerHTML += `Error connecting to log stream: ${error.message}\n`;
+                    }
+                }
+            };
+        }
+        
+        // Make applyToAll available globally
+        window.applyToAll = function(level) {
+            const component = document.querySelector('[x-data="loggingControl()"]').__x.$data;
+            component.applyToAll(level);
+        };
+    </script>
+</body>
+</html> 
