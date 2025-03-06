@@ -274,19 +274,24 @@
         <div class="bg-white rounded-lg shadow-sm p-6">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-xl font-semibold text-gray-800">Device Settings</h2>
-                <button 
-                    @click="rescanDevices"
-                    class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                    :class="{'opacity-50 cursor-not-allowed': isScanning}"
-                    :disabled="isScanning"
-                >
-                    <!-- Spinner for loading state -->
-                    <svg x-show="isScanning" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    <span x-text="isScanning ? 'Scanning...' : 'Scan for Devices'"></span>
-                </button>
+                <div class="flex items-center space-x-2">
+                    <div x-show="lastDeviceUpdate" class="text-xs text-gray-500 animate-pulse">
+                        Last updated: <span x-text="lastDeviceUpdate"></span>
+                    </div>
+                    <button 
+                        @click="rescanDevices"
+                        class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                        :class="{'opacity-50 cursor-not-allowed': isScanning}"
+                        :disabled="isScanning"
+                    >
+                        <!-- Spinner for loading state -->
+                        <svg x-show="isScanning" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span x-text="isScanning ? 'Scanning...' : 'Scan for Devices'"></span>
+                    </button>
+                </div>
             </div>
             <div class="grid grid-cols-2 gap-6">
                 <!-- Heater Section -->
@@ -319,9 +324,14 @@
                                         <div class="flex items-center">
                                             <span class="text-sm text-gray-600 mr-2">Status:</span>
                                             <span 
-                                                :class="getDeviceStatusClass(device)"
-                                                x-text="getDeviceStatusText(device)"
+                                                :class="systemStatus.heater.state ? 'px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800' : 'px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800'"
+                                                x-text="systemStatus.heater.text"
                                             ></span>
+                                            <button 
+                                                @click="toggleDevice('heater')"
+                                                class="ml-2 px-2 py-1 text-xs font-medium rounded bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                x-text="systemStatus.heater.state ? 'Turn OFF' : 'Turn ON'"
+                                            ></button>
                                         </div>
                                     </div>
                                 </div>
@@ -360,9 +370,14 @@
                                         <div class="flex items-center">
                                             <span class="text-sm text-gray-600 mr-2">Status:</span>
                                             <span 
-                                                :class="getDeviceStatusClass(device)"
-                                                x-text="getDeviceStatusText(device)"
+                                                :class="systemStatus.humidifier.state ? 'px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800' : 'px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800'"
+                                                x-text="systemStatus.humidifier.text"
                                             ></span>
+                                            <button 
+                                                @click="toggleDevice('humidifier')"
+                                                class="ml-2 px-2 py-1 text-xs font-medium rounded bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                x-text="systemStatus.humidifier.state ? 'Turn OFF' : 'Turn ON'"
+                                            ></button>
                                         </div>
                                     </div>
                                 </div>
@@ -466,6 +481,7 @@
                 selectedHeater: '',
                 selectedHumidifier: '',
                 isScanning: false,
+                lastDeviceUpdate: '',
                 systemStatus: {
                     fan_speed: 0,
                     heater: { state: false, text: 'OFF' },
@@ -484,6 +500,10 @@
 
                 init() {
                     debugLog('Initializing control panel...');
+                    
+                    // Initialize lastDeviceUpdate
+                    const now = new Date();
+                    this.lastDeviceUpdate = now.toLocaleTimeString();
                     
                     // Ensure loading overlay is hidden after initialization
                     setTimeout(() => {
@@ -524,10 +544,14 @@
                         .finally(() => {
                             debugLog(`Initialization complete with status: ${JSON.stringify(this.initStatus)}`);
                             
-                            // Set up periodic updates
+                            // Set up more frequent updates for system status
+                            setInterval(() => {
+                                this.updateSystemStatus().catch(err => debugLog(`Error updating system status: ${err.message}`, 'error'));
+                            }, 1000); // Poll every second for device status changes
+                            
+                            // Set up less frequent updates for measurements
                             setInterval(() => {
                                 this.updateMeasurements().catch(err => debugLog(`Error updating measurements: ${err.message}`, 'error'));
-                                this.updateSystemStatus().catch(err => debugLog(`Error updating system status: ${err.message}`, 'error'));
                             }, 5000);
                         });
                 },
@@ -804,6 +828,28 @@
                                 }
                             });
                             
+                            // Get the latest device states from system status
+                            try {
+                                const statusResponse = await fetch('/api/system/status');
+                                if (statusResponse.ok) {
+                                    const statusData = await statusResponse.json();
+                                    
+                                    // Update device states to match system status
+                                    this.availableDevices.forEach(device => {
+                                        if (device.role === 'heater') {
+                                            device.state = statusData.heater.state || false;
+                                        } else if (device.role === 'humidifier') {
+                                            device.state = statusData.humidifier.state || false;
+                                        }
+                                    });
+                                    
+                                    debugLog("Updated device states from system status");
+                                }
+                            } catch (statusError) {
+                                debugLog('Error getting system status for device states:', statusError, 'warning');
+                                // Continue with the states from settings.json
+                            }
+                            
                             this.initStatus.devices = true;
                         } else {
                             debugLog("No available_devices found in settings");
@@ -890,7 +936,14 @@
                         // Reload available devices after scan
                         await this.loadAvailableDevices();
                         
-                        debugLog("Device scan completed");
+                        // Also update system status to get latest device states
+                        await this.updateSystemStatus();
+                        
+                        // Update the last update timestamp
+                        const now = new Date();
+                        this.lastDeviceUpdate = now.toLocaleTimeString();
+                        
+                        debugLog("Device scan completed and UI updated");
                     } catch (error) {
                         debugLog('Error during device scan:', error, 'error');
                         alert(`Device scan failed: ${error.message || 'Unknown error'}`);
@@ -916,6 +969,7 @@
                         
                         const data = await response.json();
                         
+                        // Update system status
                         this.systemStatus = {
                             fan_speed: data.fan_speed || 0,
                             heater: { 
@@ -929,10 +983,64 @@
                             cpu_temp: data.cpu_temp
                         };
                         
-                        debugLog('System status updated:', this.systemStatus);
+                        // Update timestamp
+                        const now = new Date();
+                        this.lastDeviceUpdate = now.toLocaleTimeString();
                     } catch (error) {
                         debugLog('Error updating system status:', error, 'error');
                         // Don't show alerts for system status errors to avoid annoying the user
+                    }
+                },
+
+                async toggleDevice(device) {
+                    try {
+                        debugLog(`Toggling ${device}...`);
+                        
+                        // Get current state
+                        const currentState = device === 'heater' ? 
+                            this.systemStatus.heater.state : 
+                            this.systemStatus.humidifier.state;
+                        
+                        // Toggle state
+                        const newState = !currentState;
+                        
+                        // Call API to update device state
+                        const response = await fetch('/api/devices/control', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                device: device,
+                                state: newState
+                            })
+                        });
+                        
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            throw new Error(errorData.error || `HTTP error ${response.status}`);
+                        }
+                        
+                        // Update UI immediately
+                        if (device === 'heater') {
+                            this.systemStatus.heater.state = newState;
+                            this.systemStatus.heater.text = newState ? 'ON' : 'OFF';
+                        } else {
+                            this.systemStatus.humidifier.state = newState;
+                            this.systemStatus.humidifier.text = newState ? 'ON' : 'OFF';
+                        }
+                        
+                        // Update timestamp
+                        const now = new Date();
+                        this.lastDeviceUpdate = now.toLocaleTimeString();
+                        
+                        debugLog(`Successfully toggled ${device} to ${newState ? 'ON' : 'OFF'}`);
+                        
+                        // Refresh system status after a short delay
+                        setTimeout(() => {
+                            this.updateSystemStatus().catch(err => debugLog(`Error updating system status: ${err.message}`, 'error'));
+                        }, 1000);
+                    } catch (error) {
+                        debugLog(`Error toggling ${device}:`, error, 'error');
+                        alert(`Failed to toggle ${device}: ${error.message || 'Unknown error'}`);
                     }
                 },
 

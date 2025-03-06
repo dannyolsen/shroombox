@@ -6,7 +6,7 @@
             "model": "P115",
             "name": "Humidifier",
             "role": "humidifier",
-            "state": false,
+            "state": true,
             "type": "SMART.TAPOPLUG"
         },
         {
@@ -15,7 +15,7 @@
             "model": "P115",
             "name": "Heatmat",
             "role": "heater",
-            "state": false,
+            "state": true,
             "type": "SMART.TAPOPLUG"
         }
     ],
@@ -39,7 +39,7 @@
                 "co2_setpoint": 300,
                 "rh_setpoint": 20.0,
                 "temp_hysteresis": 0.5,
-                "temp_setpoint": 10.0
+                "temp_setpoint": 25.0
             },
             "growing": {
                 "co2_setpoint": 550,
