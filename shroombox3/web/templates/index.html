@@ -274,19 +274,24 @@
         <div class="bg-white rounded-lg shadow-sm p-6">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-xl font-semibold text-gray-800">Device Settings</h2>
-                <button 
-                    @click="rescanDevices"
-                    class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                    :class="{'opacity-50 cursor-not-allowed': isScanning}"
-                    :disabled="isScanning"
-                >
-                    <!-- Spinner for loading state -->
-                    <svg x-show="isScanning" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    <span x-text="isScanning ? 'Scanning...' : 'Scan for Devices'"></span>
-                </button>
+                <div class="flex items-center space-x-2">
+                    <div x-show="lastDeviceUpdate" class="text-xs text-gray-500 animate-pulse">
+                        Last updated: <span x-text="lastDeviceUpdate"></span>
+                    </div>
+                    <button 
+                        @click="rescanDevices"
+                        class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                        :class="{'opacity-50 cursor-not-allowed': isScanning}"
+                        :disabled="isScanning"
+                    >
+                        <!-- Spinner for loading state -->
+                        <svg x-show="isScanning" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span x-text="isScanning ? 'Scanning...' : 'Scan for Devices'"></span>
+                    </button>
+                </div>
             </div>
             <div class="grid grid-cols-2 gap-6">
                 <!-- Heater Section -->
@@ -319,9 +324,14 @@
                                         <div class="flex items-center">
                                             <span class="text-sm text-gray-600 mr-2">Status:</span>
                                             <span 
-                                                :class="getDeviceStatusClass(device)"
-                                                x-text="getDeviceStatusText(device)"
+                                                :class="systemStatus.heater.state ? 'px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800' : 'px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800'"
+                                                x-text="systemStatus.heater.text"
                                             ></span>
+                                            <button 
+                                                @click="toggleDevice('heater')"
+                                                class="ml-2 px-2 py-1 text-xs font-medium rounded bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                x-text="systemStatus.heater.state ? 'Turn OFF' : 'Turn ON'"
+                                            ></button>
                                         </div>
                                     </div>
                                 </div>
@@ -360,9 +370,14 @@
                                         <div class="flex items-center">
                                             <span class="text-sm text-gray-600 mr-2">Status:</span>
                                             <span 
-                                                :class="getDeviceStatusClass(device)"
-                                                x-text="getDeviceStatusText(device)"
+                                                :class="systemStatus.humidifier.state ? 'px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800' : 'px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800'"
+                                                x-text="systemStatus.humidifier.text"
                                             ></span>
+                                            <button 
+                                                @click="toggleDevice('humidifier')"
+                                                class="ml-2 px-2 py-1 text-xs font-medium rounded bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                x-text="systemStatus.humidifier.state ? 'Turn OFF' : 'Turn ON'"
+                                            ></button>
                                         </div>
                                     </div>
                                 </div>
@@ -389,7 +404,7 @@
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div class="p-4 bg-gray-50 rounded-lg">
                     <div class="text-sm text-gray-600">Fan Speed</div>
-                    <div class="text-lg font-medium" x-text="systemStatus.fan_speed + '%'"></div>
+                    <div id="fan-speed-display" class="text-lg font-medium" x-text="systemStatus.fan_speed + '%'"></div>
                 </div>
                 <div class="p-4 bg-gray-50 rounded-lg">
                     <div class="text-sm text-gray-600">Heater</div>
@@ -411,17 +426,6 @@
                     <div class="text-sm text-gray-600">CPU Temp</div>
                     <div class="text-lg font-medium" x-text="(systemStatus.cpu_temp ?? '--') + '°C'"></div>
                 </div>
-            </div>
-        </div>
-
-        <!-- Terminal Output -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
-            <h2 class="text-xl font-semibold text-gray-800 mb-4">Terminal Output</h2>
-            <div 
-                id="terminal-output" 
-                class="font-mono text-sm bg-black text-green-400 p-4 rounded-lg h-96 overflow-y-auto"
-                style="white-space: pre-wrap; line-height: 1.4;"
-            >
             </div>
         </div>
     </div>
@@ -466,6 +470,7 @@
                 selectedHeater: '',
                 selectedHumidifier: '',
                 isScanning: false,
+                lastDeviceUpdate: '',
                 systemStatus: {
                     fan_speed: 0,
                     heater: { state: false, text: 'OFF' },
@@ -478,12 +483,15 @@
                     setpoints: false,
                     measurements: false,
                     devices: false,
-                    terminal: false
                 },
                 initErrors: [],
 
                 init() {
                     debugLog('Initializing control panel...');
+                    
+                    // Initialize lastDeviceUpdate
+                    const now = new Date();
+                    this.lastDeviceUpdate = now.toLocaleTimeString();
                     
                     // Ensure loading overlay is hidden after initialization
                     setTimeout(() => {
@@ -510,10 +518,6 @@
                         })
                         .then(() => {
                             debugLog('Devices loaded successfully');
-                            return this.initTerminal();
-                        })
-                        .then(() => {
-                            debugLog('Terminal initialized successfully');
                             return this.updateSystemStatus();
                         })
                         .catch(error => {
@@ -524,10 +528,14 @@
                         .finally(() => {
                             debugLog(`Initialization complete with status: ${JSON.stringify(this.initStatus)}`);
                             
-                            // Set up periodic updates
+                            // Set up more frequent updates for system status
+                            setInterval(() => {
+                                this.updateSystemStatus().catch(err => debugLog(`Error updating system status: ${err.message}`, 'error'));
+                            }, 1000); // Poll every second for device status changes
+                            
+                            // Set up less frequent updates for measurements
                             setInterval(() => {
                                 this.updateMeasurements().catch(err => debugLog(`Error updating measurements: ${err.message}`, 'error'));
-                                this.updateSystemStatus().catch(err => debugLog(`Error updating system status: ${err.message}`, 'error'));
                             }, 5000);
                         });
                 },
@@ -804,6 +812,28 @@
                                 }
                             });
                             
+                            // Get the latest device states from system status
+                            try {
+                                const statusResponse = await fetch('/api/system/status');
+                                if (statusResponse.ok) {
+                                    const statusData = await statusResponse.json();
+                                    
+                                    // Update device states to match system status
+                                    this.availableDevices.forEach(device => {
+                                        if (device.role === 'heater') {
+                                            device.state = statusData.heater.state || false;
+                                        } else if (device.role === 'humidifier') {
+                                            device.state = statusData.humidifier.state || false;
+                                        }
+                                    });
+                                    
+                                    debugLog("Updated device states from system status");
+                                }
+                            } catch (statusError) {
+                                debugLog('Error getting system status for device states:', statusError, 'warning');
+                                // Continue with the states from settings.json
+                            }
+                            
                             this.initStatus.devices = true;
                         } else {
                             debugLog("No available_devices found in settings");
@@ -890,7 +920,14 @@
                         // Reload available devices after scan
                         await this.loadAvailableDevices();
                         
-                        debugLog("Device scan completed");
+                        // Also update system status to get latest device states
+                        await this.updateSystemStatus();
+                        
+                        // Update the last update timestamp
+                        const now = new Date();
+                        this.lastDeviceUpdate = now.toLocaleTimeString();
+                        
+                        debugLog("Device scan completed and UI updated");
                     } catch (error) {
                         debugLog('Error during device scan:', error, 'error');
                         alert(`Device scan failed: ${error.message || 'Unknown error'}`);
@@ -911,11 +948,17 @@
 
                 async updateSystemStatus() {
                     try {
-                        const response = await fetch('/api/system/status');
+                        // Add a cache-busting parameter to prevent browser caching
+                        const timestamp = new Date().getTime();
+                        const response = await fetch(`/api/system/status?_=${timestamp}`);
                         if (!response.ok) throw new Error(`HTTP error ${response.status}`);
                         
                         const data = await response.json();
                         
+                        // Log the fan speed for debugging
+                        debugLog(`Received fan speed from API: ${data.fan_speed}%`);
+                        
+                        // Update system status
                         this.systemStatus = {
                             fan_speed: data.fan_speed || 0,
                             heater: { 
@@ -929,167 +972,75 @@
                             cpu_temp: data.cpu_temp
                         };
                         
-                        debugLog('System status updated:', this.systemStatus);
+                        // Update fan speed display directly in the DOM
+                        const fanSpeedDisplay = document.getElementById('fan-speed-display');
+                        if (fanSpeedDisplay) {
+                            fanSpeedDisplay.textContent = `${data.fan_speed}%`;
+                        }
+                        
+                        // Update timestamp
+                        const now = new Date();
+                        this.lastDeviceUpdate = now.toLocaleTimeString();
                     } catch (error) {
                         debugLog('Error updating system status:', error, 'error');
                         // Don't show alerts for system status errors to avoid annoying the user
                     }
                 },
 
-                initTerminal() {
-                    debugLog('Initializing terminal...');
-                    const terminalOutput = document.getElementById('terminal-output');
-                    if (!terminalOutput) {
-                        debugLog("Terminal output element not found", 'error');
-                        this.initErrors.push('Terminal output element not found');
-                        return Promise.reject(new Error("Terminal output element not found"));
-                    }
-                    
-                    return new Promise((resolve, reject) => {
-                        // Clear any existing content
-                        terminalOutput.innerHTML = "Connecting to log stream...\n";
-                        
-                        // Close existing EventSource if any
-                        if (this.eventSource) {
-                            this.eventSource.close();
-                        }
-                        
-                        // Special handling for Safari
-                        if (isSafari) {
-                            debugLog("Safari detected - using modified log stream approach");
-                            // For Safari, we'll use periodic AJAX instead of EventSource
-                            // This helps Safari complete the page load properly
-                            terminalOutput.innerHTML += "Using Safari compatibility mode for logs\n";
-                            this.initStatus.terminal = true;
-                            
-                            // Setup periodic polling for logs instead of EventSource for Safari
-                            this.safariLogInterval = setInterval(async () => {
-                                try {
-                                    const response = await fetch('/api/logs/latest?count=10');
-                                    if (response.ok) {
-                                        const logs = await response.json();
-                                        if (logs && logs.length) {
-                                            logs.forEach(log => {
-                                                terminalOutput.innerHTML += log + "\n";
-                                            });
-                                            terminalOutput.scrollTop = terminalOutput.scrollHeight;
-                                        }
-                                    }
-                                } catch (err) {
-                                    console.error("Error fetching logs:", err);
-                                }
-                            }, 5000);
-                            
-                            resolve();
-                            return;
-                        }
-                        
-                        // Standard approach for non-Safari browsers
-                        // Set up EventSource for terminal updates
-                        try {
-                            this.eventSource = new EventSource('/api/logs/stream');
-                            
-                            this.eventSource.onopen = () => {
-                                debugLog("Log stream connection established");
-                                terminalOutput.innerHTML += "Connected to log stream\n";
-                                this.initStatus.terminal = true;
-                                resolve();
-                            };
-                            
-                            this.eventSource.onmessage = (event) => {
-                                // Skip heartbeat messages
-                                if (event.data === "♥") return;
-                                
-                                const logLine = event.data;
-                                terminalOutput.innerHTML += logLine + "\n";
-                                terminalOutput.scrollTop = terminalOutput.scrollHeight;
-                            };
-                            
-                            this.eventSource.onerror = (error) => {
-                                debugLog('EventSource error:', error, 'error');
-                                terminalOutput.innerHTML += "Connection to log stream lost. Reconnecting...\n";
-                                
-                                // Close the current connection
-                                this.eventSource.close();
-                                this.eventSource = null;
-                                
-                                // If this is the initial connection, reject the promise
-                                if (!this.initStatus.terminal) {
-                                    this.initErrors.push('Failed to connect to log stream');
-                                    reject(new Error('Failed to connect to log stream'));
-                                } else {
-                                    // Try to reconnect after a delay if this is a subsequent error
-                                    setTimeout(() => this.reconnectTerminal(), 5000);
-                                }
-                            };
-                            
-                            // Set a timeout in case the connection hangs
-                            setTimeout(() => {
-                                if (!this.initStatus.terminal) {
-                                    debugLog('Log stream connection timed out, continuing anyway');
-                                    this.initStatus.terminal = true;
-                                    resolve();
-                                }
-                            }, 3000);
-                        } catch (error) {
-                            debugLog('Error setting up EventSource:', error, 'error');
-                            terminalOutput.innerHTML += `Error connecting to log stream: ${error.message}\n`;
-                            this.initErrors.push('Error setting up log stream');
-                            reject(error);
-                        }
-                    });
-                },
-                
-                reconnectTerminal() {
-                    const terminalOutput = document.getElementById('terminal-output');
-                    if (!terminalOutput) return;
-                    
-                    // Don't try to reconnect in Safari mode
-                    if (isSafari && this.safariLogInterval) {
-                        terminalOutput.innerHTML += "Safari mode: using periodic log refresh instead of streaming\n";
-                        return;
-                    }
-                    
-                    terminalOutput.innerHTML += "Attempting to reconnect...\n";
-                    
+                async toggleDevice(device) {
                     try {
-                        this.eventSource = new EventSource('/api/logs/stream');
+                        debugLog(`Toggling ${device}...`);
                         
-                        this.eventSource.onopen = () => {
-                            debugLog("Log stream reconnected");
-                            terminalOutput.innerHTML += "Reconnected to log stream\n";
-                        };
+                        // Get current state
+                        const currentState = device === 'heater' ? 
+                            this.systemStatus.heater.state : 
+                            this.systemStatus.humidifier.state;
                         
-                        this.eventSource.onmessage = (event) => {
-                            if (event.data === "♥") return;
-                            const logLine = event.data;
-                            terminalOutput.innerHTML += logLine + "\n";
-                            terminalOutput.scrollTop = terminalOutput.scrollHeight;
-                        };
+                        // Toggle state
+                        const newState = !currentState;
                         
-                        this.eventSource.onerror = () => {
-                            debugLog('EventSource reconnection error');
-                            this.eventSource.close();
-                            this.eventSource = null;
-                            setTimeout(() => this.reconnectTerminal(), 5000);
-                        };
+                        // Call API to update device state
+                        const response = await fetch('/api/devices/control', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                device: device,
+                                state: newState
+                            })
+                        });
+                        
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            throw new Error(errorData.error || `HTTP error ${response.status}`);
+                        }
+                        
+                        // Update UI immediately
+                        if (device === 'heater') {
+                            this.systemStatus.heater.state = newState;
+                            this.systemStatus.heater.text = newState ? 'ON' : 'OFF';
+                        } else {
+                            this.systemStatus.humidifier.state = newState;
+                            this.systemStatus.humidifier.text = newState ? 'ON' : 'OFF';
+                        }
+                        
+                        // Update timestamp
+                        const now = new Date();
+                        this.lastDeviceUpdate = now.toLocaleTimeString();
+                        
+                        debugLog(`Successfully toggled ${device} to ${newState ? 'ON' : 'OFF'}`);
+                        
+                        // Refresh system status after a short delay
+                        setTimeout(() => {
+                            this.updateSystemStatus().catch(err => debugLog(`Error updating system status: ${err.message}`, 'error'));
+                        }, 1000);
                     } catch (error) {
-                        debugLog('Error reconnecting to log stream:', error, 'error');
-                        setTimeout(() => this.reconnectTerminal(), 5000);
+                        debugLog(`Error toggling ${device}:`, error, 'error');
+                        alert(`Failed to toggle ${device}: ${error.message || 'Unknown error'}`);
                     }
                 },
-                
-                // Add cleanup method to handle Safari interval
+
                 cleanup() {
-                    if (this.eventSource) {
-                        this.eventSource.close();
-                        this.eventSource = null;
-                    }
-                    
-                    if (this.safariLogInterval) {
-                        clearInterval(this.safariLogInterval);
-                        this.safariLogInterval = null;
-                    }
+                    // Terminal-related cleanup removed
                 }
             };
         }

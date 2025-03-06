@@ -15,17 +15,30 @@ from hypercorn.asyncio import serve
 from dotenv import load_dotenv
 from typing import Optional, Dict, Any, List, Tuple
 from functools import wraps
+import psutil
+import aiohttp
+import logging_setup
+from tapo_controller import TapoController
+from scd30_controller import SCD30Controller
+from main import EnvironmentController
+from settings_manager import SettingsManager
 
 # Add parent directory to Python path so we can import from root
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.insert(0, parent_dir)
 
+# Initialize log buffer and lock for Safari compatibility
+import threading
+log_buffer = []
+log_buffer_lock = threading.Lock()
+MAX_LOG_BUFFER_SIZE = 1000  # Maximum number of log entries to keep in memory
+
 # Get the parent directory path for file operations
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Initialize logging
-logger = logging.getLogger('shroombox')
+logger = logging_setup.get_logger('shroombox.web')
 if not logger.handlers:
     logger.setLevel(logging.INFO)
     
@@ -72,6 +85,9 @@ if not logger.handlers:
 # Make logger not buffer output
 logger.propagate = False
 
+# Define log directory
+log_dir = os.path.join(BASE_DIR, 'logs')
+
 # Set environment variable for other modules to use local log directory
 os.environ['SHROOMBOX_LOG_DIR'] = log_dir
 
@@ -93,6 +109,7 @@ app = cors(app, allow_origin="*", allow_methods=["GET", "POST", "OPTIONS"])
 controller = None
 sensor = None
 shutdown_event = asyncio.Event()
+settings_manager = None
 
 # Add signal handlers to prevent premature shutdown
 def signal_handler(sig, frame):
@@ -106,10 +123,14 @@ signal.signal(signal.SIGTERM, signal_handler)
 
 async def initialize_controller():
     """Initialize the environment controller and sensor."""
-    global controller, sensor
+    global controller, sensor, settings_manager
     try:
-        # First initialize the sensor
-        logger.info("Checking I2C bus before sensor initialization...")
+        # Initialize settings manager
+        settings_manager = SettingsManager(os.path.join(BASE_DIR, 'config', 'settings.json'))
+        logger.info("Settings manager initialized")
+        
+        # Check I2C bus before initializing controller
+        logger.info("Checking I2C bus before controller initialization...")
         try:
             import subprocess
             result = subprocess.run(['i2cdetect', '-y', '1'], capture_output=True, text=True)
@@ -117,20 +138,29 @@ async def initialize_controller():
         except Exception as e:
             logger.warning(f"Could not check I2C bus: {e}")
 
-        sensor = SCD30Controller()
-        try:
-            sensor_available = sensor.is_available()
-            if not sensor_available:
-                logger.warning("SCD30 sensor not available (expected at address 0x61), continuing in monitoring-only mode")
-                logger.info("Please check: \n1. Power connections to the sensor\n2. I2C connections (SDA and SCL)\n3. Pull-up resistors on I2C lines")
-        except Exception as e:
-            logger.warning(f"Error checking SCD30 sensor (CRC error): {e}")
-            sensor_available = False
-            # Continue anyway with sensor marked as unavailable
-
-        # Then initialize the controller with the sensor
+        # Initialize the controller (which will initialize its own sensor)
         controller = EnvironmentController()
         await controller.start()  # Initialize async resources
+        
+        # Get a reference to the controller's sensor
+        sensor = controller.sensor
+        
+        # Check if sensor is available
+        sensor_available = False
+        if sensor:
+            try:
+                sensor_available = sensor.is_available()
+                if not sensor_available:
+                    logger.warning("SCD30 sensor not available (expected at address 0x61), continuing in monitoring-only mode")
+                    logger.info("Please check: \n1. Power connections to the sensor\n2. I2C connections (SDA and SCL)\n3. Pull-up resistors on I2C lines")
+            except Exception as e:
+                logger.warning(f"Error checking SCD30 sensor (CRC error): {e}")
+                # Continue anyway with sensor marked as unavailable
+        
+        # Initialize devices
+        logger.info("Initializing devices...")
+        await controller.initialize_devices()
+        logger.info("Devices initialized")
         
         status = " (monitoring-only mode)" if not sensor_available else ""
         logger.info(f"Controller initialized successfully{status}")
@@ -230,8 +260,29 @@ async def simple_page():
 async def get_settings():
     """Get current settings including available devices."""
     try:
-        with open(os.path.join(BASE_DIR, 'config', 'settings.json'), 'r') as f:
-            settings = json.load(f)
+        # Use settings manager to get settings
+        if settings_manager:
+            settings = await settings_manager.load_settings(force_reload=True)
+        else:
+            # Fallback if settings manager not initialized
+            with open(os.path.join(BASE_DIR, 'config', 'settings.json'), 'r') as f:
+                settings = json.load(f)
+        
+        # If controller is initialized, update device states from physical devices
+        if controller and controller.tapo:
+            # Update device states in the settings before returning
+            for device in settings.get('available_devices', []):
+                if 'ip' in device and 'role' in device:
+                    # Get the actual device state
+                    actual_state = await controller.tapo.get_device_state(device['ip'])
+                    # Update the state in the settings
+                    device['state'] = actual_state
+                    # Also update controller's tracking
+                    if device['role'] == 'heater':
+                        controller.heater_on = actual_state
+                    elif device['role'] == 'humidifier':
+                        controller.humidifier_on = actual_state
+        
         return jsonify(settings)
     except Exception as e:
         logger.error(f"Error loading settings: {e}")
@@ -257,11 +308,53 @@ async def save_settings():
                     phase_data['rh_setpoint'] = float(phase_data['rh_setpoint'])
                 if 'co2_setpoint' in phase_data:
                     phase_data['co2_setpoint'] = int(phase_data['co2_setpoint'])
+        
+        # Use settings manager to save settings
+        if settings_manager:
+            # Preserve device states from current settings
+            current_settings = await settings_manager.load_settings(force_reload=True)
             
-        # Save to file
-        settings_file = os.path.join(BASE_DIR, 'config', 'settings.json')
-        with open(settings_file, 'w') as f:
-            json.dump(data, f, indent=4)
+            # Create a map of device roles to states from current settings
+            if 'available_devices' in current_settings and 'available_devices' in data:
+                current_states = {}
+                for device in current_settings.get('available_devices', []):
+                    if 'role' in device and 'state' in device:
+                        current_states[device['role']] = device['state']
+                
+                # Apply current states to new settings
+                for device in data['available_devices']:
+                    if 'role' in device and device['role'] in current_states:
+                        device['state'] = current_states[device['role']]
+            
+            # Save settings
+            success = await settings_manager.save_settings(data)
+            if not success:
+                return jsonify({'error': 'Failed to save settings'}), 500
+        else:
+            # Fallback if settings manager not initialized
+            # Preserve device states from current settings
+            settings_file = os.path.join(BASE_DIR, 'config', 'settings.json')
+            try:
+                with open(settings_file, 'r') as f:
+                    current_settings = json.load(f)
+                    
+                # Create a map of device roles to states from current settings
+                if 'available_devices' in current_settings and 'available_devices' in data:
+                    current_states = {}
+                    for device in current_settings.get('available_devices', []):
+                        if 'role' in device and 'state' in device:
+                            current_states[device['role']] = device['state']
+                    
+                    # Apply current states to new settings
+                    for device in data['available_devices']:
+                        if 'role' in device and device['role'] in current_states:
+                            device['state'] = current_states[device['role']]
+            except Exception as e:
+                logger.warning(f"Could not preserve device states: {e}")
+                
+            # Save to file
+            with open(settings_file, 'w') as f:
+                json.dump(data, f, indent=4)
             
         logger.info(f"Settings updated successfully: {data['environment']['current_phase']} phase")
         return jsonify({'success': True})
@@ -405,33 +498,34 @@ async def get_system_status():
         # Update device states from actual device status
         await controller.update_device_states()
         
+        # Get fan settings from settings manager
+        fan_settings = await controller.settings_manager.get_fan_settings()
+        logger.info(f"Retrieved fan settings from settings manager: {fan_settings}")
+        
+        # Always use fan settings from settings.json
+        fan_speed = fan_settings.get('speed', 0)
+        fan_manual_control = fan_settings.get('manual_control', False)
+        
+        # Log the fan speed that will be returned
+        logger.info(f"Returning fan speed in API: {fan_speed:.1f}%")
+        
         # Also update states in settings.json to keep it in sync
         try:
-            settings_file = os.path.join(BASE_DIR, 'config', 'settings.json')
-            with open(settings_file, 'r') as f:
-                settings = json.load(f)
-                
             # Update device states in settings
-            for device in settings.get('available_devices', []):
-                if device.get('role') == 'heater':
-                    device['state'] = controller.heater_on
-                elif device.get('role') == 'humidifier':
-                    device['state'] = controller.humidifier_on
-            
-            # Save updated settings
-            with open(settings_file, 'w') as f:
-                json.dump(settings, f, indent=4)
+            for device_role in ['heater', 'humidifier']:
+                device_state = getattr(controller, f"{device_role}_on", False)
+                if device_state is not None:
+                    await controller.settings_manager.set_device_state(device_role, device_state)
         except Exception as e:
             logger.error(f"Error updating device states in settings: {e}")
         
         # Get CPU temperature
         cpu_temp = controller.fan.get_cpu_temp() if controller.fan else None
         
-        # Get fan speed
-        fan_speed = controller.fan_percentage
-        
-        return jsonify({
+        # Create response with data
+        response_data = {
             'fan_speed': round(fan_speed, 1) if fan_speed is not None else 0,
+            'fan_manual': fan_manual_control,
             'cpu_temp': round(cpu_temp, 1) if cpu_temp else None,
             'heater': {
                 'state': controller.heater_on,
@@ -441,12 +535,22 @@ async def get_system_status():
                 'state': controller.humidifier_on,
                 'text': 'ON' if controller.humidifier_on else 'OFF'
             }
-        })
+        }
+        
+        # Create response with no-cache headers
+        response = await make_response(jsonify(response_data))
+        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+        response.headers['Pragma'] = 'no-cache'
+        response.headers['Expires'] = '0'
+        response.headers['Last-Modified'] = datetime.now().strftime('%a, %d %b %Y %H:%M:%S GMT')
+        
+        return response
         
     except Exception as e:
         logger.error(f"Error getting system status: {e}")
         return jsonify({
             'fan_speed': 0,
+            'fan_manual': False,
             'cpu_temp': None,
             'heater': {'state': False, 'text': 'OFF'},
             'humidifier': {'state': False, 'text': 'OFF'}
@@ -490,14 +594,14 @@ async def get_latest_measurements():
     try:
         global controller
         if not controller:
-            success = await initialize_controller()
-            if not success:
+            await initialize_controller()
+            if not controller:  # If initialization failed
                 logger.warning("Controller initialization failed, falling back to InfluxDB")
                 # Continue to InfluxDB fallback
 
         if controller and controller.sensor:
             try:
-                # Use get_measurements() from the controller instead of direct sensor access
+                # Use get_measurements() from the controller
                 measurements = await controller.get_measurements()
                 if measurements:
                     co2, temp, rh = measurements
@@ -649,6 +753,12 @@ async def log_stream():
                             new_lines = f.readlines()
                             for line in new_lines:
                                 if line.strip():
+                                    # Add to log buffer for Safari compatibility
+                                    with log_buffer_lock:
+                                        log_buffer.append(line.strip())
+                                        # Keep buffer size limited
+                                        if len(log_buffer) > MAX_LOG_BUFFER_SIZE:
+                                            log_buffer.pop(0)
                                     yield f"data: {line.strip()}\n\n"
                             last_position = f.tell()
                             last_size = current_size
@@ -765,6 +875,129 @@ async def get_latest_logs():
     except Exception as e:
         app.logger.error(f"Error fetching latest logs: {e}")
         return jsonify([f"Error fetching logs: {str(e)}"]), 500
+
+@app.route('/api/devices/control', methods=['POST'])
+async def control_device():
+    """Control a device (turn it on or off)."""
+    try:
+        if not controller:
+            return jsonify({'error': 'Controller not initialized'}), 500
+            
+        data = await request.get_json()
+        device_role = data.get('device')
+        state = data.get('state')
+        
+        if not device_role or state is None:
+            return jsonify({'error': 'Missing device or state parameter'}), 400
+            
+        if device_role not in ['heater', 'humidifier']:
+            return jsonify({'error': 'Invalid device role'}), 400
+            
+        # Control the device
+        success = False
+        if device_role == 'heater':
+            success = await controller.set_heater_state(state)
+        elif device_role == 'humidifier':
+            success = await controller.set_humidifier_state(state)
+            
+        if success:
+            # Get the updated device state
+            device_state = controller.heater_on if device_role == 'heater' else controller.humidifier_on
+            return jsonify({
+                'success': True,
+                'device': device_role,
+                'state': device_state,
+                'text': 'ON' if device_state else 'OFF'
+            })
+        else:
+            return jsonify({'error': f'Failed to set {device_role} state'}), 500
+            
+    except Exception as e:
+        logger.error(f"Error controlling device: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/fan/control', methods=['POST'])
+async def control_fan():
+    """Control fan speed manually."""
+    try:
+        if not controller:
+            return jsonify({'error': 'Controller not initialized'}), 500
+            
+        data = await request.get_json()
+        speed = data.get('speed')
+        manual = data.get('manual', True)  # Default to manual control
+        
+        if speed is None:
+            return jsonify({'error': 'Missing speed parameter'}), 400
+            
+        # Validate speed is between 0 and 100
+        try:
+            speed = float(speed)
+            if speed < 0 or speed > 100:
+                return jsonify({'error': 'Speed must be between 0 and 100'}), 400
+        except ValueError:
+            return jsonify({'error': 'Speed must be a number'}), 400
+            
+        # Set fan speed
+        if controller.fan:
+            previous_speed = controller.fan_percentage
+            controller.fan.set_speed(speed)
+            controller.fan_percentage = speed
+            controller.fan_manual_control = manual
+            
+            # Save fan settings to settings.json
+            await controller.settings_manager.set_fan_settings(manual, speed)
+            
+            logger.info(f"Fan speed manually set to {speed:.1f}% (previous: {previous_speed:.1f}%)")
+            logger.info(f"Fan manual control: {'ON' if manual else 'OFF'}")
+            
+            return jsonify({
+                'success': True,
+                'fan_speed': speed,
+                'previous_speed': previous_speed,
+                'manual_control': manual
+            })
+        else:
+            return jsonify({'error': 'Fan controller not initialized'}), 500
+            
+    except Exception as e:
+        logger.error(f"Error controlling fan: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/fan/mode', methods=['POST'])
+async def set_fan_mode():
+    """Set fan control mode (manual or automatic)."""
+    try:
+        if not controller:
+            return jsonify({'error': 'Controller not initialized'}), 500
+            
+        data = await request.get_json()
+        manual = data.get('manual')
+        
+        if manual is None:
+            return jsonify({'error': 'Missing manual parameter'}), 400
+            
+        # Set fan control mode
+        if controller.fan:
+            previous_mode = controller.fan_manual_control
+            controller.fan_manual_control = manual
+            
+            # Save fan settings to settings.json
+            await controller.settings_manager.set_fan_settings(manual, controller.fan_percentage)
+            
+            logger.info(f"Fan control mode changed: {'manual' if manual else 'automatic'} (previous: {'manual' if previous_mode else 'automatic'})")
+            
+            return jsonify({
+                'success': True,
+                'manual_control': manual,
+                'previous_mode': previous_mode
+            })
+        else:
+            return jsonify({'error': 'Fan controller not initialized'}), 500
+            
+    except Exception as e:
+        logger.error(f"Error setting fan mode: {e}")
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     config = Config()

@@ -5,6 +5,21 @@ import logging
 from logging.handlers import RotatingFileHandler
 import scd30_i2c  # Import the module directly
 import logging_setup
+import copy
+import json
+import time
+import asyncio
+import aiohttp
+from typing import Optional, Tuple, Dict, Any, List
+from datetime import datetime
+from simple_pid import PID
+from influxdb_client import InfluxDBClient, Point
+from influxdb_client.client.write_api import SYNCHRONOUS
+from tapo import ApiClient
+from noctua_pwm import NoctuaFan
+from tapo_controller import TapoController
+from scd30_controller import SCD30Controller
+from settings_manager import SettingsManager
 
 # Initialize logging first thing
 logging_setup.setup_logging()
@@ -19,7 +34,7 @@ if not logger.handlers:
     log_dir = os.getenv('SHROOMBOX_LOG_DIR', os.path.join(os.path.dirname(__file__), 'logs'))
     os.makedirs(log_dir, exist_ok=True)
     
-    log_file = os.path.join(log_dir, 'main.log')
+    log_file = os.getenv('SHROOMBOX_LOG_FILE', os.path.join(log_dir, 'main.log'))
     try:
         # Create file handler
         file_handler = RotatingFileHandler(
@@ -124,18 +139,18 @@ class EnvironmentController:
         self.config_path = os.path.join(script_dir, 'config', 'settings.json')
         logger.info(f"Looking for config at: {self.config_path}")
         
+        # Initialize settings manager
+        self.settings_manager = SettingsManager(self.config_path)
+        
         self.last_config_check = 0
-        self.config_check_interval = 5  # Check config every 5 seconds
-        self.current_settings = self.load_config()
+        self.config_check_interval = 30  # Increased from 5 to 30 seconds
         
-        # Initialize logging settings FIRST
-        self.logging_interval = self.current_settings.get('logging', {}).get('interval', 30)
-        
-        # Get measurement interval from config, with fallback to default
-        self.measurement_interval = self.current_settings.get('sensor', {}).get('measurement_interval', 5)
+        # We'll load settings in the start method since we need async
+        self.current_settings = {}
         
         # Initialize state tracking variables
         self.fan_percentage = 0  # Track current fan speed
+        self.fan_manual_control = False  # Flag to indicate manual fan control
         self.heater_on = False  # Track heater state
         self.humidifier_on = False  # Track humidifier state
         self.fan = NoctuaFan()  # Initialize fan controller
@@ -144,14 +159,79 @@ class EnvironmentController:
         self.heater_ip = None
         self.humidifier_ip = None
         
-        # Initialize sensor
-        self.sensor = SCD30Controller(
-            measurement_interval=self.current_settings['sensor']['measurement_interval']
+        # Add debounce timers for device state changes
+        self.heater_last_change = 0
+        self.humidifier_last_change = 0
+        self.device_debounce_time = 10  # Minimum seconds between state changes
+        
+        # Initialize sensor - we'll set the measurement interval in start()
+        self.sensor = SCD30Controller()
+        
+        # Initialize other variables
+        self.influx_client = None
+        self.write_api = None
+        self.session = None
+        self.tapo = None
+        self.humidifier_config = None
+        self.heater_config = None
+        self.temperature_last_called = 0
+        self.system_running = False
+        self.monitoring_enabled = True
+        
+        # Initialize PIDs with default values - we'll update them in start()
+        self.co2_pid = None
+        self.cpu_pid = None
+        self.humidity_pid = None
+        
+    async def start(self):
+        """Initialize async resources."""
+        # Create aiohttp session
+        self.session = aiohttp.ClientSession()
+        
+        # Load settings
+        self.current_settings = await self.settings_manager.load_settings()
+        
+        # Initialize logging settings
+        self.logging_interval = self.current_settings.get('logging', {}).get('interval', 30)
+        
+        # Get measurement interval from config, with fallback to default
+        self.measurement_interval = self.current_settings.get('sensor', {}).get('measurement_interval', 5)
+        
+        # Update sensor measurement interval
+        self.sensor.set_measurement_interval(self.measurement_interval)
+        
+        # Initialize Tapo controller
+        self.tapo = TapoController(
+            email=os.getenv('TAPO_EMAIL'),
+            password=os.getenv('TAPO_PASSWORD')
         )
         
-        # Load initial device assignments
-        self._load_device_assignments()
+        # Get device configs from settings
+        self.humidifier_config = next((d for d in self.current_settings.get('available_devices', []) 
+                                     if d.get('role') == 'humidifier'), None)
+        self.heater_config = next((d for d in self.current_settings.get('available_devices', [])
+                                 if d.get('role') == 'heater'), None)
         
+        # Initialize InfluxDB client
+        try:
+            # Initialize InfluxDB client if environment variables are set
+            influx_url = os.getenv('INFLUXDB_URL')
+            influx_token = os.getenv('INFLUXDB_TOKEN')
+            influx_org = os.getenv('INFLUXDB_ORG')
+            
+            if influx_url and influx_token and influx_org:
+                self.influx_client = InfluxDBClient(
+                    url=influx_url,
+                    token=influx_token,
+                    org=influx_org
+                )
+                self.write_api = self.influx_client.write_api(write_options=SYNCHRONOUS)
+                logger.info(f"InfluxDB client initialized: {influx_url}")
+            else:
+                logger.warning("InfluxDB environment variables not set, data logging disabled")
+        except Exception as e:
+            logger.error(f"Error initializing InfluxDB client: {e}")
+            
         # Initialize PIDs with default values first
         phase = self.current_settings['environment']['current_phase']
         phase_settings = self.current_settings['environment']['phases'][phase]
@@ -199,79 +279,9 @@ class EnvironmentController:
         # Now update controllers with config settings
         self.update_controllers()
         
-        # Initialize InfluxDB client
-        try:
-            logger.info("\n=== Initializing InfluxDB Client ===")
-            logger.info(f"URL: {os.getenv('INFLUXDB_URL')}")
-            logger.info(f"Organization: {os.getenv('INFLUXDB_ORG')}")
-            logger.info(f"Bucket: {os.getenv('INFLUXDB_BUCKET')}")
-            
-            if not os.getenv('INFLUXDB_TOKEN'):
-                logger.error("❌ Error: INFLUXDB_TOKEN not found in environment variables")
-                return
-                
-            self.influx_client = InfluxDBClient(
-                url=os.getenv('INFLUXDB_URL', 'http://localhost:8086'),
-                token=os.getenv('INFLUXDB_TOKEN'),
-                org=os.getenv('INFLUXDB_ORG')
-            )
-            self.write_api = self.influx_client.write_api(write_options=SYNCHRONOUS)
-            
-            # Test the connection
-            try:
-                test_point = Point("test_connection").field("value", 1)
-                self.write_api.write(
-                    bucket=os.getenv('INFLUXDB_BUCKET'),
-                    record=test_point
-                )
-                logger.info("✓ InfluxDB connection test successful")
-            except Exception as e:
-                logger.error(f"❌ InfluxDB connection test failed: {e}")
-                
-        except Exception as e:
-            logger.error(f"❌ Error initializing InfluxDB client: {e}")
-            logger.error(f"Full traceback: {traceback.format_exc()}")
-        
-        self.session = None
-        self.connector = None
-        
-        # Initialize Tapo controller
-        self.tapo = TapoController(
-            email=os.getenv('TAPO_EMAIL'),
-            password=os.getenv('TAPO_PASSWORD')
-        )
-        
-        # Get device configs from settings
-        self.humidifier_config = self.current_settings.get('devices', {}).get('humidifier')
-        self.heater_config = self.current_settings.get('devices', {}).get('heater')
-        
-        # Initialize temperature_last_called
-        self.temperature_last_called = 0
-        
-        self.system_running = False
-        self.monitoring_enabled = True
-        
-    def load_config(self):
-        """Load settings from config file."""
-        try:
-            logger.info(f"Loading config from: {self.config_path}")
-            with open(self.config_path, 'r') as f:
-                config = json.load(f)
-            
-            # Ensure numeric values are properly converted
-            if 'environment' in config and 'phases' in config['environment']:
-                for phase_name, phase_data in config['environment']['phases'].items():
-                    if 'temp_setpoint' in phase_data:
-                        phase_data['temp_setpoint'] = float(phase_data['temp_setpoint'])
-                    if 'rh_setpoint' in phase_data:
-                        phase_data['rh_setpoint'] = float(phase_data['rh_setpoint'])
-                    if 'co2_setpoint' in phase_data:
-                        phase_data['co2_setpoint'] = int(phase_data['co2_setpoint'])
-                    
-            return config
-        except Exception as e:
-            logger.error(f"Error loading config: {e}")
-            return {}
+    async def load_config(self):
+        """Load settings from config file using SettingsManager."""
+        return await self.settings_manager.load_settings(force_reload=True)
 
     def get_logging_interval(self) -> int:
         """Get the current logging interval in seconds."""
@@ -320,6 +330,23 @@ class EnvironmentController:
                 float(co2_pid_settings.get('Kd', 0.0))
             )
 
+        # Update fan settings
+        fan_settings = self.current_settings.get('fan', {})
+        if fan_settings:
+            self.fan_manual_control = fan_settings.get('manual_control', False)
+            fan_speed = fan_settings.get('speed', 0)
+            
+            # Always update fan speed from settings
+            if self.fan_percentage != fan_speed:
+                logger.info(f"Updating fan speed from settings: {self.fan_percentage:.1f}% -> {fan_speed:.1f}%")
+                self.fan_percentage = fan_speed
+                self.fan.set_speed(fan_speed)
+                
+            if self.fan_manual_control:
+                logger.info(f"Fan is under manual control at {self.fan_percentage:.1f}%")
+            else:
+                logger.info(f"Fan is under automatic control at {self.fan_percentage:.1f}%")
+
         # Update sensor interval if changed
         new_interval = self.current_settings.get('sensor', {}).get('measurement_interval', 5)
         if new_interval != self.measurement_interval:
@@ -336,13 +363,56 @@ class EnvironmentController:
         """Check for configuration updates."""
         current_time = time.time()
         if current_time - self.last_config_check > self.config_check_interval:
-            new_settings = self.load_config()
-            if new_settings != self.current_settings:
+            new_settings = await self.load_config()
+            
+            # Only update if settings other than device states have changed
+            if self._settings_changed_excluding_device_states(new_settings, self.current_settings):
                 logger.info("\nConfig changed, updating settings...")
+                
+                # Preserve current device states
+                self._preserve_device_states(new_settings)
+                
                 self.current_settings = new_settings
                 self.update_controllers()
                 logger.info(f"New setpoints - RH: {self.humidity_pid.setpoint}%, CO2: {self.co2_pid.setpoint}ppm")
+            
             self.last_config_check = current_time
+    
+    def _settings_changed_excluding_device_states(self, new_settings, old_settings):
+        """Check if settings have changed, ignoring device state changes."""
+        # Create deep copies to avoid modifying the originals
+        new_copy = copy.deepcopy(new_settings)
+        old_copy = copy.deepcopy(old_settings)
+        
+        # Remove device states from comparison
+        if 'available_devices' in new_copy:
+            for device in new_copy['available_devices']:
+                if 'state' in device:
+                    device['state'] = None
+                    
+        if 'available_devices' in old_copy:
+            for device in old_copy['available_devices']:
+                if 'state' in device:
+                    device['state'] = None
+        
+        # Compare settings without device states
+        return new_copy != old_copy
+    
+    def _preserve_device_states(self, new_settings):
+        """Preserve current device states when updating settings."""
+        if 'available_devices' not in new_settings or 'available_devices' not in self.current_settings:
+            return
+            
+        # Create a map of device roles to states from current settings
+        current_states = {}
+        for device in self.current_settings['available_devices']:
+            if 'role' in device and 'state' in device:
+                current_states[device['role']] = device['state']
+        
+        # Apply current states to new settings
+        for device in new_settings['available_devices']:
+            if 'role' in device and device['role'] in current_states:
+                device['state'] = current_states[device['role']]
 
     async def get_measurements(self) -> Optional[Tuple[float, float, float]]:
         """Get measurements from the sensor."""
@@ -350,14 +420,32 @@ class EnvironmentController:
 
     def co2_control(self, co2: float, setpoint_max: float) -> None:
         """Control CO2 levels using PID controller."""
+        # Log input values
+        logger.info(f"CO2 control - Current: {co2} ppm, Setpoint: {setpoint_max} ppm")
+        
+        # Skip fan control if under manual control
+        if self.fan_manual_control:
+            logger.info(f"Skipping CO2 control - Fan is under manual control (speed: {self.fan_percentage:.1f}%)")
+            return
+        
+        # Calculate fan speed using PID
+        previous_fan_percentage = self.fan_percentage
         self.fan_percentage = float(self.co2_pid(co2))
+        
+        # Log PID output
+        logger.info(f"CO2 PID output - Fan speed: {self.fan_percentage:.1f}% (previous: {previous_fan_percentage:.1f}%)")
         
         # Get CPU temperature and use the higher of CO2 control or CPU cooling needs
         cpu_temp = self.fan.get_cpu_temp()
         if cpu_temp and cpu_temp > 70:  # CPU getting too hot
+            logger.info(f"CPU temperature high ({cpu_temp}°C) - using auto control for fan")
             self.fan.auto_control()  # Let auto control take over
         else:
+            logger.info(f"Setting fan speed to {self.fan_percentage:.1f}% based on CO2 control")
             self.fan.set_speed(self.fan_percentage)  # Normal CO2 control
+            
+        # Always update fan speed in settings.json
+        asyncio.create_task(self.update_fan_settings_in_background())
 
     async def initialize_devices(self):
         """Initialize device connections."""
@@ -383,55 +471,137 @@ class EnvironmentController:
                 self.heater_ip = await self.tapo.get_or_update_device(self.heater_config)
                 if self.heater_ip:
                     logger.info(f"Connected to heater at {self.heater_ip}")
+                    # Synchronize actual device state with our tracking
+                    await self.sync_device_states()
                 else:
                     logger.error("Failed to connect to heater")
         except Exception as e:
             logger.error(f"Error initializing devices: {e}")
 
-    async def set_humidifier_state(self, state: bool) -> None:
-        """Set humidifier state."""
+    async def sync_device_states(self):
+        """Synchronize actual device states with our tracking and settings.json."""
+        try:
+            logger.info("Synchronizing device states with physical devices...")
+            
+            # Sync heater state
+            if self.heater_ip:
+                actual_heater_state = await self.tapo.get_device_state(self.heater_ip)
+                if actual_heater_state is not None:
+                    logger.info(f"Actual heater state: {'ON' if actual_heater_state else 'OFF'}")
+                    # Update our tracking
+                    self.heater_on = actual_heater_state
+                    # Update settings.json using SettingsManager
+                    await self.settings_manager.set_device_state('heater', actual_heater_state)
+                else:
+                    logger.warning("Could not get heater state - device may be offline")
+            
+            # Sync humidifier state
+            if self.humidifier_ip:
+                actual_humidifier_state = await self.tapo.get_device_state(self.humidifier_ip)
+                if actual_humidifier_state is not None:
+                    logger.info(f"Actual humidifier state: {'ON' if actual_humidifier_state else 'OFF'}")
+                    # Update our tracking
+                    self.humidifier_on = actual_humidifier_state
+                    # Update settings.json using SettingsManager
+                    await self.settings_manager.set_device_state('humidifier', actual_humidifier_state)
+                else:
+                    logger.warning("Could not get humidifier state - device may be offline")
+                    
+            logger.info("Device state synchronization complete")
+        except Exception as e:
+            logger.error(f"Error synchronizing device states: {e}")
+
+    async def set_humidifier_state(self, state: bool) -> bool:
+        """Set humidifier state.
+        
+        Args:
+            state: True to turn on, False to turn off
+            
+        Returns:
+            bool: True if successful, False otherwise
+        """
+        # Apply debouncing to prevent rapid state changes
+        current_time = time.time()
+        if current_time - self.humidifier_last_change < self.device_debounce_time:
+            # Only log if trying to change state
+            if state != self.humidifier_on:
+                logger.debug(f"Skipping humidifier state change to {state} (debounce active)")
+            return False
+            
         if self.humidifier_ip:
-            await self.tapo.set_device_state(self.humidifier_ip, state)
-            self.humidifier_on = state
-            
-            # Update state in settings.json
             try:
-                with open(self.config_path, 'r') as f:
-                    settings = json.load(f)
-                
-                # Update device state in settings
-                for device in settings.get('available_devices', []):
-                    if device.get('role') == 'humidifier':
-                        device['state'] = state
-                
-                # Save updated settings
-                with open(self.config_path, 'w') as f:
-                    json.dump(settings, f, indent=4)
+                # Only update if state is changing
+                if state != self.humidifier_on:
+                    # First update the physical device
+                    success = await self.tapo.set_device_state(self.humidifier_ip, state)
+                    
+                    if success:
+                        self.humidifier_on = state
+                        self.humidifier_last_change = current_time
+                        logger.info(f"Humidifier state set to: {'ON' if state else 'OFF'}")
+                        
+                        # Update state in settings.json using SettingsManager
+                        await self.settings_manager.set_device_state('humidifier', state)
+                        return True
+                    else:
+                        logger.error(f"Failed to set humidifier state to {'ON' if state else 'OFF'}")
+                        return False
+                else:
+                    # State already matches what was requested
+                    return True
             except Exception as e:
-                logger.error(f"Error updating humidifier state in settings: {e}")
+                logger.error(f"Error setting humidifier state: {e}")
+                return False
+        else:
+            logger.warning("No humidifier IP available")
+            return False
 
-    async def set_heater_state(self, state: bool) -> None:
-        """Set heater state."""
+    async def set_heater_state(self, state: bool) -> bool:
+        """Set heater state.
+        
+        Args:
+            state: True to turn on, False to turn off
+            
+        Returns:
+            bool: True if successful, False otherwise
+        """
+        # Apply debouncing to prevent rapid state changes
+        current_time = time.time()
+        if current_time - self.heater_last_change < self.device_debounce_time:
+            # Only log if trying to change state
+            if state != self.heater_on:
+                logger.debug(f"Skipping heater state change to {state} (debounce active)")
+            return False
+            
         if self.heater_ip:
-            await self.tapo.set_device_state(self.heater_ip, state)
-            self.heater_on = state
-            
-            # Update state in settings.json
             try:
-                with open(self.config_path, 'r') as f:
-                    settings = json.load(f)
-                
-                # Update device state in settings
-                for device in settings.get('available_devices', []):
-                    if device.get('role') == 'heater':
-                        device['state'] = state
-                
-                # Save updated settings
-                with open(self.config_path, 'w') as f:
-                    json.dump(settings, f, indent=4)
+                # Only update if state is changing
+                if state != self.heater_on:
+                    # Update the physical device
+                    success = await self.tapo.set_device_state(self.heater_ip, state)
+                    
+                    if success:
+                        # Update internal state tracking
+                        self.heater_on = state
+                        self.heater_last_change = current_time
+                        logger.info(f"Heater state set to: {'ON' if state else 'OFF'}")
+                        
+                        # Update state in settings.json using SettingsManager
+                        await self.settings_manager.set_device_state('heater', state)
+                        return True
+                    else:
+                        logger.error(f"Failed to set heater state to {'ON' if state else 'OFF'}")
+                        return False
+                else:
+                    # State already matches what was requested
+                    return True
             except Exception as e:
-                logger.error(f"Error updating heater state in settings: {e}")
-
+                logger.error(f"Error setting heater state: {e}")
+                return False
+        else:
+            logger.warning("No heater IP available")
+            return False
+    
     async def connect_to_humidifier(self, retries=3):
         """Connect to humidifier with retries."""
         try:
@@ -480,26 +650,36 @@ class EnvironmentController:
             setpoint = float(self.humidity_pid.setpoint)
             current_time = time.time()
             
-            # Skip humidity control if RH is above setpoint
-            if current_rh >= setpoint:
-                await self.set_humidifier_state(False)  # Ensure humidifier is off
-                return
-
-            # Check if we're in a burst
-            if self.humidifier_bursting:
-                if current_time >= self.burst_end_time:
-                    self.humidifier_bursting = False
-                    await self.set_humidifier_state(False)
-                    return
-
-            # Calculate burst duration using PID
-            burst_duration = self.humidity_pid(current_rh)
+            # Get hysteresis value from settings
+            hysteresis = self.current_settings.get('humidifier', {}).get('rh_hysteresis', 2.0)
             
-            # Start a new burst if duration is sufficient
-            if burst_duration >= HUMIDIFIER_BURST_MIN:
-                self.humidifier_bursting = True
-                self.burst_end_time = current_time + burst_duration
-                await self.set_humidifier_state(True)
+            # Skip humidity control if RH is above setpoint (with hysteresis)
+            if current_rh >= (setpoint - hysteresis):
+                # Only log if we're turning off the humidifier
+                if self.humidifier_on or self.humidifier_bursting:
+                    logger.info(f"RH ({current_rh}%) is above setpoint minus hysteresis ({setpoint - hysteresis}%), turning humidifier OFF")
+                await self.set_humidifier_state(False)  # Ensure humidifier is off
+                self.humidifier_bursting = False  # Reset bursting state
+                return
+            
+            # Only activate if RH is significantly below setpoint
+            if current_rh < (setpoint - hysteresis):
+                # Check if we're in a burst
+                if self.humidifier_bursting:
+                    if current_time >= self.burst_end_time:
+                        self.humidifier_bursting = False
+                        await self.set_humidifier_state(False)
+                        return
+
+                # Calculate burst duration using PID
+                burst_duration = self.humidity_pid(current_rh)
+                
+                # Start a new burst if duration is sufficient
+                if burst_duration >= HUMIDIFIER_BURST_MIN:
+                    self.humidifier_bursting = True
+                    self.burst_end_time = current_time + burst_duration
+                    logger.info(f"Starting humidifier burst for {burst_duration:.1f}s (RH: {current_rh}%, target: {setpoint}%)")
+                    await self.set_humidifier_state(True)
                 
         except Exception as e:
             logger.error(f"Error in humidity control: {e}")
@@ -552,8 +732,31 @@ class EnvironmentController:
             self.write_api.write(bucket=bucket, record=point)
             logger.info(f"✓ Logged heater state: {'ON' if state == 1 else 'OFF'}")
             
+            # Ensure settings.json is updated to match the actual state
+            # Create a background task to update settings.json
+            asyncio.create_task(self._ensure_heater_state_in_settings(bool(state)))
+            
         except Exception as e:
             logger.error(f"❌ Error logging heater state: {e}")
+            
+    async def _ensure_heater_state_in_settings(self, state: bool) -> None:
+        """Ensure the heater state in settings.json matches the actual state."""
+        try:
+            # Check current state in settings
+            current_state = await self.settings_manager.get_device_state('heater')
+            
+            # If state doesn't match, update it
+            if current_state != state:
+                logger.warning(f"Heater state mismatch: InfluxDB has {'ON' if state else 'OFF'}, but settings.json has {'ON' if current_state else 'OFF'}")
+                
+                # Update settings.json
+                success = await self.settings_manager.set_device_state('heater', state)
+                if success:
+                    logger.info(f"Successfully synchronized heater state in settings.json to {'ON' if state else 'OFF'}")
+                else:
+                    logger.error(f"Failed to synchronize heater state in settings.json")
+        except Exception as e:
+            logger.error(f"Error ensuring heater state in settings: {e}")
 
     async def start_system(self):
         """Start environmental control system."""
@@ -577,10 +780,6 @@ class EnvironmentController:
 
         # ... rest of control logic ...
 
-    async def start(self):
-        """Initialize async resources."""
-        self.session = aiohttp.ClientSession()
-        
     async def cleanup(self):
         """Cleanup resources before shutdown."""
         try:
@@ -593,14 +792,20 @@ class EnvironmentController:
             
             # Turn off devices
             try:
-                await self.control_heater(False)
-                logger.info("✓ Heater turned off")
+                success = await self.set_heater_state(False)
+                if success:
+                    logger.info("✓ Heater turned off")
+                else:
+                    logger.warning("⚠ Could not turn off heater")
             except Exception as e:
                 logger.error(f"❌ Error turning off heater: {e}")
                 
             try:
-                await self.control_humidifier(False)
-                logger.info("✓ Humidifier turned off")
+                success = await self.set_humidifier_state(False)
+                if success:
+                    logger.info("✓ Humidifier turned off")
+                else:
+                    logger.warning("⚠ Could not turn off humidifier")
             except Exception as e:
                 logger.error(f"❌ Error turning off humidifier: {e}")
             
@@ -708,10 +913,37 @@ class EnvironmentController:
             
             # Only change state if needed
             if should_heat != self.heater_on:
-                await self.set_heater_state(should_heat)
-                logger.info(f"Heater turned {'ON' if should_heat else 'OFF'} - Temp: {temperature}°C (Target: {setpoint}°C ±{hysteresis}°C)")
-                # Log the heater state to InfluxDB
-                self.log_heater_state(1 if should_heat else 0, temperature)
+                # First update the physical device and internal state
+                success = await self.set_heater_state(should_heat)
+                
+                if success:
+                    logger.info(f"Heater turned {'ON' if should_heat else 'OFF'} - Temp: {temperature}°C (Target: {setpoint}°C ±{hysteresis}°C)")
+                    
+                    # Log the heater state to InfluxDB
+                    self.log_heater_state(1 if should_heat else 0, temperature)
+                    
+                    # Directly update settings.json to ensure it's in sync
+                    settings_updated = await self.settings_manager.set_device_state('heater', should_heat)
+                    if not settings_updated:
+                        logger.error(f"Failed to update heater state in settings.json to {'ON' if should_heat else 'OFF'}")
+                        
+                        # Try one more time after a short delay
+                        await asyncio.sleep(1)
+                        retry_success = await self.settings_manager.set_device_state('heater', should_heat)
+                        if retry_success:
+                            logger.info(f"Successfully updated heater state in settings.json to {'ON' if should_heat else 'OFF'} on retry")
+                        else:
+                            logger.error(f"Failed to update heater state in settings.json even after retry")
+                else:
+                    logger.error(f"Failed to set heater state to {'ON' if should_heat else 'OFF'}")
+                    
+                    # Check if the device is online
+                    is_online = await self.tapo.check_device_online(self.heater_ip)
+                    if not is_online:
+                        logger.error(f"Heater device appears to be offline. Please check the physical device and network connection.")
+                    
+                    # Try to resync device states
+                    await self.sync_device_states()
             
             # Force an immediate check if the setpoint has changed significantly
             # This ensures the heater responds quickly to large setpoint changes
@@ -720,11 +952,37 @@ class EnvironmentController:
                 # Force heater state update based on current conditions
                 # Use the same hysteresis logic as in the regular check, don't just compare to setpoint
                 should_heat = temperature < temp_low
-                await self.set_heater_state(should_heat)
-                logger.info(f"Heater state forced to {'ON' if should_heat else 'OFF'} due to large setpoint change")
-                self.heater_on = should_heat
-                # Log the heater state to InfluxDB after forced update
-                self.log_heater_state(1 if should_heat else 0, temperature)
+                
+                # Only update if state is different from current state
+                if should_heat != self.heater_on:
+                    # First update the physical device and internal state
+                    success = await self.set_heater_state(should_heat)
+                    
+                    if success:
+                        logger.info(f"Heater state forced to {'ON' if should_heat else 'OFF'} due to large setpoint change")
+                        
+                        # Log the heater state to InfluxDB after forced update
+                        self.log_heater_state(1 if should_heat else 0, temperature)
+                        
+                        # Directly update settings.json to ensure it's in sync
+                        settings_updated = await self.settings_manager.set_device_state('heater', should_heat)
+                        if not settings_updated:
+                            logger.error(f"Failed to update heater state in settings.json to {'ON' if should_heat else 'OFF'} after forced change")
+                            
+                            # Try one more time after a short delay
+                            await asyncio.sleep(1)
+                            retry_success = await self.settings_manager.set_device_state('heater', should_heat)
+                            if retry_success:
+                                logger.info(f"Successfully updated heater state in settings.json to {'ON' if should_heat else 'OFF'} on retry after forced change")
+                            else:
+                                logger.error(f"Failed to update heater state in settings.json even after retry after forced change")
+                    else:
+                        logger.error(f"Failed to force heater state to {'ON' if should_heat else 'OFF'}")
+                        
+                        # Check if the device is online
+                        is_online = await self.tapo.check_device_online(self.heater_ip)
+                        if not is_online:
+                            logger.error(f"Heater device appears to be offline. Please check the physical device and network connection.")
                 
         except Exception as e:
             logger.error(f"Error in temperature control: {e}")
@@ -737,18 +995,65 @@ class EnvironmentController:
                 return
                 
             logger.info("\n=== SCD30 Sensor Diagnosis ===")
-            logger.info(f"ASC Status: {self.sensor.get_auto_self_calibration()}")  # Changed back to original method
-            logger.info(f"Measurement Interval: {self.sensor.get_measurement_interval()}s")
-            logger.info(f"Temperature Offset: {self.sensor.get_temperature_offset()}°C")
-            logger.info(f"Firmware Version: {self.sensor.get_firmware_version()}")
+            # Remove direct access to underlying sensor methods
+            logger.info(f"Measurement Interval: {self.sensor.measurement_interval}s")
+            logger.info(f"Last Measurement Time: {datetime.fromtimestamp(self.sensor._last_measurement_time).strftime('%H:%M:%S') if self.sensor._last_measurement_time else 'None'}")
+            logger.info(f"Consecutive Failures: {self.sensor._consecutive_failures}")
+            logger.info(f"Sensor Initialized: {self.sensor._initialized}")
             logger.info("============================\n")
             
         except Exception as e:
             logger.error(f"Error during sensor diagnosis: {e}")
 
     async def initialize_sensor(self) -> bool:
-        """Initialize the sensor."""
-        return self.sensor.is_available()
+        """Initialize the sensor with proper waiting for data readiness."""
+        try:
+            logger.info("Initializing SCD30 sensor...")
+            
+            # Get measurement interval from settings
+            measurement_interval = self.current_settings['sensor']['measurement_interval']
+            
+            # Update the sensor's measurement interval if needed
+            if self.sensor.measurement_interval != measurement_interval:
+                logger.info(f"Updating sensor measurement interval to {measurement_interval}s")
+                self.sensor.set_measurement_interval(measurement_interval)
+            
+            # Check if sensor is available
+            if not self.sensor.is_available():
+                logger.warning("SCD30 sensor not immediately available. Waiting for it to become ready...")
+                
+                # Wait for the sensor to become available (up to 30 seconds)
+                for attempt in range(15):
+                    await asyncio.sleep(2)  # Wait 2 seconds between checks
+                    if self.sensor.is_available():
+                        logger.info("SCD30 sensor is now available")
+                        break
+                    logger.debug(f"Waiting for sensor to become available (attempt {attempt+1}/15)...")
+                else:
+                    logger.error("Failed to initialize SCD30 sensor after multiple attempts")
+                    return False
+            
+            # Try to get a test measurement
+            logger.info("Waiting for first measurement...")
+            for attempt in range(5):
+                measurement = await self.sensor.get_measurements()
+                if measurement:
+                    co2, temp, rh = measurement
+                    logger.info(f"First measurement successful: CO2={co2:.1f}ppm, Temp={temp:.1f}°C, RH={rh:.1f}%")
+                    
+                    # Print sensor diagnostic information
+                    await self.diagnose_sensor()
+                    return True
+                
+                logger.debug(f"Waiting for first measurement (attempt {attempt+1}/5)...")
+                await asyncio.sleep(measurement_interval)
+            
+            logger.warning("Could not get initial measurement, but continuing anyway")
+            return True
+            
+        except Exception as e:
+            logger.error(f"Error initializing sensor: {e}")
+            return False
 
     async def log_data(self, co2: float, temp: float, rh: float) -> None:
         """Log sensor data to InfluxDB."""
@@ -764,7 +1069,7 @@ class EnvironmentController:
             else:
                 logger.warning("Skipping data logging due to invalid measurements")
                 logger.debug(f"Invalid values detected - CO2: {co2}, Temp: {temp}, RH: {rh}")
-                
+            
         except Exception as e:
             logger.error(f"Error logging data: {e}")
 
@@ -835,6 +1140,18 @@ class EnvironmentController:
         # Clean up sensor
         self.sensor.cleanup()
         logger.info("System completely stopped")
+
+    async def update_fan_settings_in_background(self):
+        """Update fan settings in the background."""
+        try:
+            # Update the fan speed in settings.json using the settings manager
+            await self.settings_manager.set_fan_settings(
+                manual_control=self.fan_manual_control,
+                speed=self.fan_percentage
+            )
+            logger.info(f"Updated fan settings in settings.json: manual={self.fan_manual_control}, speed={self.fan_percentage:.1f}%")
+        except Exception as e:
+            logger.error(f"Error updating fan settings in settings.json: {e}")
 
 class ShroomboxController:
     def __init__(self):
@@ -1044,22 +1361,42 @@ async def main():
         
         # Initialize environment controller
         controller = EnvironmentController()
+        
+        # Start the controller (initialize async resources)
+        await controller.start()
+        
+        # Initialize devices
         await controller.initialize_devices()
         
         # Initialize sensor
+        logger.info("\n=== Initializing SCD30 Sensor ===")
         sensor_ok = await controller.initialize_sensor()
         if not sensor_ok:
             logger.error("Failed to initialize sensor, continuing without sensor...")
         
         logger.info("\n=== Starting Main Control Loop ===")
         
+        consecutive_failures = 0
+        max_consecutive_failures = 5
+        last_sync_time = 0
+        sync_interval = 300  # Sync device states every 5 minutes
+        
         while True:  # Main control loop
             try:
+                # Periodically sync device states with physical devices
+                current_time = time.time()
+                if current_time - last_sync_time > sync_interval:
+                    await controller.sync_device_states()
+                    last_sync_time = current_time
+                
                 # Get current measurements
                 measurements = await controller.get_measurements()
                 if measurements:
                     co2, temp, rh = measurements
                     logger.debug(f"Measurements - Temp: {temp}°C, RH: {rh}%, CO2: {co2}ppm")
+                    
+                    # Reset failure counter on successful measurement
+                    consecutive_failures = 0
                     
                     # Control temperature
                     await controller.temperature_control(temp)
@@ -1068,13 +1405,25 @@ async def main():
                     await controller.humidity_control(rh)
                     
                     # Control CO2/ventilation
+                    logger.info(f"Calling CO2 control with CO2={co2} ppm")
                     controller.co2_control(co2, controller.current_settings['environment']['phases'][controller.current_settings['environment']['current_phase']]['co2_setpoint'])
+                    logger.info(f"CO2 control completed - Fan speed now: {controller.fan_percentage:.1f}%")
                     
                     # Check for configuration updates
                     await controller.check_config_updates()
                     
                     # Log data to InfluxDB
                     await controller.log_data(co2, temp, rh)
+                else:
+                    # Increment failure counter
+                    consecutive_failures += 1
+                    logger.warning(f"Failed to get measurements (failure #{consecutive_failures})")
+                    
+                    # Try to reinitialize sensor after multiple consecutive failures
+                    if consecutive_failures >= max_consecutive_failures:
+                        logger.warning(f"Too many consecutive failures ({consecutive_failures}). Attempting to reinitialize sensor...")
+                        await controller.initialize_sensor()
+                        consecutive_failures = 0  # Reset counter after reinitialization attempt
                 
                 # Wait for next measurement interval
                 await asyncio.sleep(controller.current_settings['sensor']['measurement_interval'])
