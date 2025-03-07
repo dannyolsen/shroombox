@@ -1,0 +1,15 @@
+* [33mf8b2fe4[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m)[m surviving
+[31m|[m * [33mbecacba[m[33m ([m[1;31morigin/recovery[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mrecovery[m[33m)[m new gitignore
+[31m|[m * [33mff9f52e[m going for the save
+[31m|[m[31m/[m  
+[31m|[m * [33m662619a[m[33m ([m[1;35mrefs/stash[m[33m)[m On master: dont know what im doing
+[31m|[m[31m/[m[34m|[m 
+[31m|[m * [33m8c229c7[m index on master: 82cad3d Merge remote changes and keep files untracked as per .gitignore
+[31m|[m[31m/[m  
+*   [33m82cad3d[m Merge remote changes and keep files untracked as per .gitignore
+[35m|[m[36m\[m  
+[35m|[m *   [33mc1cf3e7[m Merge remote-tracking branch 'origin/fix_humidity_control'
+[35m|[m [1;31m|[m[1;32m\[m  
+[35m|[m * [1;32m|[m [33m4c20c44[m[33m ([m[1;31morigin/fix_heat_control_logic[m[33m, [m[1;32mfix_heat_control_logic[m[33m)[m heatlogic works - fix humidity logic
+[35m|[m * [1;32m|[m [33ma51be56[m setpoints saved to settings.json works
+* [1;32m|[m [1;32m|[m [33mbcb46a9[m Update .gitignore to exclude settings.json and .env
