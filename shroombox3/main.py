@@ -34,7 +34,7 @@ if not logger.handlers:
     log_dir = os.getenv('SHROOMBOX_LOG_DIR', os.path.join(os.path.dirname(__file__), 'logs'))
     os.makedirs(log_dir, exist_ok=True)
     
-    log_file = os.getenv('SHROOMBOX_LOG_FILE', os.path.join(log_dir, 'main.log'))
+    log_file = os.path.join(log_dir, 'main.log')
     try:
         # Create file handler
         file_handler = RotatingFileHandler(
@@ -150,7 +150,6 @@ class EnvironmentController:
         
         # Initialize state tracking variables
         self.fan_percentage = 0  # Track current fan speed
-        self.fan_manual_control = False  # Flag to indicate manual fan control
         self.heater_on = False  # Track heater state
         self.humidifier_on = False  # Track humidifier state
         self.fan = NoctuaFan()  # Initialize fan controller
@@ -330,23 +329,6 @@ class EnvironmentController:
                 float(co2_pid_settings.get('Kd', 0.0))
             )
 
-        # Update fan settings
-        fan_settings = self.current_settings.get('fan', {})
-        if fan_settings:
-            self.fan_manual_control = fan_settings.get('manual_control', False)
-            fan_speed = fan_settings.get('speed', 0)
-            
-            # Always update fan speed from settings
-            if self.fan_percentage != fan_speed:
-                logger.info(f"Updating fan speed from settings: {self.fan_percentage:.1f}% -> {fan_speed:.1f}%")
-                self.fan_percentage = fan_speed
-                self.fan.set_speed(fan_speed)
-                
-            if self.fan_manual_control:
-                logger.info(f"Fan is under manual control at {self.fan_percentage:.1f}%")
-            else:
-                logger.info(f"Fan is under automatic control at {self.fan_percentage:.1f}%")
-
         # Update sensor interval if changed
         new_interval = self.current_settings.get('sensor', {}).get('measurement_interval', 5)
         if new_interval != self.measurement_interval:
@@ -420,32 +402,14 @@ class EnvironmentController:
 
     def co2_control(self, co2: float, setpoint_max: float) -> None:
         """Control CO2 levels using PID controller."""
-        # Log input values
-        logger.info(f"CO2 control - Current: {co2} ppm, Setpoint: {setpoint_max} ppm")
-        
-        # Skip fan control if under manual control
-        if self.fan_manual_control:
-            logger.info(f"Skipping CO2 control - Fan is under manual control (speed: {self.fan_percentage:.1f}%)")
-            return
-        
-        # Calculate fan speed using PID
-        previous_fan_percentage = self.fan_percentage
         self.fan_percentage = float(self.co2_pid(co2))
-        
-        # Log PID output
-        logger.info(f"CO2 PID output - Fan speed: {self.fan_percentage:.1f}% (previous: {previous_fan_percentage:.1f}%)")
         
         # Get CPU temperature and use the higher of CO2 control or CPU cooling needs
         cpu_temp = self.fan.get_cpu_temp()
         if cpu_temp and cpu_temp > 70:  # CPU getting too hot
-            logger.info(f"CPU temperature high ({cpu_temp}°C) - using auto control for fan")
             self.fan.auto_control()  # Let auto control take over
         else:
-            logger.info(f"Setting fan speed to {self.fan_percentage:.1f}% based on CO2 control")
             self.fan.set_speed(self.fan_percentage)  # Normal CO2 control
-            
-        # Always update fan speed in settings.json
-        asyncio.create_task(self.update_fan_settings_in_background())
 
     async def initialize_devices(self):
         """Initialize device connections."""
@@ -1141,18 +1105,6 @@ class EnvironmentController:
         self.sensor.cleanup()
         logger.info("System completely stopped")
 
-    async def update_fan_settings_in_background(self):
-        """Update fan settings in the background."""
-        try:
-            # Update the fan speed in settings.json using the settings manager
-            await self.settings_manager.set_fan_settings(
-                manual_control=self.fan_manual_control,
-                speed=self.fan_percentage
-            )
-            logger.info(f"Updated fan settings in settings.json: manual={self.fan_manual_control}, speed={self.fan_percentage:.1f}%")
-        except Exception as e:
-            logger.error(f"Error updating fan settings in settings.json: {e}")
-
 class ShroomboxController:
     def __init__(self):
         self.config_path = 'config/settings.json'
@@ -1405,9 +1357,7 @@ async def main():
                     await controller.humidity_control(rh)
                     
                     # Control CO2/ventilation
-                    logger.info(f"Calling CO2 control with CO2={co2} ppm")
                     controller.co2_control(co2, controller.current_settings['environment']['phases'][controller.current_settings['environment']['current_phase']]['co2_setpoint'])
-                    logger.info(f"CO2 control completed - Fan speed now: {controller.fan_percentage:.1f}%")
                     
                     # Check for configuration updates
                     await controller.check_config_updates()
