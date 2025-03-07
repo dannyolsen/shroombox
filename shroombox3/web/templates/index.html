@@ -404,7 +404,7 @@
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div class="p-4 bg-gray-50 rounded-lg">
                     <div class="text-sm text-gray-600">Fan Speed</div>
-                    <div id="fan-speed-display" class="text-lg font-medium" x-text="systemStatus.fan_speed + '%'"></div>
+                    <div class="text-lg font-medium" x-text="systemStatus.fan_speed + '%'"></div>
                 </div>
                 <div class="p-4 bg-gray-50 rounded-lg">
                     <div class="text-sm text-gray-600">Heater</div>
@@ -426,6 +426,17 @@
                     <div class="text-sm text-gray-600">CPU Temp</div>
                     <div class="text-lg font-medium" x-text="(systemStatus.cpu_temp ?? '--') + '°C'"></div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Terminal Output -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Terminal Output</h2>
+            <div 
+                id="terminal-output" 
+                class="font-mono text-sm bg-black text-green-400 p-4 rounded-lg h-96 overflow-y-auto"
+                style="white-space: pre-wrap; line-height: 1.4;"
+            >
             </div>
         </div>
     </div>
@@ -483,6 +494,7 @@
                     setpoints: false,
                     measurements: false,
                     devices: false,
+                    terminal: false
                 },
                 initErrors: [],
 
@@ -518,6 +530,10 @@
                         })
                         .then(() => {
                             debugLog('Devices loaded successfully');
+                            return this.initTerminal();
+                        })
+                        .then(() => {
+                            debugLog('Terminal initialized successfully');
                             return this.updateSystemStatus();
                         })
                         .catch(error => {
@@ -948,15 +964,10 @@
 
                 async updateSystemStatus() {
                     try {
-                        // Add a cache-busting parameter to prevent browser caching
-                        const timestamp = new Date().getTime();
-                        const response = await fetch(`/api/system/status?_=${timestamp}`);
+                        const response = await fetch('/api/system/status');
                         if (!response.ok) throw new Error(`HTTP error ${response.status}`);
                         
                         const data = await response.json();
-                        
-                        // Log the fan speed for debugging
-                        debugLog(`Received fan speed from API: ${data.fan_speed}%`);
                         
                         // Update system status
                         this.systemStatus = {
@@ -971,12 +982,6 @@
                             },
                             cpu_temp: data.cpu_temp
                         };
-                        
-                        // Update fan speed display directly in the DOM
-                        const fanSpeedDisplay = document.getElementById('fan-speed-display');
-                        if (fanSpeedDisplay) {
-                            fanSpeedDisplay.textContent = `${data.fan_speed}%`;
-                        }
                         
                         // Update timestamp
                         const now = new Date();
@@ -1039,8 +1044,160 @@
                     }
                 },
 
+                initTerminal() {
+                    debugLog('Initializing terminal...');
+                    const terminalOutput = document.getElementById('terminal-output');
+                    if (!terminalOutput) {
+                        debugLog("Terminal output element not found", 'error');
+                        this.initErrors.push('Terminal output element not found');
+                        return Promise.reject(new Error("Terminal output element not found"));
+                    }
+                    
+                    return new Promise((resolve, reject) => {
+                        // Clear any existing content
+                        terminalOutput.innerHTML = "Connecting to log stream...\n";
+                        
+                        // Close existing EventSource if any
+                        if (this.eventSource) {
+                            this.eventSource.close();
+                        }
+                        
+                        // Special handling for Safari
+                        if (isSafari) {
+                            debugLog("Safari detected - using modified log stream approach");
+                            // For Safari, we'll use periodic AJAX instead of EventSource
+                            // This helps Safari complete the page load properly
+                            terminalOutput.innerHTML += "Using Safari compatibility mode for logs\n";
+                            this.initStatus.terminal = true;
+                            
+                            // Setup periodic polling for logs instead of EventSource for Safari
+                            this.safariLogInterval = setInterval(async () => {
+                                try {
+                                    const response = await fetch('/api/logs/latest?count=10');
+                                    if (response.ok) {
+                                        const logs = await response.json();
+                                        if (logs && logs.length) {
+                                            logs.forEach(log => {
+                                                terminalOutput.innerHTML += log + "\n";
+                                            });
+                                            terminalOutput.scrollTop = terminalOutput.scrollHeight;
+                                        }
+                                    }
+                                } catch (err) {
+                                    console.error("Error fetching logs:", err);
+                                }
+                            }, 5000);
+                            
+                            resolve();
+                            return;
+                        }
+                        
+                        // Standard approach for non-Safari browsers
+                        // Set up EventSource for terminal updates
+                        try {
+                            this.eventSource = new EventSource('/api/logs/stream');
+                            
+                            this.eventSource.onopen = () => {
+                                debugLog("Log stream connection established");
+                                terminalOutput.innerHTML += "Connected to log stream\n";
+                                this.initStatus.terminal = true;
+                                resolve();
+                            };
+                            
+                            this.eventSource.onmessage = (event) => {
+                                // Skip heartbeat messages
+                                if (event.data === "♥") return;
+                                
+                                const logLine = event.data;
+                                terminalOutput.innerHTML += logLine + "\n";
+                                terminalOutput.scrollTop = terminalOutput.scrollHeight;
+                            };
+                            
+                            this.eventSource.onerror = (error) => {
+                                debugLog('EventSource error:', error, 'error');
+                                terminalOutput.innerHTML += "Connection to log stream lost. Reconnecting...\n";
+                                
+                                // Close the current connection
+                                this.eventSource.close();
+                                this.eventSource = null;
+                                
+                                // If this is the initial connection, reject the promise
+                                if (!this.initStatus.terminal) {
+                                    this.initErrors.push('Failed to connect to log stream');
+                                    reject(new Error('Failed to connect to log stream'));
+                                } else {
+                                    // Try to reconnect after a delay if this is a subsequent error
+                                    setTimeout(() => this.reconnectTerminal(), 5000);
+                                }
+                            };
+                            
+                            // Set a timeout in case the connection hangs
+                            setTimeout(() => {
+                                if (!this.initStatus.terminal) {
+                                    debugLog('Log stream connection timed out, continuing anyway');
+                                    this.initStatus.terminal = true;
+                                    resolve();
+                                }
+                            }, 3000);
+                        } catch (error) {
+                            debugLog('Error setting up EventSource:', error, 'error');
+                            terminalOutput.innerHTML += `Error connecting to log stream: ${error.message}\n`;
+                            this.initErrors.push('Error setting up log stream');
+                            reject(error);
+                        }
+                    });
+                },
+                
+                reconnectTerminal() {
+                    const terminalOutput = document.getElementById('terminal-output');
+                    if (!terminalOutput) return;
+                    
+                    // Don't try to reconnect in Safari mode
+                    if (isSafari && this.safariLogInterval) {
+                        terminalOutput.innerHTML += "Safari mode: using periodic log refresh instead of streaming\n";
+                        return;
+                    }
+                    
+                    terminalOutput.innerHTML += "Attempting to reconnect...\n";
+                    
+                    try {
+                        this.eventSource = new EventSource('/api/logs/stream');
+                        
+                        this.eventSource.onopen = () => {
+                            debugLog("Log stream reconnected");
+                            terminalOutput.innerHTML += "Reconnected to log stream\n";
+                        };
+                        
+                        this.eventSource.onmessage = (event) => {
+                            if (event.data === "♥") return;
+                            const logLine = event.data;
+                            terminalOutput.innerHTML += logLine + "\n";
+                            terminalOutput.scrollTop = terminalOutput.scrollHeight;
+                        };
+                        
+                        this.eventSource.onerror = () => {
+                            debugLog('EventSource reconnection error');
+                            this.eventSource.close();
+                            this.eventSource = null;
+                            setTimeout(() => this.reconnectTerminal(), 5000);
+                        };
+                    } catch (error) {
+                        debugLog('Error reconnecting to log stream:', error, 'error');
+                        setTimeout(() => this.reconnectTerminal(), 5000);
+                    }
+                },
+                
+                // Add cleanup method to handle Safari interval
                 cleanup() {
-                    // Terminal-related cleanup removed
+                    if (this.eventSource) {
+                        this.eventSource.close();
+                        this.eventSource = null;
+                    }
+                    
+                    if (this.safariLogInterval) {
+                        clearInterval(this.safariLogInterval);
+                        this.safariLogInterval = null;
+                    }
                 }
             };
         }
