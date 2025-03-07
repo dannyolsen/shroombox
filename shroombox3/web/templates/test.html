@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shroombox Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        h1 {
+            color: #333;
+        }
+        .test-button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .test-button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            min-height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Shroombox Test Page</h1>
+        <p>This is a simple test page to verify if the server is responding correctly.</p>
+        
+        <button id="testSettings" class="test-button">Test Settings API</button>
+        <button id="testMeasurements" class="test-button">Test Measurements API</button>
+        
+        <div id="result">
+            <p>Results will appear here...</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('testSettings').addEventListener('click', async () => {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<p>Testing settings API...</p>';
+            
+            try {
+                const response = await fetch('/api/settings');
+                if (!response.ok) {
+                    throw new Error(`HTTP error ${response.status}`);
+                }
+                
+                const data = await response.json();
+                resultDiv.innerHTML = '<p>Settings API test successful!</p><pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            } catch (error) {
+                resultDiv.innerHTML = '<p>Error testing settings API: ' + error.message + '</p>';
+            }
+        });
+        
+        document.getElementById('testMeasurements').addEventListener('click', async () => {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<p>Testing measurements API...</p>';
+            
+            try {
+                const response = await fetch('/api/measurements/latest');
+                if (!response.ok) {
+                    throw new Error(`HTTP error ${response.status}`);
+                }
+                
+                const data = await response.json();
+                resultDiv.innerHTML = '<p>Measurements API test successful!</p><pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            } catch (error) {
+                resultDiv.innerHTML = '<p>Error testing measurements API: ' + error.message + '</p>';
+            }
+        });
+    </script>
+</body>
+</html> 
