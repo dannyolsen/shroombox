@@ -8,7 +8,9 @@ __pycache__/
 *.class
 
 # Virtual environments
-
+venv/
+env/
+ENV/
 
 # IDE specific files
 .idea/
@@ -21,5 +23,11 @@ __pycache__/
 Thumbs.db
 
 # Configuration files
+settings.json
+.env
 
+# Workspace files
 shroombox3.code-workspace
+
+# Backup files
+*.bak
