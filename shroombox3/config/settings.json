@@ -2,5 +2,25 @@
     "fan": {
         "manual_control": false,
         "speed": 0.0
-    }
+    },
+    "available_devices": [
+        {
+            "name": "Humidifier",
+            "ip": "192.168.8.181",
+            "mac": "B0-19-21-C4-C9-9D",
+            "model": "P115",
+            "type": "SMART.TAPOPLUG",
+            "state": false,
+            "role": null
+        },
+        {
+            "name": "Heatmat",
+            "ip": "192.168.8.164",
+            "mac": "B0-19-21-C4-CE-97",
+            "model": "P115",
+            "type": "SMART.TAPOPLUG",
+            "state": false,
+            "role": null
+        }
+    ]
 }
