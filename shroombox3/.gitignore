@@ -1,0 +1,25 @@
+# Log files
+logs/
+*.log
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+env_shrooms/
+env/
+
+# Environment variables
+.env
+
+# IDE specific files
+.idea/
+.vscode/
+*.code-workspace
+
+# OS specific files
+.DS_Store
+Thumbs.db

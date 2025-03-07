@@ -3056,3 +3056,757 @@ Changes detected in settings.json!
 2025-03-07 01:29:16,812 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
 2025-03-07 01:29:17,371 - shroombox.sensor - INFO - Successful measurement at 01:29:17 - CO2: 498.86ppm, Temp: 20.59°C, RH: 35.64%
 2025-03-07 01:29:17,371 - shroombox.web - INFO - Live measurements - Temp: 20.59°C, RH: 35.64%, CO2: 498.86ppm
+2025-03-07 01:29:18,834 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:18,835 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:18,836 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:18,837 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:18,837 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:18,838 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:18,846 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:18,847 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:18,847 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:18,848 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:18,848 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:18,849 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:20,831 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:20,832 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:20,832 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:20,833 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:20,833 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:20,834 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:20,838 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:20,838 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:20,838 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:20,839 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:20,839 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:20,840 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:22,860 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:22,861 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:22,861 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:22,862 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:22,862 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:22,863 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:22,866 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:22,867 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:22,867 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:22,867 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:22,868 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:22,868 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:22,892 - shroombox.sensor - INFO - Successful measurement at 01:29:22 - CO2: 500.27ppm, Temp: 20.59°C, RH: 35.74%
+2025-03-07 01:29:22,892 - shroombox.web - INFO - Live measurements - Temp: 20.59°C, RH: 35.74%, CO2: 500.27ppm
+2025-03-07 01:29:24,827 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:24,828 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:24,828 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:24,829 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:24,830 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:24,831 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:24,837 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:24,837 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:24,838 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:24,839 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:24,840 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:24,841 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:24,924 - shroombox.sensor - WARNING - Failed to get valid measurement after 5 attempts
+2025-03-07 01:29:24,924 - shroombox.sensor - INFO - Returning last valid measurement as fallback
+2025-03-07 01:29:24,925 - shroombox.web - INFO - Live measurements - Temp: 20.59°C, RH: 35.74%, CO2: 500.27ppm
+2025-03-07 01:29:26,830 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:26,830 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:26,831 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:26,832 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:26,833 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:26,834 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:26,842 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:26,843 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:26,844 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:26,845 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:26,845 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:26,846 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:28,851 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:28,852 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:28,853 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:28,853 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:28,854 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:28,855 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:28,860 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:28,860 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:28,861 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:28,862 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:28,862 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:28,863 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:28,924 - shroombox.sensor - INFO - Successful measurement at 01:29:28 - CO2: 497.0ppm, Temp: 20.56°C, RH: 35.69%
+2025-03-07 01:29:28,925 - shroombox.web - INFO - Live measurements - Temp: 20.56°C, RH: 35.69%, CO2: 497.0ppm
+2025-03-07 01:29:30,451 - shroombox.sensor - WARNING - Failed to get valid measurement after 5 attempts
+2025-03-07 01:29:30,452 - shroombox.sensor - INFO - Returning last valid measurement as fallback
+2025-03-07 01:29:30,453 - shroombox.web - INFO - Live measurements - Temp: 20.56°C, RH: 35.69%, CO2: 497.0ppm
+2025-03-07 01:29:30,831 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:30,832 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:30,832 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:30,833 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:30,834 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:30,835 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:30,840 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:30,840 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:30,841 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:30,842 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:30,842 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:30,843 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:32,860 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:32,861 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:32,861 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:32,862 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:32,863 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:32,863 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:32,867 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:32,867 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:32,868 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:32,868 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:32,869 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:32,869 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:34,446 - shroombox.sensor - INFO - Successful measurement at 01:29:34 - CO2: 498.95ppm, Temp: 20.6°C, RH: 35.73%
+2025-03-07 01:29:34,447 - shroombox.web - INFO - Live measurements - Temp: 20.6°C, RH: 35.73%, CO2: 498.95ppm
+2025-03-07 01:29:34,836 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:34,836 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:34,837 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:34,837 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:34,838 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:34,838 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:34,842 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:34,843 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:34,843 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:34,844 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:34,844 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:34,844 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:36,477 - shroombox.sensor - WARNING - Failed to get valid measurement after 5 attempts
+2025-03-07 01:29:36,477 - shroombox.sensor - INFO - Returning last valid measurement as fallback
+2025-03-07 01:29:36,478 - shroombox.web - INFO - Live measurements - Temp: 20.6°C, RH: 35.73%, CO2: 498.95ppm
+2025-03-07 01:29:36,807 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:36,807 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:36,807 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:36,808 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:36,808 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:36,809 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:36,812 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:36,813 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:36,813 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:36,814 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:36,814 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:36,814 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:38,844 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:38,845 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:38,845 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:38,846 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:38,847 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:38,848 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:38,852 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:38,853 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:38,854 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:38,854 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:38,855 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:38,856 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:39,967 - shroombox.sensor - INFO - Successful measurement at 01:29:39 - CO2: 500.6ppm, Temp: 20.59°C, RH: 35.7%
+2025-03-07 01:29:39,968 - shroombox.web - INFO - Live measurements - Temp: 20.59°C, RH: 35.7%, CO2: 500.6ppm
+2025-03-07 01:29:40,827 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:40,828 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:40,828 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:40,829 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:40,829 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:40,830 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:40,836 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:40,837 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:40,837 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:40,838 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:40,838 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:40,838 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:41,998 - shroombox.sensor - WARNING - Failed to get valid measurement after 5 attempts
+2025-03-07 01:29:41,999 - shroombox.sensor - INFO - Returning last valid measurement as fallback
+2025-03-07 01:29:41,999 - shroombox.web - INFO - Live measurements - Temp: 20.59°C, RH: 35.7%, CO2: 500.6ppm
+2025-03-07 01:29:42,858 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:42,858 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:42,859 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:42,859 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:42,860 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:42,860 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:42,864 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:42,864 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:42,864 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:42,865 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:42,865 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:42,866 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:44,830 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:44,831 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:44,831 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:44,831 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:44,832 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:44,832 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:44,836 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:44,837 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:44,837 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:44,838 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:44,838 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:44,838 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:45,995 - shroombox.sensor - INFO - Successful measurement at 01:29:45 - CO2: 505.26ppm, Temp: 20.6°C, RH: 35.73%
+2025-03-07 01:29:45,996 - shroombox.web - INFO - Live measurements - Temp: 20.6°C, RH: 35.73%, CO2: 505.26ppm
+2025-03-07 01:29:46,830 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:46,831 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:46,831 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:46,832 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:46,832 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:46,833 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:46,837 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:46,838 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:46,838 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:46,838 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:46,839 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:46,839 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:47,521 - shroombox.sensor - WARNING - Failed to get valid measurement after 5 attempts
+2025-03-07 01:29:47,521 - shroombox.sensor - INFO - Returning last valid measurement as fallback
+2025-03-07 01:29:47,521 - shroombox.web - INFO - Live measurements - Temp: 20.6°C, RH: 35.73%, CO2: 505.26ppm
+2025-03-07 01:29:48,858 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:48,859 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:48,859 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:48,860 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:48,860 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:48,860 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:48,865 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:48,866 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:48,866 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:48,867 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:48,867 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:48,868 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:50,848 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:50,849 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:50,851 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:50,852 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:50,852 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:50,853 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:50,858 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:50,859 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:50,859 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:50,860 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:50,860 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:50,860 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:51,516 - shroombox.sensor - INFO - Successful measurement at 01:29:51 - CO2: 507.94ppm, Temp: 20.6°C, RH: 35.83%
+2025-03-07 01:29:51,517 - shroombox.web - INFO - Live measurements - Temp: 20.6°C, RH: 35.83%, CO2: 507.94ppm
+2025-03-07 01:29:52,825 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:52,826 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:52,826 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:52,827 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:52,827 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:52,828 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:52,832 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:52,832 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:52,832 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:52,833 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:52,833 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:52,834 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:53,547 - shroombox.sensor - WARNING - Failed to get valid measurement after 5 attempts
+2025-03-07 01:29:53,548 - shroombox.sensor - INFO - Returning last valid measurement as fallback
+2025-03-07 01:29:53,548 - shroombox.web - INFO - Live measurements - Temp: 20.6°C, RH: 35.83%, CO2: 507.94ppm
+2025-03-07 01:29:54,842 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:54,843 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:54,843 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:54,844 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:54,845 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:54,846 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:54,853 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:54,854 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:54,855 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:54,856 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:54,857 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:54,858 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:56,837 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:56,838 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:56,838 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:56,838 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:56,839 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:56,840 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:56,844 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:56,844 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:56,844 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:56,845 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:56,845 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:56,846 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:57,039 - shroombox.sensor - INFO - Successful measurement at 01:29:57 - CO2: 506.34ppm, Temp: 20.58°C, RH: 35.77%
+2025-03-07 01:29:57,040 - shroombox.web - INFO - Live measurements - Temp: 20.58°C, RH: 35.77%, CO2: 506.34ppm
+2025-03-07 01:29:58,852 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:58,852 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:58,853 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:58,853 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:58,854 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:58,854 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:58,857 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:29:58,858 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:29:58,858 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:29:58,858 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:29:58,859 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:29:58,859 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:29:59,071 - shroombox.sensor - WARNING - Failed to get valid measurement after 5 attempts
+2025-03-07 01:29:59,072 - shroombox.sensor - INFO - Returning last valid measurement as fallback
+2025-03-07 01:29:59,072 - shroombox.web - INFO - Live measurements - Temp: 20.58°C, RH: 35.77%, CO2: 506.34ppm
+2025-03-07 01:30:00,851 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:00,851 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:00,851 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:00,852 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:00,852 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:00,853 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:00,857 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:00,858 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:00,858 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:00,859 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:00,859 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:00,860 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:02,826 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:02,830 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:02,830 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:02,831 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:02,831 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:02,832 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:02,840 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:02,841 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:02,841 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:02,843 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:02,843 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:02,844 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:03,068 - shroombox.sensor - INFO - Successful measurement at 01:30:03 - CO2: 505.95ppm, Temp: 20.59°C, RH: 35.72%
+2025-03-07 01:30:03,069 - shroombox.web - INFO - Live measurements - Temp: 20.59°C, RH: 35.72%, CO2: 505.95ppm
+2025-03-07 01:30:04,594 - shroombox.sensor - WARNING - Failed to get valid measurement after 5 attempts
+2025-03-07 01:30:04,594 - shroombox.sensor - INFO - Returning last valid measurement as fallback
+2025-03-07 01:30:04,594 - shroombox.web - INFO - Live measurements - Temp: 20.59°C, RH: 35.72%, CO2: 505.95ppm
+2025-03-07 01:30:04,798 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:04,798 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:04,799 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:04,799 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:04,800 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:04,800 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:04,809 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:04,809 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:04,810 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:04,810 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:04,811 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:04,811 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:06,837 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:06,838 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:06,838 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:06,838 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:06,839 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:06,839 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:06,843 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:06,844 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:06,844 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:06,845 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:06,845 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:06,845 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:08,590 - shroombox.sensor - INFO - Successful measurement at 01:30:08 - CO2: 504.71ppm, Temp: 20.6°C, RH: 35.77%
+2025-03-07 01:30:08,590 - shroombox.web - INFO - Live measurements - Temp: 20.6°C, RH: 35.77%, CO2: 504.71ppm
+2025-03-07 01:30:08,825 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:08,825 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:08,826 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:08,826 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:08,827 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:08,828 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:08,835 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:08,835 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:08,836 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:08,836 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:08,837 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:08,837 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:10,620 - shroombox.sensor - WARNING - Failed to get valid measurement after 5 attempts
+2025-03-07 01:30:10,621 - shroombox.sensor - INFO - Returning last valid measurement as fallback
+2025-03-07 01:30:10,621 - shroombox.web - INFO - Live measurements - Temp: 20.6°C, RH: 35.77%, CO2: 504.71ppm
+2025-03-07 01:30:10,796 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:10,796 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:10,797 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:10,797 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:10,797 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:10,798 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:10,803 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:10,803 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:10,803 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:10,804 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:10,804 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:10,805 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:12,856 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:12,856 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:12,856 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:12,857 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:12,858 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:12,858 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:12,861 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:12,861 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:12,862 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:12,862 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:12,862 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:12,863 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:14,111 - shroombox.sensor - INFO - Successful measurement at 01:30:14 - CO2: 503.08ppm, Temp: 20.6°C, RH: 35.75%
+2025-03-07 01:30:14,112 - shroombox.web - INFO - Live measurements - Temp: 20.6°C, RH: 35.75%, CO2: 503.08ppm
+2025-03-07 01:30:14,849 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:14,850 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:14,850 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:14,851 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:14,851 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:14,852 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:14,856 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:14,856 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:14,857 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:14,857 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:14,858 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:14,858 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:16,144 - shroombox.sensor - WARNING - Failed to get valid measurement after 5 attempts
+2025-03-07 01:30:16,144 - shroombox.sensor - INFO - Returning last valid measurement as fallback
+2025-03-07 01:30:16,145 - shroombox.web - INFO - Live measurements - Temp: 20.6°C, RH: 35.75%, CO2: 503.08ppm
+2025-03-07 01:30:16,836 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:16,836 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:16,836 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:16,837 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:16,838 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:16,838 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:16,843 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:16,844 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:16,844 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:16,845 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:16,845 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:16,846 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:18,829 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:18,830 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:18,830 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:18,831 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:18,831 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:18,832 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:18,836 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:18,836 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:18,837 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:18,837 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:18,837 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:18,838 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:20,139 - shroombox.sensor - INFO - Successful measurement at 01:30:20 - CO2: 501.42ppm, Temp: 20.6°C, RH: 35.78%
+2025-03-07 01:30:20,140 - shroombox.web - INFO - Live measurements - Temp: 20.6°C, RH: 35.78%, CO2: 501.42ppm
+2025-03-07 01:30:20,849 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:20,850 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:20,850 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:20,851 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:20,852 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:20,853 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:20,857 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:20,858 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:20,858 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:20,859 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:20,859 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:20,860 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:21,665 - shroombox.sensor - WARNING - Failed to get valid measurement after 5 attempts
+2025-03-07 01:30:21,665 - shroombox.sensor - INFO - Returning last valid measurement as fallback
+2025-03-07 01:30:21,666 - shroombox.web - INFO - Live measurements - Temp: 20.6°C, RH: 35.78%, CO2: 501.42ppm
+2025-03-07 01:30:22,852 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:22,852 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:22,853 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:22,854 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:22,854 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:22,855 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:22,858 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:22,858 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:22,858 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:22,859 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:22,859 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:22,860 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:24,849 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:24,850 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:24,850 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:24,851 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:24,851 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:24,851 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:24,855 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:24,856 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:24,856 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:24,857 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:24,857 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:24,857 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:25,661 - shroombox.sensor - INFO - Successful measurement at 01:30:25 - CO2: 499.89ppm, Temp: 20.6°C, RH: 35.8%
+2025-03-07 01:30:25,661 - shroombox.web - INFO - Live measurements - Temp: 20.6°C, RH: 35.8%, CO2: 499.89ppm
+2025-03-07 01:30:26,841 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:26,842 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:26,843 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:26,843 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:26,844 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:26,844 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:26,849 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:26,849 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:26,849 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:26,850 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:26,850 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:26,851 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:27,693 - shroombox.sensor - WARNING - Failed to get valid measurement after 5 attempts
+2025-03-07 01:30:27,694 - shroombox.sensor - INFO - Returning last valid measurement as fallback
+2025-03-07 01:30:27,695 - shroombox.web - INFO - Live measurements - Temp: 20.6°C, RH: 35.8%, CO2: 499.89ppm
+2025-03-07 01:30:28,860 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:28,860 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:28,861 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:28,861 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:28,862 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:28,862 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:28,866 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:28,866 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:28,866 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:28,867 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:28,867 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:28,868 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:30,859 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:30,860 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:30,860 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:30,861 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:30,861 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:30,861 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:30,864 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:30,865 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:30,865 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:30,866 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:30,866 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:30,866 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:31,186 - shroombox.sensor - INFO - Successful measurement at 01:30:31 - CO2: 497.9ppm, Temp: 20.59°C, RH: 35.81%
+2025-03-07 01:30:31,186 - shroombox.web - INFO - Live measurements - Temp: 20.59°C, RH: 35.81%, CO2: 497.9ppm
+2025-03-07 01:30:32,831 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:32,832 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:32,832 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:32,832 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:32,833 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:32,833 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:32,838 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:32,838 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:32,839 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:32,839 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:32,840 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:32,840 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:33,223 - shroombox.sensor - WARNING - Failed to get valid measurement after 5 attempts
+2025-03-07 01:30:33,223 - shroombox.sensor - INFO - Returning last valid measurement as fallback
+2025-03-07 01:30:33,224 - shroombox.web - INFO - Live measurements - Temp: 20.59°C, RH: 35.81%, CO2: 497.9ppm
+2025-03-07 01:30:34,832 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:34,832 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:34,832 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:34,833 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:34,834 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:34,835 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:34,838 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:34,839 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:34,839 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:34,840 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:34,840 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:34,841 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:36,827 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:36,829 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:36,829 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:36,830 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:36,831 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:36,831 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:36,837 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:36,837 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:36,838 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:36,838 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:36,839 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:36,840 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:37,213 - shroombox.sensor - INFO - Successful measurement at 01:30:37 - CO2: 496.8ppm, Temp: 20.59°C, RH: 35.78%
+2025-03-07 01:30:37,214 - shroombox.web - INFO - Live measurements - Temp: 20.59°C, RH: 35.78%, CO2: 496.8ppm
+2025-03-07 01:30:38,740 - shroombox.sensor - WARNING - Failed to get valid measurement after 5 attempts
+2025-03-07 01:30:38,741 - shroombox.sensor - INFO - Returning last valid measurement as fallback
+2025-03-07 01:30:38,741 - shroombox.web - INFO - Live measurements - Temp: 20.59°C, RH: 35.78%, CO2: 496.8ppm
+2025-03-07 01:30:38,787 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:38,788 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:38,788 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:38,788 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:38,789 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:38,789 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:38,794 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:38,794 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:38,794 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:38,795 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:38,795 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:38,796 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:40,826 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:40,827 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:40,827 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:40,828 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:40,828 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:40,829 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:40,833 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:40,833 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:40,833 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:40,834 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:40,834 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:40,835 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:42,735 - shroombox.sensor - INFO - Successful measurement at 01:30:42 - CO2: 493.95ppm, Temp: 20.6°C, RH: 35.8%
+2025-03-07 01:30:42,735 - shroombox.web - INFO - Live measurements - Temp: 20.6°C, RH: 35.8%, CO2: 493.95ppm
+2025-03-07 01:30:42,839 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:42,839 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:42,840 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:42,840 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:42,841 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:42,841 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:42,845 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:42,846 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:42,846 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:42,847 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:42,847 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:42,847 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:44,766 - shroombox.sensor - WARNING - Failed to get valid measurement after 5 attempts
+2025-03-07 01:30:44,766 - shroombox.sensor - INFO - Returning last valid measurement as fallback
+2025-03-07 01:30:44,766 - shroombox.web - INFO - Live measurements - Temp: 20.6°C, RH: 35.8%, CO2: 493.95ppm
+2025-03-07 01:30:44,826 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:44,826 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:44,827 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:44,827 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:44,828 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:44,828 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:44,832 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:44,833 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:44,833 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:44,833 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:44,834 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:44,834 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:46,823 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:46,824 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:46,824 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:46,825 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:46,825 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:46,826 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:46,836 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:46,836 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:46,837 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:46,838 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:46,838 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:46,839 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:48,348 - shroombox.sensor - INFO - Successful measurement at 01:30:48 - CO2: 491.55ppm, Temp: 20.63°C, RH: 35.75%
+2025-03-07 01:30:48,348 - shroombox.web - INFO - Live measurements - Temp: 20.63°C, RH: 35.75%, CO2: 491.55ppm
+2025-03-07 01:30:48,819 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:48,819 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:48,820 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:48,820 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:48,821 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:48,821 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:48,826 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:48,826 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:48,826 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:48,827 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:48,827 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:48,828 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:50,380 - shroombox.sensor - WARNING - Failed to get valid measurement after 5 attempts
+2025-03-07 01:30:50,380 - shroombox.sensor - INFO - Returning last valid measurement as fallback
+2025-03-07 01:30:50,381 - shroombox.web - INFO - Live measurements - Temp: 20.63°C, RH: 35.75%, CO2: 491.55ppm
+2025-03-07 01:30:50,831 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:50,832 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:50,832 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:50,833 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:50,833 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:50,834 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:50,838 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:50,838 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:50,839 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:50,839 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:50,840 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:50,840 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:52,827 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:52,827 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:52,828 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:52,829 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:52,829 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:52,830 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:52,835 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:52,836 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:52,836 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:52,837 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:52,837 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:52,838 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:53,864 - shroombox.sensor - INFO - Successful measurement at 01:30:53 - CO2: 488.5ppm, Temp: 20.6°C, RH: 35.72%
+2025-03-07 01:30:53,865 - shroombox.web - INFO - Live measurements - Temp: 20.6°C, RH: 35.72%, CO2: 488.5ppm
+2025-03-07 01:30:54,847 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:54,848 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:54,848 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:54,848 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:54,849 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:54,850 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:54,854 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:54,854 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:54,855 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:54,855 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:54,855 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:54,856 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:56,828 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:56,828 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:56,829 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:56,829 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:56,830 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:56,830 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:56,839 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:56,839 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:56,840 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:56,840 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:56,840 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:56,841 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:58,830 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:58,831 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:58,831 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:58,832 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:58,832 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:58,833 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:58,840 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:30:58,840 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:30:58,840 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:30:58,841 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:30:58,841 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:30:58,842 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:30:59,862 - shroombox.sensor - INFO - Successful measurement at 01:30:59 - CO2: 483.78ppm, Temp: 20.59°C, RH: 35.72%
+2025-03-07 01:30:59,863 - shroombox.web - INFO - Live measurements - Temp: 20.59°C, RH: 35.72%, CO2: 483.78ppm
+2025-03-07 01:31:00,861 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:31:00,862 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:31:00,862 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:31:00,863 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:31:00,863 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:31:00,864 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:31:00,866 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:31:00,867 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:31:00,867 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:31:00,868 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:31:00,868 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:31:00,868 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:31:01,401 - shroombox.sensor - WARNING - Failed to get valid measurement after 5 attempts
+2025-03-07 01:31:01,402 - shroombox.sensor - INFO - Returning last valid measurement as fallback
+2025-03-07 01:31:01,402 - shroombox.web - INFO - Live measurements - Temp: 20.59°C, RH: 35.72%, CO2: 483.78ppm
+2025-03-07 01:31:02,838 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:31:02,839 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:31:02,839 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:31:02,839 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:31:02,840 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:31:02,840 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:31:02,843 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:31:02,844 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:31:02,844 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:31:02,845 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:31:02,845 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:31:02,845 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:31:04,860 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:31:04,860 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:31:04,860 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:31:04,861 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:31:04,861 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:31:04,862 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:31:04,865 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:31:04,865 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:31:04,866 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:31:04,866 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:31:04,866 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:31:04,867 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:31:05,392 - shroombox.sensor - INFO - Successful measurement at 01:31:05 - CO2: 476.19ppm, Temp: 20.62°C, RH: 35.79%
+2025-03-07 01:31:05,392 - shroombox.web - INFO - Live measurements - Temp: 20.62°C, RH: 35.79%, CO2: 476.19ppm
+2025-03-07 01:31:06,801 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:31:06,802 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:31:06,802 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:31:06,803 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:31:06,803 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:31:06,804 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:31:06,807 - shroombox.web - INFO - Retrieved fan settings from settings manager: {'manual_control': False, 'speed': 0.0}
+2025-03-07 01:31:06,807 - shroombox.web - INFO - Returning fan speed in API: 0.0%
+2025-03-07 01:31:06,807 - shroombox.settings - INFO - SettingsManager: Setting heater state to OFF
+2025-03-07 01:31:06,808 - shroombox.settings - WARNING - No device with role 'heater' found in settings
+2025-03-07 01:31:06,808 - shroombox.settings - INFO - SettingsManager: Setting humidifier state to OFF
+2025-03-07 01:31:06,809 - shroombox.settings - WARNING - No device with role 'humidifier' found in settings
+2025-03-07 01:31:10,913 - shroombox.sensor - INFO - Successful measurement at 01:31:10 - CO2: 469.56ppm, Temp: 20.62°C, RH: 35.8%
+2025-03-07 01:31:10,914 - shroombox.web - INFO - Live measurements - Temp: 20.62°C, RH: 35.8%, CO2: 469.56ppm
+2025-03-07 01:31:12,944 - shroombox.sensor - WARNING - Failed to get valid measurement after 5 attempts
+2025-03-07 01:31:12,945 - shroombox.sensor - INFO - Returning last valid measurement as fallback
+2025-03-07 01:31:12,945 - shroombox.web - INFO - Live measurements - Temp: 20.62°C, RH: 35.8%, CO2: 469.56ppm
