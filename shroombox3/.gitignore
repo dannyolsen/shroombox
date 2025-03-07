@@ -8,9 +8,7 @@ __pycache__/
 *.class
 
 # Virtual environments
-venv/
-env/
-ENV/
+
 
 # IDE specific files
 .idea/
@@ -23,5 +21,4 @@ ENV/
 Thumbs.db
 
 # Configuration files
-config/settings.json
-.env
+
