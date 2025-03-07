@@ -1,6 +1,6 @@
 {
     "fan": {
         "manual_control": false,
-        "speed": 100.0
+        "speed": 0.0
     }
 }
