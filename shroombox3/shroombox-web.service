@@ -1,0 +1,38 @@
+[Unit]
+Description=Shroombox Web Interface
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=danny
+Group=danny
+WorkingDirectory=/home/danny/Github/shroombox/shroombox3
+
+# Environment setup
+Environment=PYTHONUNBUFFERED=1
+Environment=PATH=/home/danny/Github/shroombox/shroombox3/venv/bin
+Environment=PYTHONPATH=/home/danny/Github/shroombox/shroombox3
+Environment=QUART_APP=web.web_server:app
+Environment=QUART_ENV=production
+
+# Create log directory if it doesn't exist
+ExecStartPre=/bin/mkdir -p /home/danny/Github/shroombox/shroombox3/logs
+
+# Start the application
+ExecStart=/home/danny/Github/shroombox/shroombox3/venv/bin/hypercorn \
+    --bind 0.0.0.0:5000 \
+    --workers 1 \
+    --log-level debug \
+    web.web_server:app
+
+# Restart configuration
+Restart=on-failure
+RestartSec=10
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target 

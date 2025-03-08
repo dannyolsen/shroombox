@@ -1,0 +1,10 @@
+---
+description: make code always suggest best practices to optimize and maintain code and preserve stability
+globs: 
+alwaysApply: false
+---
+
+# Your rule content
+- suggest best practices for better file structure and maintenance and code stability
+- make use of managers singleton style if it makes sense
+

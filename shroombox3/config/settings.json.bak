@@ -1,21 +1,21 @@
 {
     "available_devices": [
         {
-            "ip": "192.168.8.181",
-            "mac": "B0-19-21-C4-C9-9D",
-            "model": "P115",
-            "name": "Humidifier",
-            "role": "humidifier",
-            "state": true,
-            "type": "SMART.TAPOPLUG"
-        },
-        {
             "ip": "192.168.8.164",
             "mac": "B0-19-21-C4-CE-97",
             "model": "P115",
             "name": "Heatmat",
             "role": "heater",
-            "state": true,
+            "state": false,
+            "type": "SMART.TAPOPLUG"
+        },
+        {
+            "ip": "192.168.8.181",
+            "mac": "B0-19-21-C4-C9-9D",
+            "model": "P115",
+            "name": "Humidifier",
+            "role": "humidifier",
+            "state": false,
             "type": "SMART.TAPOPLUG"
         }
     ],
@@ -23,7 +23,19 @@
         "pid": {
             "Kd": 0,
             "Ki": -0.01,
-            "Kp": -1
+            "Kp": -0.1
+        }
+    },
+    "control_states": {
+        "heater": {
+            "desired_state": false,
+            "last_change": 1741454583.1354744,
+            "last_change_reason": "Temperature 22.27100944519043\u00b0C above upper bound 10.5\u00b0C"
+        },
+        "humidifier": {
+            "desired_state": true,
+            "last_change": 1741454953.912961,
+            "last_change_reason": "Humidity 44.81939697265625% below lower bound 48.0% - PID: 0.00 - Burst duration: 2.0s"
         }
     },
     "environment": {
@@ -36,7 +48,7 @@
                 "temp_setpoint": 19.0
             },
             "colonisation": {
-                "co2_setpoint": 300,
+                "co2_setpoint": 1000,
                 "rh_setpoint": 50.0,
                 "temp_hysteresis": 0.5,
                 "temp_setpoint": 10.0
@@ -49,6 +61,10 @@
             }
         }
     },
+    "fan": {
+        "manual_control": false,
+        "speed": 0.0
+    },
     "humidifier": {
         "break_time": 180,
         "burst_interval": 60,
@@ -56,16 +72,24 @@
         "burst_min": 2,
         "pid": {
             "Kd": 0,
-            "Ki": 0.01,
-            "Kp": 0.2
+            "Ki": -0.01,
+            "Kp": -1
         },
         "rh_hysteresis": 2
     },
     "logging": {
         "enabled": true,
-        "interval": 30
+        "interval": 60
     },
     "sensor": {
-        "measurement_interval": 2
+        "description": "Interval in seconds between sensor readings (minimum 2)",
+        "measurement_interval": 5
+    },
+    "tapo": {
+        "connection_retries": 3,
+        "description": "Configuration for Tapo smart plug monitoring",
+        "discovery_ttl": 300,
+        "monitoring_interval": 1,
+        "session_ttl": 3600
     }
 }

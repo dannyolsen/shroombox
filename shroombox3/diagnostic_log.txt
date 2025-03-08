@@ -1,0 +1,183 @@
+2025-03-08 16:05:56,862 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.alarm.Alarm'>
+2025-03-08 16:05:56,863 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.autooff.AutoOff'>
+2025-03-08 16:05:56,864 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.batterysensor.BatterySensor'>
+2025-03-08 16:05:56,865 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.brightness.Brightness'>
+2025-03-08 16:05:56,866 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.childdevice.ChildDevice'>
+2025-03-08 16:05:56,867 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.childlock.ChildLock'>
+2025-03-08 16:05:56,868 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.childprotection.ChildProtection'>
+2025-03-08 16:05:56,869 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.childsetup.ChildSetup'>
+2025-03-08 16:05:56,873 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.clean.Clean'>
+2025-03-08 16:05:56,904 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.cleanrecords.CleanRecords'>
+2025-03-08 16:05:56,905 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.cloud.Cloud'>
+2025-03-08 16:05:56,906 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.color.Color'>
+2025-03-08 16:05:56,907 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.colortemperature.ColorTemperature'>
+2025-03-08 16:05:56,912 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.consumables.Consumables'>
+2025-03-08 16:05:56,913 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.contactsensor.ContactSensor'>
+2025-03-08 16:05:56,914 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.devicemodule.DeviceModule'>
+2025-03-08 16:05:56,916 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.dustbin.Dustbin'>
+2025-03-08 16:05:56,917 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.energy.Energy'>
+2025-03-08 16:05:56,919 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.fan.Fan'>
+2025-03-08 16:05:56,948 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.firmware.Firmware'>
+2025-03-08 16:05:56,949 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.frostprotection.FrostProtection'>
+2025-03-08 16:05:56,950 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.homekit.HomeKit'>
+2025-03-08 16:05:56,951 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.humiditysensor.HumiditySensor'>
+2025-03-08 16:05:56,952 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.led.Led'>
+2025-03-08 16:05:56,954 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.light.Light'>
+2025-03-08 16:05:56,955 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.lighteffect.LightEffect'>
+2025-03-08 16:05:56,956 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.lightpreset.LightPreset'>
+2025-03-08 16:05:56,958 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.lightstripeffect.LightStripEffect'>
+2025-03-08 16:05:56,959 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.lighttransition.LightTransition'>
+2025-03-08 16:05:56,961 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.matter.Matter'>
+2025-03-08 16:05:56,962 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.mop.Mop'>
+2025-03-08 16:05:56,963 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.motionsensor.MotionSensor'>
+2025-03-08 16:05:56,965 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.overheatprotection.OverheatProtection'>
+2025-03-08 16:05:56,966 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.powerprotection.PowerProtection'>
+2025-03-08 16:05:56,967 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.reportmode.ReportMode'>
+2025-03-08 16:05:56,968 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.speaker.Speaker'>
+2025-03-08 16:05:56,969 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.temperaturecontrol.TemperatureControl'>
+2025-03-08 16:05:56,970 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.temperaturesensor.TemperatureSensor'>
+2025-03-08 16:05:56,972 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.thermostat.Thermostat'>
+2025-03-08 16:05:56,973 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.time.Time'>
+2025-03-08 16:05:56,983 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.triggerlogs.TriggerLogs'>
+2025-03-08 16:05:56,989 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smart.modules.waterleaksensor.WaterleakSensor'>
+2025-03-08 16:05:56,995 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smartcam.modules.alarm.Alarm'>
+2025-03-08 16:05:56,997 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smartcam.modules.babycrydetection.BabyCryDetection'>
+2025-03-08 16:05:56,998 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smartcam.modules.battery.Battery'>
+2025-03-08 16:05:57,000 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smartcam.modules.camera.Camera'>
+2025-03-08 16:05:57,001 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smartcam.modules.childdevice.ChildDevice'>
+2025-03-08 16:05:57,002 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smartcam.modules.childsetup.ChildSetup'>
+2025-03-08 16:05:57,003 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smartcam.modules.device.DeviceModule'>
+2025-03-08 16:05:57,004 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smartcam.modules.homekit.HomeKit'>
+2025-03-08 16:05:57,005 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smartcam.modules.led.Led'>
+2025-03-08 16:05:57,006 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smartcam.modules.lensmask.LensMask'>
+2025-03-08 16:05:57,007 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smartcam.modules.matter.Matter'>
+2025-03-08 16:05:57,008 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smartcam.modules.motiondetection.MotionDetection'>
+2025-03-08 16:05:57,009 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smartcam.modules.pantilt.PanTilt'>
+2025-03-08 16:05:57,010 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smartcam.modules.persondetection.PersonDetection'>
+2025-03-08 16:05:57,011 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smartcam.modules.petdetection.PetDetection'>
+2025-03-08 16:05:57,012 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smartcam.modules.tamperdetection.TamperDetection'>
+2025-03-08 16:05:57,013 - kasa.smart.smartmodule - DEBUG - Registering <class 'kasa.smartcam.modules.time.Time'>
+2025-03-08 16:05:57,093 - shroombox.device - INFO - Initializing Device Manager
+2025-03-08 16:05:57,094 - shroombox.device - INFO - Using config path: /home/danny/Github/shroombox/shroombox3/config/settings.json
+2025-03-08 16:05:57,094 - shroombox.settings - INFO - Settings manager initialized with config path: /home/danny/Github/shroombox/shroombox3/config/settings.json
+2025-03-08 16:05:57,097 - shroombox.settings - INFO - Settings manager initialized with config path: /home/danny/Github/shroombox/shroombox3/config/settings.json
+2025-03-08 16:05:57,097 - shroombox.device - INFO - Using session TTL from settings: 3600s
+2025-03-08 16:05:57,098 - shroombox.device - INFO - Using connection retries from settings: 3
+2025-03-08 16:05:57,098 - shroombox.device - INFO - Using discovery TTL from settings: 300s
+2025-03-08 16:05:57,098 - shroombox.device - INFO - Tapo controller initialized successfully
+2025-03-08 16:05:57,098 - shroombox.sensor - INFO - Initializing SimpleSCD30Controller
+2025-03-08 16:05:57,099 - shroombox.settings - INFO - Settings manager initialized with config path: /home/danny/Github/shroombox/shroombox3/config/settings.json
+2025-03-08 16:05:57,099 - shroombox.sensor - INFO - Creating SCD30 instance
+2025-03-08 16:05:57,099 - shroombox.sensor - INFO - Stopping any existing measurements (cleanup from previous runs)
+2025-03-08 16:05:57,099 - root - DEBUG - Executing command 0x0104 with arguments: <none>
+2025-03-08 16:05:57,100 - root - DEBUG - Sending raw I2C data block: [0x01, 0x04]
+2025-03-08 16:05:57,106 - shroombox.sensor - INFO - Successfully stopped periodic measurement
+2025-03-08 16:05:59,106 - shroombox.sensor - INFO - Starting continuous measurement
+2025-03-08 16:05:59,106 - root - DEBUG - Executing command 0x10 with arguments: 0x00
+2025-03-08 16:05:59,106 - root - DEBUG - Sending raw I2C data block: [0x00, 0x10, 0x00, 0x00, 0x81]
+2025-03-08 16:05:59,112 - shroombox.sensor - DEBUG - Failed to start periodic measurement - sensor may already be in measurement mode
+2025-03-08 16:05:59,113 - shroombox.sensor - INFO - Checking if sensor is working despite initialization warning
+2025-03-08 16:06:01,113 - shroombox.sensor - DEBUG - Checking sensor readiness (attempt 1/5)
+2025-03-08 16:06:01,113 - root - DEBUG - Executing command 0x0202 with arguments: <none>
+2025-03-08 16:06:01,114 - root - DEBUG - Sending raw I2C data block: [0x02, 0x02]
+2025-03-08 16:06:01,120 - root - DEBUG - Received raw I2C response: [0x00, 0x01, 0xb0]
+2025-03-08 16:06:01,120 - root - DEBUG - CRC-verified response: 0x01
+2025-03-08 16:06:01,120 - root - DEBUG - Executing command 0x0300 with arguments: <none>
+2025-03-08 16:06:01,121 - root - DEBUG - Sending raw I2C data block: [0x03, 0x00]
+2025-03-08 16:06:01,128 - root - DEBUG - Received raw I2C response: [0x44, 0x37, 0xd9, 0x24, 0xcd, 0xd5, 0x41, 0xba, 0x98, 0x43, 0x8c, 0x22, 0x42, 0x04, 0x15, 0x0b, 0x20, 0x1d]
+2025-03-08 16:06:01,129 - root - DEBUG - CRC-verified response: [0x4437, 0x24cd, 0x41ba, 0x438c, 0x4204, 0xb20]
+2025-03-08 16:06:01,129 - shroombox.sensor - INFO - Sensor is working despite initialization warning: CO2=732.6ppm, Temp=23.3°C, RH=33.0%
+2025-03-08 16:06:01,129 - shroombox.device - INFO - Device Manager initialized successfully
+2025-03-08 16:06:01,147 - test - INFO - Starting environment controller tests...
+2025-03-08 16:06:01,148 - asyncio - DEBUG - Using selector: EpollSelector
+2025-03-08 16:06:01,148 - test - INFO - Setting overall timeout of 120 seconds
+2025-03-08 16:06:01,149 - test - INFO - === Test 1: Initialization ===
+2025-03-08 16:06:01,149 - test - INFO - Creating DeviceManager...
+2025-03-08 16:06:01,149 - test - INFO - Creating EnvironmentController...
+2025-03-08 16:06:01,149 - shroombox.environment - INFO - Initializing Environment Controller
+2025-03-08 16:06:01,614 - shroombox.influxdb - INFO - Initializing InfluxDB Manager
+2025-03-08 16:06:01,614 - shroombox.influxdb - INFO - Using InfluxDB token: c2Rv1...2Rg==
+2025-03-08 16:06:01,614 - shroombox.influxdb - INFO - Using InfluxDB URL: http://localhost:8086
+2025-03-08 16:06:01,614 - shroombox.influxdb - INFO - Using InfluxDB org: supershrooms
+2025-03-08 16:06:01,624 - shroombox.influxdb - INFO - InfluxDB client initialized successfully
+2025-03-08 16:06:01,624 - shroombox.environment - INFO - Environment controller initialized
+2025-03-08 16:06:01,624 - test - INFO - Initialization successful!
+2025-03-08 16:06:01,624 - test - INFO - === Test 2: Controller.start() ===
+2025-03-08 16:06:01,624 - test - INFO - Starting controller with 10 second timeout...
+2025-03-08 16:06:01,625 - shroombox.settings - INFO - Detected external change to settings.json (mtime: 1741446252.993066 > 0)
+2025-03-08 16:06:01,625 - shroombox.settings - DEBUG - Loading settings from: /home/danny/Github/shroombox/shroombox3/config/settings.json
+2025-03-08 16:06:01,626 - shroombox.settings - INFO - Detected external change to settings.json (mtime: 1741446252.993066 > 0)
+2025-03-08 16:06:01,626 - shroombox.settings - DEBUG - Loading settings from: /home/danny/Github/shroombox/shroombox3/config/settings.json
+2025-03-08 16:06:01,627 - shroombox.sensor - INFO - Using measurement interval from settings: 5.0s
+2025-03-08 16:06:01,627 - shroombox.device - INFO - Device Manager async initialization complete
+2025-03-08 16:06:01,627 - shroombox.fan - INFO - Fan controller initialized
+2025-03-08 16:06:01,628 - shroombox.humidity - INFO - Humidity controller initialized
+2025-03-08 16:06:01,628 - shroombox.humidity - INFO - Default settings - Setpoint: 85.0%, Hysteresis: 2.0%, Min state change interval: 1.0s
+2025-03-08 16:06:01,628 - shroombox.temperature - INFO - Temperature controller initialized
+2025-03-08 16:06:01,628 - shroombox.temperature - INFO - Default settings - Setpoint: 20.0°C, Hysteresis: 0.5°C, Min state change interval: 1.0s
+2025-03-08 16:06:01,630 - shroombox.environment - INFO - Started file watcher for config directory: /home/danny/Github/shroombox/shroombox3/config
+2025-03-08 16:06:01,630 - shroombox.settings - DEBUG - Loading settings from: /home/danny/Github/shroombox/shroombox3/config/settings.json
+2025-03-08 16:06:01,631 - watchdog.observers.inotify_buffer - DEBUG - in-event <InotifyEvent: src_path=b'/home/danny/Github/shroombox/shroombox3/config/settings.json', wd=1, mask=IN_OPEN, cookie=0, name='settings.json'>
+2025-03-08 16:06:01,632 - watchdog.observers.inotify_buffer - DEBUG - in-event <InotifyEvent: src_path=b'/home/danny/Github/shroombox/shroombox3/config/settings.json', wd=1, mask=IN_CLOSE_NOWRITE, cookie=0, name='settings.json'>
+2025-03-08 16:06:01,632 - shroombox.fan - INFO - Loaded fan speed from settings: 15.846075690325334%
+2025-03-08 16:06:01,633 - shroombox.fan - INFO - Loaded CO2 setpoint from settings: 600.0ppm
+2025-03-08 16:06:01,633 - shroombox.fan - INFO - Loaded CO2 PID parameters from settings: Kp=-0.1, Ki=-0.01, Kd=0.0
+2025-03-08 16:06:01,633 - shroombox.humidity - INFO - Updating humidity settings:
+2025-03-08 16:06:01,634 - shroombox.humidity - INFO - - Setpoint: 85.0% -> 10.0%
+2025-03-08 16:06:01,634 - shroombox.temperature - INFO - Updating temperature settings:
+2025-03-08 16:06:01,634 - shroombox.temperature - INFO - - Setpoint: 20.0°C -> 10.0°C
+2025-03-08 16:06:01,634 - shroombox.environment - INFO - Loaded settings - Measurement interval: 5s, Logging interval: 60s
+2025-03-08 16:06:01,634 - test - INFO - Controller.start() completed successfully!
+2025-03-08 16:06:01,634 - test - INFO - === Test 3: Controller.load_config() ===
+2025-03-08 16:06:01,634 - test - INFO - Loading config with 5 second timeout...
+2025-03-08 16:06:01,635 - shroombox.settings - DEBUG - Loading settings from: /home/danny/Github/shroombox/shroombox3/config/settings.json
+2025-03-08 16:06:01,635 - watchdog.observers.inotify_buffer - DEBUG - in-event <InotifyEvent: src_path=b'/home/danny/Github/shroombox/shroombox3/config/settings.json', wd=1, mask=IN_OPEN, cookie=0, name='settings.json'>
+2025-03-08 16:06:01,636 - watchdog.observers.inotify_buffer - DEBUG - in-event <InotifyEvent: src_path=b'/home/danny/Github/shroombox/shroombox3/config/settings.json', wd=1, mask=IN_CLOSE_NOWRITE, cookie=0, name='settings.json'>
+2025-03-08 16:06:01,637 - shroombox.fan - INFO - Loaded fan speed from settings: 15.846075690325334%
+2025-03-08 16:06:01,637 - shroombox.fan - INFO - Loaded CO2 setpoint from settings: 600.0ppm
+2025-03-08 16:06:01,637 - shroombox.fan - INFO - Loaded CO2 PID parameters from settings: Kp=-0.1, Ki=-0.01, Kd=0.0
+2025-03-08 16:06:01,638 - shroombox.environment - INFO - Loaded settings - Measurement interval: 5s, Logging interval: 60s
+2025-03-08 16:06:01,638 - test - INFO - Controller.load_config() completed successfully!
+2025-03-08 16:06:01,638 - test - INFO - === Test 4: DeviceManager.get_measurements() ===
+2025-03-08 16:06:01,638 - test - INFO - Getting measurements with 5 second timeout...
+2025-03-08 16:06:01,638 - shroombox.sensor - DEBUG - Using recent measurement (age: 0.5s)
+2025-03-08 16:06:01,639 - shroombox.device - DEBUG - Updated measurement cache with fresh data: CO2=732.5750122070312, Temp=23.282981872558594, RH=33.0108642578125
+2025-03-08 16:06:01,639 - test - INFO - Measurements: CO2=732.6ppm, Temp=23.3°C, RH=33.0%
+2025-03-08 16:06:01,639 - test - INFO - === Test 5: Single Control Cycle ===
+2025-03-08 16:06:01,639 - test - INFO - Testing a single control cycle...
+2025-03-08 16:06:01,639 - shroombox.sensor - DEBUG - Using recent measurement (age: 0.5s)
+2025-03-08 16:06:01,640 - shroombox.device - DEBUG - Updated measurement cache with fresh data: CO2=732.5750122070312, Temp=23.282981872558594, RH=33.0108642578125
+2025-03-08 16:06:01,640 - test - INFO - Testing temperature control...
+2025-03-08 16:06:01,640 - test - INFO - Testing humidity control...
+2025-03-08 16:06:01,662 - shroombox.influxdb - DEBUG - Humidifier state logged to InfluxDB - State: OFF, Desired: OFF, RH: 33.0108642578125%, Setpoint: 10.0%
+2025-03-08 16:06:01,663 - test - INFO - Testing fan control...
+2025-03-08 16:06:01,663 - test - INFO - Single control cycle completed successfully!
+2025-03-08 16:06:01,663 - test - INFO - Cleaning up...
+2025-03-08 16:06:01,663 - shroombox.environment - INFO - 
+=== Cleaning up resources ===
+2025-03-08 16:06:01,664 - shroombox.environment - INFO - File observer stopped
+2025-03-08 16:06:01,664 - shroombox.device - INFO - Cleaning up device resources
+2025-03-08 16:06:01,665 - shroombox.device - INFO - Fan cleaned up
+2025-03-08 16:06:01,665 - shroombox.sensor - INFO - Cleaning up SCD30 sensor
+2025-03-08 16:06:01,665 - root - DEBUG - Executing command 0x0104 with arguments: <none>
+2025-03-08 16:06:01,665 - root - DEBUG - Sending raw I2C data block: [0x01, 0x04]
+2025-03-08 16:06:01,671 - shroombox.sensor - WARNING - Failed to stop periodic measurement (attempt 1)
+2025-03-08 16:06:02,171 - root - DEBUG - Executing command 0x0104 with arguments: <none>
+2025-03-08 16:06:02,172 - root - DEBUG - Sending raw I2C data block: [0x01, 0x04]
+2025-03-08 16:06:02,177 - shroombox.sensor - WARNING - Failed to stop periodic measurement (attempt 2)
+2025-03-08 16:06:02,678 - root - DEBUG - Executing command 0x0104 with arguments: <none>
+2025-03-08 16:06:02,678 - root - DEBUG - Sending raw I2C data block: [0x01, 0x04]
+2025-03-08 16:06:02,684 - shroombox.sensor - WARNING - Failed to stop periodic measurement (attempt 3)
+2025-03-08 16:06:03,184 - shroombox.sensor - INFO - SCD30 sensor cleanup completed
+2025-03-08 16:06:03,184 - shroombox.device - INFO - Sensor cleaned up
+2025-03-08 16:06:03,185 - shroombox.environment - INFO - Device manager cleaned up
+2025-03-08 16:06:03,185 - shroombox.environment - INFO - Cleanup completed
+2025-03-08 16:06:03,185 - test - INFO - Cleanup successful
+2025-03-08 16:06:03,185 - test - INFO - Tests completed
+2025-03-08 16:06:03,186 - test - INFO - Test script finished
+
+=== Fan Cleanup ===
+Setting fan speed to 0%...
+Stopping PWM...
+Fan cleanup completed
+===================

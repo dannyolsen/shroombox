@@ -1,0 +1,21 @@
+[Unit]
+Description=Shroombox Measurements Updater
+After=network.target
+
+[Service]
+Type=simple
+User=danny
+WorkingDirectory=/home/danny/Github/shroombox/shroombox3
+Environment=VIRTUAL_ENV=/home/danny/Github/shroombox/shroombox3/venv
+Environment=PATH=/home/danny/Github/shroombox/shroombox3/venv/bin:/usr/local/bin:/usr/bin:/bin
+Environment=PYTHONPATH=/home/danny/Github/shroombox/shroombox3
+EnvironmentFile=/home/danny/Github/shroombox/shroombox3/.env
+ExecStart=/home/danny/Github/shroombox/shroombox3/venv/bin/python /home/danny/Github/shroombox/shroombox3/scripts/util_update_measurements.py
+# Only restart on failure, not when manually stopped
+Restart=on-failure
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target 

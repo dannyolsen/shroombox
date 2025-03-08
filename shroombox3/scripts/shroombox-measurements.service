@@ -1,0 +1,16 @@
+[Unit]
+Description=Shroombox Measurements Updater
+After=network.target
+
+[Service]
+Type=simple
+User=danny
+WorkingDirectory=/home/danny/Github/shroombox/shroombox3
+ExecStart=/home/danny/Github/shroombox/shroombox3/venv/bin/python /home/danny/Github/shroombox/shroombox3/scripts/util_update_measurements.py
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target 

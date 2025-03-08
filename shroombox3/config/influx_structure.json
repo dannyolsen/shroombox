@@ -1,0 +1,668 @@
+{
+  "dashboard_suggestions": {
+    "environmental_overview": {
+      "description": "Overview of all environmental parameters",
+      "panels": [
+        {
+          "title": "Temperature and Humidity",
+          "type": "time_series",
+          "measurements": [
+            "environment"
+          ],
+          "fields": [
+            "temperature",
+            "humidity"
+          ]
+        },
+        {
+          "title": "CO2 Levels",
+          "type": "time_series",
+          "measurements": [
+            "environment"
+          ],
+          "fields": [
+            "co2"
+          ]
+        },
+        {
+          "title": "Fan Speed",
+          "type": "time_series",
+          "measurements": [
+            "fan"
+          ],
+          "fields": [
+            "speed"
+          ]
+        },
+        {
+          "title": "Device Status",
+          "type": "status",
+          "measurements": [
+            "humidifier",
+            "heater"
+          ],
+          "fields": [
+            "state"
+          ]
+        }
+      ]
+    },
+    "humidity_control": {
+      "description": "Detailed view of humidity control system",
+      "template": "controller_overview",
+      "parameters": {
+        "controller_name": "humidity",
+        "measurement_name": "humidifier_state",
+        "process_variable": "humidity",
+        "setpoint_unit": "%"
+      },
+      "additional_panels": [
+        {
+          "title": "Burst Durations",
+          "type": "time_series",
+          "measurements": [
+            "humidifier_state"
+          ],
+          "fields": [
+            "burst_duration"
+          ]
+        },
+        {
+          "title": "Active Burst Cycles",
+          "type": "time_series",
+          "measurements": [
+            "burst_cycle"
+          ],
+          "fields": [
+            "cycle_active",
+            "burst_progress"
+          ]
+        }
+      ]
+    },
+    "temperature_control": {
+      "description": "Detailed view of temperature control system",
+      "template": "controller_overview",
+      "parameters": {
+        "controller_name": "temperature",
+        "measurement_name": "heater_state",
+        "process_variable": "temperature",
+        "setpoint_unit": "\u00b0C"
+      }
+    },
+    "pid_controller_performance": {
+      "description": "Detailed analysis of PID controller performance",
+      "panels": [
+        {
+          "template": "pid_components",
+          "parameters": {
+            "controller_name": "humidity"
+          }
+        },
+        {
+          "template": "pid_components",
+          "parameters": {
+            "controller_name": "temperature"
+          }
+        }
+      ]
+    }
+  },
+  "dashboard_templates": {
+    "controller_overview": {
+      "parameters": [
+        "controller_name",
+        "measurement_name",
+        "process_variable",
+        "setpoint_unit"
+      ],
+      "panels": [
+        {
+          "title": "{controller_name} vs Setpoint",
+          "type": "time_series",
+          "measurements": [
+            "{measurement_name}",
+            "shroombox_environment"
+          ],
+          "fields": [
+            "{process_variable}",
+            "setpoint"
+          ]
+        },
+        {
+          "title": "{controller_name} State",
+          "type": "state_timeline",
+          "measurements": [
+            "{measurement_name}"
+          ],
+          "fields": [
+            "state",
+            "desired_state"
+          ]
+        },
+        {
+          "title": "State Change Events",
+          "type": "event_list",
+          "measurements": [
+            "{measurement_name}"
+          ],
+          "tags": [
+            "state_change_reason"
+          ]
+        },
+        {
+          "title": "PID Controller Performance",
+          "type": "time_series",
+          "measurements": [
+            "pid_metrics"
+          ],
+          "fields": [
+            "pid_output",
+            "error"
+          ],
+          "filter": {
+            "controller": "{controller_name}"
+          }
+        }
+      ]
+    },
+    "pid_components": {
+      "parameters": [
+        "controller_name"
+      ],
+      "panels": [
+        {
+          "title": "{controller_name} PID Components",
+          "type": "time_series",
+          "measurements": [
+            "pid_metrics"
+          ],
+          "fields": [
+            "p_term",
+            "i_term",
+            "d_term",
+            "pid_output"
+          ],
+          "filter": {
+            "controller": "{controller_name}"
+          }
+        },
+        {
+          "title": "{controller_name} Error",
+          "type": "time_series",
+          "measurements": [
+            "pid_metrics"
+          ],
+          "fields": [
+            "error",
+            "process_variable",
+            "setpoint"
+          ],
+          "filter": {
+            "controller": "{controller_name}"
+          }
+        }
+      ]
+    }
+  },
+  "global_settings": {
+    "default_tags": {
+      "location": "shroombox"
+    },
+    "retention_policies": {
+      "short_term": {
+        "duration": "7d",
+        "description": "High-resolution data for recent monitoring"
+      },
+      "medium_term": {
+        "duration": "30d",
+        "description": "Medium resolution for recent historical analysis"
+      },
+      "long_term": {
+        "duration": "365d",
+        "description": "Low resolution for long-term trends"
+      }
+    }
+  },
+  "measurement_templates": {
+    "device_control": {
+      "fields": {
+        "state": {
+          "type": "integer",
+          "unit": "boolean",
+          "description": "Actual physical state of the device (1=ON, 0=OFF)"
+        },
+        "desired_state": {
+          "type": "integer",
+          "unit": "boolean",
+          "description": "Desired state as decided by controller (1=ON, 0=OFF)"
+        },
+        "setpoint": {
+          "type": "float",
+          "unit": "varies",
+          "description": "Target setpoint for the controlled variable"
+        }
+      },
+      "tags": {
+        "phase": {
+          "description": "Current growing phase",
+          "example": "fruiting"
+        },
+        "state_change_reason": {
+          "description": "Reason for state change",
+          "example": "Value outside bounds"
+        }
+      }
+    },
+    "pid_metrics": {
+      "fields": {
+        "p_term": {
+          "type": "float",
+          "unit": "varies",
+          "description": "Proportional term of the PID calculation"
+        },
+        "i_term": {
+          "type": "float",
+          "unit": "varies",
+          "description": "Integral term of the PID calculation"
+        },
+        "d_term": {
+          "type": "float",
+          "unit": "varies",
+          "description": "Derivative term of the PID calculation"
+        },
+        "pid_output": {
+          "type": "float",
+          "unit": "normalized",
+          "description": "Raw output from the PID controller"
+        },
+        "error": {
+          "type": "float",
+          "unit": "varies",
+          "description": "Current error (setpoint - process_variable)"
+        }
+      }
+    }
+  },
+  "measurements": {
+    "environment": {
+      "description": "Overall environmental conditions in the growing chamber",
+      "fields": {
+        "temperature": {
+          "type": "float",
+          "unit": "\u00b0C",
+          "description": "Current temperature in the growing chamber"
+        },
+        "humidity": {
+          "type": "float",
+          "unit": "%",
+          "description": "Current relative humidity in the growing chamber"
+        },
+        "co2": {
+          "type": "float",
+          "unit": "ppm",
+          "description": "Current CO2 level in the growing chamber"
+        }
+      },
+      "tags": {
+        "phase": {
+          "description": "Current growing phase",
+          "example": "fruiting"
+        },
+        "location": {
+          "description": "Automatically added tag for location",
+          "example": "shroombox"
+        }
+      },
+      "recommended_retention": "365d",
+      "typical_interval": "10s",
+      "downsampling": {
+        "medium_term": {
+          "interval": "1m",
+          "aggregation": "mean"
+        },
+        "long_term": {
+          "interval": "10m",
+          "aggregation": "mean"
+        }
+      }
+    },
+    "humidifier": {
+      "description": "Humidifier device control and status",
+      "extends": [
+        "device_control"
+      ],
+      "fields": {
+        "humidity": {
+          "type": "float",
+          "unit": "%",
+          "description": "Current humidity level"
+        },
+        "setpoint": {
+          "type": "float",
+          "unit": "%",
+          "description": "Target humidity setpoint"
+        },
+        "burst_duration": {
+          "type": "float",
+          "unit": "seconds",
+          "description": "Duration of humidifier burst in seconds"
+        },
+        "burst_progress": {
+          "type": "float",
+          "unit": "%",
+          "description": "Percentage completion of the current burst cycle"
+        },
+        "time_remaining": {
+          "type": "float",
+          "unit": "seconds",
+          "description": "Time remaining in the current burst cycle"
+        },
+        "cycle_active": {
+          "type": "integer",
+          "unit": "boolean",
+          "description": "Whether a burst cycle is currently active (1=active, 0=inactive)"
+        },
+        "p_term": {
+          "type": "float",
+          "unit": "varies",
+          "description": "Proportional term of the PID calculation"
+        },
+        "i_term": {
+          "type": "float",
+          "unit": "varies",
+          "description": "Integral term of the PID calculation"
+        },
+        "d_term": {
+          "type": "float",
+          "unit": "varies",
+          "description": "Derivative term of the PID calculation"
+        },
+        "pid_output": {
+          "type": "float",
+          "unit": "normalized",
+          "description": "Raw output from the humidity PID controller"
+        },
+        "error": {
+          "type": "float",
+          "unit": "varies",
+          "description": "Current error (setpoint - humidity)"
+        },
+        "state": {
+          "type": "integer",
+          "unit": "boolean",
+          "description": "Automatically added field for state"
+        },
+        "desired_state": {
+          "type": "integer",
+          "unit": "boolean",
+          "description": "Automatically added field for desired_state"
+        }
+      },
+      "tags": {
+        "phase": {
+          "description": "Current growing phase",
+          "example": "fruiting"
+        },
+        "state_change_reason": {
+          "description": "Reason for state change",
+          "example": "Humidity below lower bound"
+        },
+        "cycle_id": {
+          "description": "Unique identifier for the burst cycle",
+          "example": "cycle_1612345678"
+        },
+        "event_type": {
+          "description": "Type of event being logged",
+          "example": "state_change, burst_cycle, pid_update"
+        },
+        "location": {
+          "description": "Automatically added tag for location",
+          "example": "shroombox"
+        }
+      },
+      "recommended_retention": "90d",
+      "typical_interval": "event-based",
+      "downsampling": {
+        "medium_term": {
+          "interval": "preserve",
+          "aggregation": "none"
+        },
+        "long_term": {
+          "interval": "preserve",
+          "aggregation": "none"
+        }
+      }
+    },
+    "heater": {
+      "description": "Heater device control and status",
+      "extends": [
+        "device_control"
+      ],
+      "fields": {
+        "temperature": {
+          "type": "float",
+          "unit": "\u00b0C",
+          "description": "Current temperature when state change occurred"
+        },
+        "setpoint": {
+          "type": "float",
+          "unit": "\u00b0C",
+          "description": "Target temperature setpoint"
+        },
+        "p_term": {
+          "type": "float",
+          "unit": "varies",
+          "description": "Proportional term of the PID calculation"
+        },
+        "i_term": {
+          "type": "float",
+          "unit": "varies",
+          "description": "Integral term of the PID calculation"
+        },
+        "d_term": {
+          "type": "float",
+          "unit": "varies",
+          "description": "Derivative term of the PID calculation"
+        },
+        "pid_output": {
+          "type": "float",
+          "unit": "normalized",
+          "description": "Raw output from the temperature PID controller"
+        },
+        "error": {
+          "type": "float",
+          "unit": "varies",
+          "description": "Current error (setpoint - temperature)"
+        },
+        "state": {
+          "type": "integer",
+          "unit": "boolean",
+          "description": "Automatically added field for state"
+        },
+        "desired_state": {
+          "type": "integer",
+          "unit": "boolean",
+          "description": "Automatically added field for desired_state"
+        }
+      },
+      "tags": {
+        "phase": {
+          "description": "Current growing phase",
+          "example": "fruiting"
+        },
+        "state_change_reason": {
+          "description": "Reason for state change",
+          "example": "Temperature below lower bound"
+        },
+        "event_type": {
+          "description": "Type of event being logged",
+          "example": "state_change, pid_update"
+        },
+        "location": {
+          "description": "Automatically added tag for location",
+          "example": "shroombox"
+        }
+      },
+      "recommended_retention": "90d",
+      "typical_interval": "event-based",
+      "downsampling": {
+        "medium_term": {
+          "interval": "preserve",
+          "aggregation": "none"
+        },
+        "long_term": {
+          "interval": "preserve",
+          "aggregation": "none"
+        }
+      }
+    },
+    "fan": {
+      "description": "Fan control and status",
+      "fields": {
+        "speed": {
+          "type": "float",
+          "unit": "%",
+          "description": "Fan speed as a percentage (0-100)"
+        },
+        "target_speed": {
+          "type": "float",
+          "unit": "%",
+          "description": "Target fan speed as a percentage"
+        },
+        "cpu_temperature": {
+          "type": "float",
+          "unit": "\u00b0C",
+          "description": "CPU temperature that may affect fan speed"
+        },
+        "co2_level": {
+          "type": "float",
+          "unit": "ppm",
+          "description": "CO2 level that may affect fan speed"
+        },
+        "p_term": {
+          "type": "float",
+          "unit": "varies",
+          "description": "Proportional term of the PID calculation"
+        },
+        "i_term": {
+          "type": "float",
+          "unit": "varies",
+          "description": "Integral term of the PID calculation"
+        },
+        "d_term": {
+          "type": "float",
+          "unit": "varies",
+          "description": "Derivative term of the PID calculation"
+        },
+        "pid_output": {
+          "type": "float",
+          "unit": "normalized",
+          "description": "Raw output from the fan PID controller"
+        },
+        "error": {
+          "type": "float",
+          "unit": "varies",
+          "description": "Current error (setpoint - process variable)"
+        }
+      },
+      "tags": {
+        "phase": {
+          "description": "Current growing phase",
+          "example": "fruiting"
+        },
+        "control_mode": {
+          "description": "Mode of fan control",
+          "example": "auto, manual, co2"
+        },
+        "event_type": {
+          "description": "Type of event being logged",
+          "example": "speed_change, pid_update"
+        },
+        "location": {
+          "description": "Automatically added tag for location",
+          "example": "shroombox"
+        }
+      },
+      "recommended_retention": "30d",
+      "typical_interval": "5s when changing, 60s otherwise",
+      "downsampling": {
+        "medium_term": {
+          "interval": "1m",
+          "aggregation": "mean"
+        },
+        "long_term": {
+          "interval": "10m",
+          "aggregation": "mean"
+        }
+      }
+    },
+    "co2": {
+      "description": "CO2 monitoring and control",
+      "fields": {
+        "level": {
+          "type": "float",
+          "unit": "ppm",
+          "description": "Current CO2 level in parts per million"
+        },
+        "setpoint": {
+          "type": "float",
+          "unit": "ppm",
+          "description": "Target CO2 setpoint"
+        },
+        "fan_response": {
+          "type": "float",
+          "unit": "%",
+          "description": "Fan speed adjustment in response to CO2 levels"
+        },
+        "p_term": {
+          "type": "float",
+          "unit": "varies",
+          "description": "Proportional term of the PID calculation"
+        },
+        "i_term": {
+          "type": "float",
+          "unit": "varies",
+          "description": "Integral term of the PID calculation"
+        },
+        "d_term": {
+          "type": "float",
+          "unit": "varies",
+          "description": "Derivative term of the PID calculation"
+        },
+        "pid_output": {
+          "type": "float",
+          "unit": "normalized",
+          "description": "Raw output from the CO2 PID controller"
+        },
+        "error": {
+          "type": "float",
+          "unit": "ppm",
+          "description": "Current error (setpoint - CO2 level)"
+        }
+      },
+      "tags": {
+        "phase": {
+          "description": "Current growing phase",
+          "example": "fruiting"
+        },
+        "event_type": {
+          "description": "Type of event being logged",
+          "example": "measurement, pid_update"
+        }
+      },
+      "recommended_retention": "90d",
+      "typical_interval": "10s",
+      "downsampling": {
+        "medium_term": {
+          "interval": "1m",
+          "aggregation": "mean"
+        },
+        "long_term": {
+          "interval": "10m",
+          "aggregation": "mean"
+        }
+      }
+    }
+  }
+}

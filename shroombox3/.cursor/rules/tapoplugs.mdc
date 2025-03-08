@@ -1,0 +1,9 @@
+---
+description: about functions involving tapo plugs
+globs: 
+alwaysApply: false
+---
+
+# Your rule content
+
+- it should be possible to find tapo plugs according to name, not just the ip address

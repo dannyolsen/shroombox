@@ -1,0 +1,110 @@
+Temperature controller initialized
+Default settings - Setpoint: 20.0°C, Hysteresis: 0.5°C, Min state change interval: 60.0s
+
+=== Running Test Scenario: Normal Operation ===
+
+Testing with temperature: 18.0°C
+Current controller state - Setpoint: 20.0°C, Hysteresis: 0.5°C
+Temperature control called with current_temp=18.0°C
+Current state: Temp=18.0°C, Setpoint=20.0°C, Hysteresis=0.5°C, Heater=OFF
+Temperature (18.0°C) is below turn-on threshold (19.5°C)
+Changing heater state from OFF to ON
+Mock: Setting heater to ON
+Successfully set heater to ON
+After control - Heater state: ON
+Waiting 3 seconds...
+
+Testing with temperature: 19.0°C
+Current controller state - Setpoint: 20.0°C, Hysteresis: 0.5°C
+Temperature control called with current_temp=19.0°C
+Current state: Temp=19.0°C, Setpoint=20.0°C, Hysteresis=0.5°C, Heater=ON
+After control - Heater state: ON
+Waiting 3 seconds...
+
+Testing with temperature: 20.0°C
+Current controller state - Setpoint: 20.0°C, Hysteresis: 0.5°C
+Temperature control called with current_temp=20.0°C
+Current state: Temp=20.0°C, Setpoint=20.0°C, Hysteresis=0.5°C, Heater=ON
+Temperature (20.0°C) is above turn-off threshold (20.0°C)
+Changing heater state from ON to OFF
+Mock: Setting heater to OFF
+Successfully set heater to OFF
+After control - Heater state: OFF
+Waiting 3 seconds...
+
+Testing with temperature: 21.0°C
+Current controller state - Setpoint: 20.0°C, Hysteresis: 0.5°C
+Temperature control called with current_temp=21.0°C
+Current state: Temp=21.0°C, Setpoint=20.0°C, Hysteresis=0.5°C, Heater=OFF
+After control - Heater state: OFF
+Waiting 3 seconds...
+
+Testing with temperature: 20.5°C
+Current controller state - Setpoint: 20.0°C, Hysteresis: 0.5°C
+Temperature control called with current_temp=20.5°C
+Current state: Temp=20.5°C, Setpoint=20.0°C, Hysteresis=0.5°C, Heater=OFF
+After control - Heater state: OFF
+Waiting 3 seconds...
+
+Testing with temperature: 19.5°C
+Current controller state - Setpoint: 20.0°C, Hysteresis: 0.5°C
+Temperature control called with current_temp=19.5°C
+Current state: Temp=19.5°C, Setpoint=20.0°C, Hysteresis=0.5°C, Heater=OFF
+After control - Heater state: OFF
+Waiting 3 seconds...
+
+Scenario completed.
+
+=== Running Test Scenario: Rapid Changes (Debouncing Test) ===
+
+Testing with temperature: 18.0°C
+Current controller state - Setpoint: 20.0°C, Hysteresis: 0.5°C
+Temperature control called with current_temp=18.0°C
+Current state: Temp=18.0°C, Setpoint=20.0°C, Hysteresis=0.5°C, Heater=OFF
+Temperature (18.0°C) is below turn-on threshold (19.5°C)
+Changing heater state from OFF to ON
+Mock: Setting heater to ON
+Successfully set heater to ON
+After control - Heater state: ON
+Waiting 1 seconds...
+
+Testing with temperature: 21.0°C
+Current controller state - Setpoint: 20.0°C, Hysteresis: 0.5°C
+Temperature control called with current_temp=21.0°C
+Current state: Temp=21.0°C, Setpoint=20.0°C, Hysteresis=0.5°C, Heater=ON
+Skipping state change check (last change was 1.0s ago)
+After control - Heater state: ON
+Waiting 1 seconds...
+
+Testing with temperature: 18.0°C
+Current controller state - Setpoint: 20.0°C, Hysteresis: 0.5°C
+Temperature control called with current_temp=18.0°C
+Current state: Temp=18.0°C, Setpoint=20.0°C, Hysteresis=0.5°C, Heater=ON
+After control - Heater state: ON
+Waiting 1 seconds...
+
+Testing with temperature: 21.0°C
+Current controller state - Setpoint: 20.0°C, Hysteresis: 0.5°C
+Temperature control called with current_temp=21.0°C
+Current state: Temp=21.0°C, Setpoint=20.0°C, Hysteresis=0.5°C, Heater=ON
+Temperature (21.0°C) is above turn-off threshold (20.0°C)
+Changing heater state from ON to OFF
+Mock: Setting heater to OFF
+Successfully set heater to OFF
+After control - Heater state: OFF
+Waiting 1 seconds...
+
+Scenario completed.
+
+=== Running Test Scenario: Edge Cases ===
+
+Testing with temperature: -45.0°C
+Current controller state - Setpoint: 20.0°C, Hysteresis: 0.5°C
+Temperature control called with current_temp=-45.0°C
+Current state: Temp=-45.0°C, Setpoint=20.0°C, Hysteresis=0.5°C, Heater=OFF
+Temperature (-45.0°C) is below turn-on threshold (19.5°C)
+Changing heater state from OFF to ON
+Mock: Setting heater to ON
+Successfully set heater to ON
+After control - Heater state: ON
+Waiting 3 seconds...

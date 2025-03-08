@@ -1,0 +1,183 @@
+#!/usr/bin/env python3
+"""
+Shroombox Main Controller
+Controls environment for mushroom cultivation.
+"""
+
+import os
+import sys
+import time
+import json
+import asyncio
+import logging
+import signal
+import traceback
+from typing import Optional, Dict, Any, Tuple, List
+
+from simple_pid import PID
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
+
+from devices.fan import NoctuaFan
+from devices.simple_sensor import SimpleSCD30Controller
+from managers.device_manager import DeviceManager
+from managers.settings_manager import SettingsManager
+from managers.influxdb_manager import InfluxDBManager
+from controllers.fan_controller import FanController
+from controllers.humidity_controller import HumidityController
+from controllers.temperature_controller import TemperatureController
+from controllers.environment_controller import EnvironmentController
+
+# Set up logging directories
+os.makedirs('logs/control', exist_ok=True)  # For main control logs
+os.makedirs('logs/web', exist_ok=True)      # For web server logs
+os.makedirs('logs/devices', exist_ok=True)   # For device monitoring logs
+os.makedirs('logs/tests', exist_ok=True)     # For test logs
+
+# Set up logging with descriptive filenames
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(),  # Log to console
+        logging.handlers.RotatingFileHandler(
+            'logs/main.log',
+            maxBytes=1024*1024,  # 1MB per file
+            backupCount=5
+        )
+    ]
+)
+
+# Main logger
+logger = logging.getLogger('shroombox')
+
+# Load environment variables
+from dotenv import load_dotenv
+load_dotenv()
+
+# Log environment variables
+logger.info("Environment variables loaded:")
+logger.info(f"INFLUXDB_URL: {os.getenv('INFLUXDB_URL')}")
+logger.info(f"INFLUXDB_ORG: {os.getenv('INFLUXDB_ORG')}")
+logger.info(f"INFLUXDB_BUCKET: {os.getenv('INFLUXDB_BUCKET')}")
+logger.info("=" * 50)
+
+async def main():
+    """Main entry point for the application."""
+    try:
+        logger.info("Starting Shroombox Main Controller")
+        logger.info(f"Running with Python {sys.version}")
+        logger.info(f"Event loop: {asyncio.get_running_loop()}")
+        
+        # Initialize device manager
+        logger.info("Initializing device manager...")
+        device_manager = DeviceManager()
+        
+        # Initialize controller
+        logger.info("Initializing environment controller...")
+        controller = EnvironmentController(device_manager)
+        
+        # Start controller (this will initialize devices and load config)
+        logger.info("Starting controller...")
+        await controller.start()
+        
+        # Start system
+        logger.info("Starting environmental control system...")
+        await controller.start_system()
+        
+    except Exception as e:
+        logger.error(f"Fatal error: {e}")
+        logger.error(traceback.format_exc())
+    finally:
+        # Cleanup
+        if 'controller' in locals():
+            logger.info("Cleaning up controller...")
+            await controller.cleanup()
+        
+        logger.info("Exiting main function")
+
+def handle_signals(loop):
+    """Set up signal handlers for graceful shutdown."""
+    
+    def shutdown(signal, frame):
+        logger.info(f"Received signal {signal}, initiating shutdown...")
+        if loop and loop.is_running():
+            # This will break out of run_until_complete and allow cleanup
+            loop.stop()
+    
+    # Register signal handlers
+    signal.signal(signal.SIGINT, shutdown)  # Ctrl+C
+    signal.signal(signal.SIGTERM, shutdown)  # Termination signal
+
+async def run_with_timeout(main_task, timeout=None):
+    """Run the main task with an optional timeout."""
+    try:
+        if timeout:
+            await asyncio.wait_for(main_task, timeout)
+        else:
+            await main_task
+    except asyncio.TimeoutError:
+        logger.error(f"Main task timed out after {timeout} seconds")
+    except asyncio.CancelledError:
+        logger.info("Main task was cancelled")
+    except Exception as e:
+        logger.error(f"Error in main task: {e}")
+        logger.error(traceback.format_exc())
+    finally:
+        # Cancel the task if it's still running
+        if not main_task.done():
+            logger.info("Cancelling main task")
+            main_task.cancel()
+            try:
+                await main_task
+            except asyncio.CancelledError:
+                pass
+
+if __name__ == "__main__":
+    try:
+        # Always create a new event loop to ensure we have one
+        logger.info("Creating event loop...")
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        logger.info(f"Event loop created: {loop}")
+        
+        # Set up signal handlers
+        handle_signals(loop)
+        
+        # Create the main task
+        logger.info("Creating main task...")
+        main_task = loop.create_task(main())
+        
+        # Set up a watchdog timer (3 minutes) to ensure the program doesn't run indefinitely if stuck
+        watchdog_timeout = 3 * 60  # 3 minutes
+        
+        # Run the main function with a watchdog timeout
+        logger.info(f"Running main function with {watchdog_timeout}s watchdog timeout...")
+        loop.run_until_complete(run_with_timeout(main_task, watchdog_timeout))
+        logger.info("Main function completed or timed out")
+        
+    except KeyboardInterrupt:
+        logger.info("\nShutdown requested by user")
+    except Exception as e:
+        logger.error(f"Unexpected error: {e}")
+        logger.error(traceback.format_exc())
+    finally:
+        logger.info("Shutting down...")
+        try:
+            # Make sure any pending tasks are completed or cancelled
+            pending = asyncio.all_tasks(loop)
+            if pending:
+                logger.info(f"Cancelling {len(pending)} pending tasks...")
+                for task in pending:
+                    task.cancel()
+                
+                # Wait for tasks to complete cancellation
+                loop.run_until_complete(asyncio.gather(*pending, return_exceptions=True))
+            
+            # Close the event loop
+            logger.info("Closing event loop...")
+            loop.close()
+            logger.info("Event loop closed")
+        except Exception as e:
+            logger.error(f"Error during shutdown: {e}")
+            logger.error(traceback.format_exc())

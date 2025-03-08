@@ -1,0 +1,10 @@
+[0;1;32m●[0m shroombox-measurements.service - Shroombox Measurements Updater
+     Loaded: loaded (]8;;file://raspberrypi/etc/systemd/system/shroombox-measurements.service/etc/systemd/system/shroombox-measurements.service]8;;; [0;1;32menabled[0m; preset: [0;1;32menabled[0m)
+     Active: [0;1;32mactive (running)[0m since Sat 2025-03-08 08:24:24 CET; 8min ago
+   Main PID: 246589 (python)
+      Tasks: 2[0;38;5;245m (limit: 3915)[0m
+        CPU: 43.944s
+     CGroup: /system.slice/shroombox-measurements.service
+             └─[0;38;5;245m246589 /home/danny/Github/shroombox/shroombox3/venv/bin/python /home/danny/Github/shroombox/shroombox3/scripts/util_update_measurements.py[0m
+
+Mar 08 08:24:24 raspberrypi systemd[1]: Started shroombox-measurements.service - Shroombox Measurements Updater.

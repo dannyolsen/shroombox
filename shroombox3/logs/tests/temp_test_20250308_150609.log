@@ -1,0 +1,42 @@
+Temperature controller initialized
+Default settings - Setpoint: 20.0°C, Hysteresis: 0.5°C, Min state change interval: 1.0s
+
+=== Running Test Scenario: Normal Operation ===
+
+Testing with temperature: 18.0°C
+Current controller state - Setpoint: 20.0°C, Hysteresis: 0.5°C
+Error in temperature control: 'MockDeviceManager' object has no attribute 'settings_manager'
+After control - Heater state: OFF
+Waiting 3 seconds...
+
+Testing with temperature: 19.0°C
+Current controller state - Setpoint: 20.0°C, Hysteresis: 0.5°C
+Error in temperature control: 'MockDeviceManager' object has no attribute 'settings_manager'
+After control - Heater state: OFF
+Waiting 3 seconds...
+
+Testing with temperature: 20.0°C
+Current controller state - Setpoint: 20.0°C, Hysteresis: 0.5°C
+Error in temperature control: 'MockDeviceManager' object has no attribute 'settings_manager'
+After control - Heater state: OFF
+Waiting 3 seconds...
+
+Testing with temperature: 21.0°C
+Current controller state - Setpoint: 20.0°C, Hysteresis: 0.5°C
+Error in temperature control: 'MockDeviceManager' object has no attribute 'settings_manager'
+After control - Heater state: OFF
+Waiting 3 seconds...
+
+Testing with temperature: 20.5°C
+Current controller state - Setpoint: 20.0°C, Hysteresis: 0.5°C
+Error in temperature control: 'MockDeviceManager' object has no attribute 'settings_manager'
+After control - Heater state: OFF
+Waiting 3 seconds...
+
+Testing with temperature: 19.5°C
+Current controller state - Setpoint: 20.0°C, Hysteresis: 0.5°C
+Error in temperature control: 'MockDeviceManager' object has no attribute 'settings_manager'
+After control - Heater state: OFF
+Waiting 3 seconds...
+
+Scenario completed.

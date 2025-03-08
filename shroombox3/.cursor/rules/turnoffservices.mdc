@@ -1,0 +1,9 @@
+---
+description: rules for working with services
+globs: 
+alwaysApply: false
+---
+
+# Your rule content
+
+- when creating services they should only restart on-failure and NOT restart always

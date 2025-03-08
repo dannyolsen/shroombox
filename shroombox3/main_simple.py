@@ -229,8 +229,8 @@ async def main():
                 for _ in range(int(sleep_time * 10)):  # Check shutdown flag every 100ms
                     if shutdown_requested:
                         break
-                await asyncio.sleep(0.1)
-            
+                    await asyncio.sleep(0.1)
+                
             except asyncio.CancelledError:
                 logger.info("Main loop was cancelled")
                 break
@@ -305,7 +305,7 @@ if __name__ == "__main__":
         exit_code = 1
     finally:
         logger.info("Shutting down...")
-
+        
         try:
             # Handle cleanup of device resources directly to avoid segfaults
             if 'loop' in locals() and loop.is_running():

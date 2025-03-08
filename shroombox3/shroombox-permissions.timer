@@ -1,0 +1,12 @@
+[Unit]
+Description=Run Shroombox Permissions Fixer every 10 seconds
+Requires=shroombox-permissions.service
+
+[Timer]
+Unit=shroombox-permissions.service
+OnBootSec=10s
+OnUnitActiveSec=10s
+AccuracySec=1s
+
+[Install]
+WantedBy=timers.target 

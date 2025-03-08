@@ -1,0 +1,9 @@
+---
+description: place folder description files in each folder
+globs: 
+alwaysApply: false
+---
+
+# Your rule content
+
+- place folder description files in each folder and give the descriptionfiles a name so they will be the first file to be shown in the folder when sorted alfabetically. I would think like 1FOLDER_DESCRIPTION fx

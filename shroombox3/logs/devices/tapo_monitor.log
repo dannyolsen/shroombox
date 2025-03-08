@@ -1,0 +1,63 @@
+2025-03-08 14:29:03,982 - INFO - Starting Tapo device monitoring
+2025-03-08 14:29:09,217 - INFO - Device states updated successfully
+2025-03-08 14:29:14,224 - INFO - Device states updated successfully
+2025-03-08 14:29:19,231 - INFO - Device states updated successfully
+2025-03-08 14:29:20,645 - INFO - Monitoring stopped
+2025-03-08 14:29:20,647 - INFO - 
+Monitoring stopped by user
+2025-03-08 14:33:30,990 - INFO - Starting Tapo device monitoring
+2025-03-08 14:33:31,034 - INFO - State change detected for Heatmat: OFF
+2025-03-08 14:33:31,071 - INFO - State change detected for Humidifier: OFF
+2025-03-08 14:34:22,187 - INFO - State change detected for Heatmat: ON
+2025-03-08 14:34:32,323 - INFO - State change detected for Heatmat: OFF
+2025-03-08 14:34:42,604 - INFO - State change detected for Humidifier: ON
+2025-03-08 14:36:02,795 - INFO - State change detected for Heatmat: ON
+2025-03-08 14:36:07,926 - INFO - State change detected for Heatmat: OFF
+2025-03-08 14:38:33,494 - INFO - Monitoring stopped
+2025-03-08 14:38:33,496 - INFO - 
+Monitoring stopped by user
+2025-03-08 14:40:46,276 - INFO - Starting Tapo device monitoring
+2025-03-08 14:40:46,319 - INFO - State change detected for Heatmat: OFF
+2025-03-08 14:40:46,358 - INFO - State change detected for Humidifier: ON
+2025-03-08 14:43:09,239 - INFO - State change detected for Humidifier: OFF
+2025-03-08 14:46:15,737 - INFO - Starting Tapo device monitoring
+2025-03-08 14:46:15,821 - INFO - State change detected for Heatmat: OFF
+2025-03-08 14:46:15,859 - INFO - State change detected for Humidifier: OFF
+2025-03-08 14:50:45,132 - INFO - State change detected for Humidifier: ON
+2025-03-08 14:50:47,170 - INFO - State change detected for Humidifier: OFF
+2025-03-08 14:50:50,311 - INFO - State change detected for Humidifier: ON
+2025-03-08 14:50:52,334 - INFO - State change detected for Humidifier: OFF
+2025-03-08 14:51:05,467 - INFO - State change detected for Heatmat: ON
+2025-03-08 14:57:28,309 - INFO - Monitoring stopped
+2025-03-08 14:57:28,311 - INFO - 
+Monitoring stopped by user
+2025-03-08 14:57:31,302 - INFO - Starting Tapo device monitoring
+2025-03-08 14:57:31,365 - INFO - State change detected for Heatmat: ON
+2025-03-08 14:57:31,411 - INFO - State change detected for Humidifier: OFF
+2025-03-08 14:59:04,115 - INFO - State change detected for Heatmat: OFF
+2025-03-08 14:59:54,281 - INFO - State change detected for Heatmat: ON
+2025-03-08 15:07:00,495 - INFO - State change detected for Heatmat: OFF
+2025-03-08 15:08:25,837 - INFO - State change detected for Humidifier: ON
+2025-03-08 15:08:27,849 - INFO - State change detected for Humidifier: OFF
+2025-03-08 15:09:46,062 - INFO - State change detected for Heatmat: ON
+2025-03-08 15:09:56,243 - INFO - State change detected for Heatmat: OFF
+2025-03-08 15:19:15,108 - INFO - State change detected for Heatmat: ON
+2025-03-08 15:57:09,405 - INFO - State change detected for Heatmat: OFF
+2025-03-08 16:12:58,014 - INFO - State change detected for Heatmat: ON
+2025-03-08 16:13:32,715 - INFO - State change detected for Heatmat: OFF
+2025-03-08 16:13:47,755 - INFO - State change detected for Humidifier: ON
+2025-03-08 16:13:49,764 - INFO - State change detected for Humidifier: OFF
+2025-03-08 16:13:52,734 - INFO - State change detected for Humidifier: ON
+2025-03-08 16:13:54,779 - INFO - State change detected for Humidifier: OFF
+2025-03-08 16:19:05,722 - INFO - State change detected for Heatmat: ON
+2025-03-08 16:19:45,433 - INFO - State change detected for Heatmat: OFF
+2025-03-08 16:25:46,605 - INFO - State change detected for Heatmat: ON
+2025-03-08 16:26:31,266 - INFO - State change detected for Heatmat: OFF
+2025-03-08 16:28:11,509 - INFO - State change detected for Humidifier: ON
+2025-03-08 16:28:17,471 - INFO - State change detected for Humidifier: OFF
+2025-03-08 16:42:28,047 - INFO - State change detected for Heatmat: ON
+2025-03-08 17:00:54,273 - INFO - State change detected for Humidifier: ON
+2025-03-08 17:00:56,370 - INFO - State change detected for Humidifier: OFF
+2025-03-08 17:48:40,313 - INFO - Monitoring stopped
+2025-03-08 17:48:40,315 - INFO - 
+Monitoring stopped by user

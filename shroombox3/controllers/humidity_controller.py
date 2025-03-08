@@ -1,0 +1,522 @@
+import os
+import time
+import logging
+import asyncio
+from typing import Optional, Dict, Any
+from simple_pid import PID
+from datetime import datetime
+
+# Set up logging
+logger = logging.getLogger("shroombox.humidity")
+
+class HumidityController:
+    """
+    Controller for managing humidity using a humidifier device.
+    
+    This class handles the logic for maintaining the desired relative humidity
+    by controlling a humidifier device using PID control for burst duration.
+    """
+    
+    def __init__(self, device_manager=None):
+        """
+        Initialize the humidity controller.
+        
+        Args:
+            device_manager: The device manager instance to use for controlling the humidifier.
+                           If None, the controller will operate in simulation mode.
+        """
+        self.logger = logger
+        self.device_manager = device_manager
+        
+        # Default settings
+        self.rh_setpoint = 85.0
+        self.rh_hysteresis = 2.0
+        self.min_state_change_interval = 1.0  # Reduced from 60s to 1s for responsiveness
+        self.break_time = 180  # Minimum time between humidifier activations
+        self.burst_min = 2.0  # Minimum burst duration in seconds
+        self.burst_max = 30.0  # Maximum burst duration in seconds
+        self.burst_interval = 60.0  # Interval for logging during burst cycles
+        
+        # PID controller for humidity
+        self.pid = PID(
+            Kp=-1.0,
+            Ki=-0.01,
+            Kd=0.0,
+            setpoint=self.rh_setpoint,
+            output_limits=(0, 100)
+        )
+        self.pid.sample_time = 1.0  # Update every 1 second
+        
+        # State tracking
+        self.last_control_time = 0
+        self.last_state_change = 0
+        self.humidifier_state = False
+        self.last_activation_time = 0
+        self.current_burst_duration = 0
+        self.current_burst_task = None  # Track the current burst task
+        self.last_state_log = 0  # Timestamp of last state log (for periodic logging)
+        
+        # Error tracking
+        self.consecutive_errors = 0
+        self.max_consecutive_errors = 3
+        
+        self.logger.info("Humidity controller initialized")
+        self.logger.info(f"Default settings - Setpoint: {self.rh_setpoint}%, "
+                      f"Hysteresis: {self.rh_hysteresis}%, "
+                      f"Min state change interval: {self.min_state_change_interval}s")
+    
+    async def update_settings(self, settings: Dict[str, Any]) -> None:
+        """
+        Update controller settings from the provided settings dictionary.
+        
+        Args:
+            settings: Dictionary containing settings
+        """
+        try:
+            # Get current phase settings
+            current_phase = settings['environment']['current_phase']
+            phase_settings = settings['environment']['phases'][current_phase]
+            
+            # Update setpoint from phase settings
+            new_setpoint = float(phase_settings.get('rh_setpoint', 85.0))
+            
+            # Get humidifier-specific settings with defaults matching the structure in settings.json
+            if 'humidifier' in settings:
+                humidifier_settings = settings['humidifier']
+                new_hysteresis = float(humidifier_settings.get('rh_hysteresis', 2.0))
+                new_break_time = float(humidifier_settings.get('break_time', 180))
+                self.burst_min = float(humidifier_settings.get('burst_min', 2.0))
+                self.burst_max = float(humidifier_settings.get('burst_max', 30.0))
+                self.burst_interval = float(humidifier_settings.get('burst_interval', 60.0))
+            
+            # Update PID parameters if available
+                if 'pid' in humidifier_settings:
+                    pid_settings = humidifier_settings['pid']
+                self.pid.Kp = float(pid_settings.get('Kp', -1.0))
+                self.pid.Ki = float(pid_settings.get('Ki', -0.01))
+                self.pid.Kd = float(pid_settings.get('Kd', 0.0))
+            else:
+                # Use defaults if humidifier section is missing
+                new_hysteresis = 2.0
+                new_break_time = 180
+            
+            # Set the PID setpoint
+            self.pid.setpoint = new_setpoint
+            
+            # Log if settings changed
+            if new_setpoint != self.rh_setpoint or new_hysteresis != self.rh_hysteresis:
+                self.logger.info(f"Updating humidity settings:")
+                if new_setpoint != self.rh_setpoint:
+                    self.logger.info(f"- Setpoint: {self.rh_setpoint}% -> {new_setpoint}%")
+                if new_hysteresis != self.rh_hysteresis:
+                    self.logger.info(f"- Hysteresis: {self.rh_hysteresis}% -> {new_hysteresis}%")
+                self.logger.info(f"- PID: Kp={self.pid.Kp}, Ki={self.pid.Ki}, Kd={self.pid.Kd}")
+                self.logger.info(f"- Burst: Min={self.burst_min}s, Max={self.burst_max}s, Break={new_break_time}s")
+                
+                # Log settings change to InfluxDB
+                if self.device_manager:
+                    reason = f"Settings updated - Setpoint: {new_setpoint}%, Hysteresis: {new_hysteresis}%"
+                    current_state = self.get_state()
+                    
+                    await self.device_manager.log_humidifier_state(
+                        state=current_state,
+                        current_rh=None,  # We don't have current RH here
+                        desired_state=current_state,  # No change in desired state
+                        reason=reason,
+                        burst_duration=self.current_burst_duration if current_state else 0.0,
+                        timestamp=datetime.utcnow()
+                    )
+            
+            self.rh_setpoint = new_setpoint
+            self.rh_hysteresis = new_hysteresis
+            self.break_time = new_break_time
+            
+            # Reset error counter on successful settings update
+            self.consecutive_errors = 0
+            
+        except (KeyError, ValueError) as e:
+            self.consecutive_errors += 1
+            self.logger.error(f"Error updating humidity settings: {e}")
+            if self.consecutive_errors >= self.max_consecutive_errors:
+                self.logger.error("Too many consecutive errors, using default settings")
+                self.rh_setpoint = 85.0
+                self.rh_hysteresis = 2.0
+    
+    async def control(self, current_rh: float) -> None:
+        """
+        Control the humidity by turning the humidifier on or off using PID for burst duration.
+        
+        Args:
+            current_rh: Current relative humidity in percent
+        """
+        try:
+            # Get current settings
+            settings = await self.device_manager.settings_manager.load_settings()
+            current_phase = settings['environment']['current_phase']
+            phase_settings = settings['environment']['phases'][current_phase]
+            setpoint = float(phase_settings['rh_setpoint'])
+            
+            # Update humidifier settings if needed
+            if 'humidifier' in settings:
+                humidifier_settings = settings['humidifier']
+                # Update burst interval if changed in settings
+                if 'burst_interval' in humidifier_settings:
+                    self.burst_interval = float(humidifier_settings.get('burst_interval', 60.0))
+            
+            # Update PID setpoint if changed
+            if setpoint != self.pid.setpoint:
+                self.pid.setpoint = setpoint
+            
+            # Calculate humidity bounds with hysteresis
+            upper_bound = setpoint + self.rh_hysteresis
+            lower_bound = setpoint - self.rh_hysteresis
+            
+            # Get current control state
+            control_state = settings.get('control_states', {}).get('humidifier', {
+                'desired_state': False,
+                'last_change': None,
+                'last_change_reason': None
+            })
+            
+            current_time = time.time()
+            previous_desired_state = control_state['desired_state']
+            new_state = previous_desired_state  # Start with current state
+            reason = None
+            
+            # Check if enough time has passed since last state change
+            if current_time - self.last_state_change >= self.min_state_change_interval:
+                # Check if we're outside the break time (if turning on)
+                can_activate = (current_time - self.last_activation_time >= self.break_time) or not new_state
+                
+                # Calculate PID output for burst duration when humidity is low
+                if current_rh < lower_bound and not new_state and can_activate:
+                    # Cancel any existing burst task
+                    if self.current_burst_task and not self.current_burst_task.done():
+                        self.current_burst_task.cancel()
+                    
+                    # Update PID controller
+                    pid_output = self.pid(current_rh)
+                    
+                    # Log PID metrics at decision point
+                    error = self.pid.setpoint - current_rh
+                    p_term = self.pid.Kp * error
+                    i_term = self.pid._integral * self.pid.Ki
+                    d_term = self.pid.Kd * self.pid._last_error if self.pid._last_error is not None else 0
+                    
+                    await self.device_manager.log_pid_metrics(
+                        controller_type="humidity",
+                        pid_output=pid_output,
+                        error=error,
+                        p_term=p_term,
+                        i_term=i_term,
+                        d_term=d_term,
+                        process_variable=current_rh,
+                        setpoint=self.pid.setpoint,
+                        timestamp=datetime.utcnow()
+                    )
+                    
+                    # Calculate burst duration based on PID output
+                    # Map PID output (0-100) to burst duration range
+                    burst_range = self.burst_max - self.burst_min
+                    self.current_burst_duration = self.burst_min + (burst_range * (abs(pid_output) / 100.0))
+                    
+                    new_state = True
+                    reason = f"Humidity {current_rh}% below lower bound {lower_bound}% - PID: {pid_output:.2f} - Burst duration: {self.current_burst_duration:.1f}s"
+                    self.logger.info(f"{reason} - turning humidifier ON")
+                    self.last_activation_time = current_time
+                    
+                    # Log the desired state change to InfluxDB with timestamp
+                    await self.device_manager.log_humidifier_state(
+                        state=previous_desired_state,  # Current actual state before change
+                        current_rh=current_rh,
+                        desired_state=new_state,  # New desired state
+                        reason=reason,
+                        burst_duration=self.current_burst_duration,
+                        timestamp=datetime.utcnow()  # Add timestamp for precise logging
+                    )
+                    
+                    # Schedule the turn-off after burst duration
+                    self.current_burst_task = asyncio.create_task(self._schedule_turn_off(self.current_burst_duration))
+                    
+                elif current_rh > upper_bound and new_state:
+                    # Cancel any existing burst task
+                    if self.current_burst_task and not self.current_burst_task.done():
+                        self.current_burst_task.cancel()
+                        
+                    new_state = False
+                    reason = f"Humidity {current_rh}% above upper bound {upper_bound}%"
+                    self.logger.info(f"{reason} - turning humidifier OFF")
+                    
+                    # Log the desired state change to InfluxDB with timestamp
+                    await self.device_manager.log_humidifier_state(
+                        state=previous_desired_state,  # Current actual state before change
+                        current_rh=current_rh,
+                        desired_state=new_state,  # New desired state
+                        reason=reason,
+                        timestamp=datetime.utcnow()  # Add timestamp for precise logging
+                    )
+                
+                # If state needs to change, update both device and control state
+                if new_state != previous_desired_state:
+                    # Update the physical device first
+                    success = await self.device_manager.set_device_state('humidifier', new_state)
+                    
+                    if success:
+                        # Update control state in settings
+                        control_state.update({
+                            'desired_state': new_state,
+                            'last_change': current_time,
+                            'last_change_reason': reason
+                        })
+                        
+                        # Save the updated control state
+                        settings.setdefault('control_states', {})['humidifier'] = control_state
+                        await self.device_manager.settings_manager.save_settings(settings)
+                        
+                        # Update last state change time
+                        self.last_state_change = current_time
+                        self.humidifier_state = new_state
+                        
+                        # Log the actual state change to InfluxDB with timestamp
+                        await self.device_manager.log_humidifier_state(
+                            state=new_state,  # New actual state after change
+                            current_rh=current_rh,
+                            desired_state=new_state,  # Same as actual now
+                            reason=reason,
+                            burst_duration=self.current_burst_duration if new_state else 0.0,
+                            timestamp=datetime.utcnow()  # Add timestamp for precise logging
+                        )
+            
+            # Log current state without changing it
+            state_str = "ON" if new_state else "OFF"
+            self.logger.debug(f"Humidity {current_rh}% within bounds ({lower_bound}% - {upper_bound}%) - keeping humidifier {state_str}")
+            
+            # Periodically log the current state with PID information for monitoring
+            if new_state and (current_time - self.last_state_log >= 60):  # Log every minute when humidifier is ON
+                await self._log_burst_cycle_status(current_rh, current_time)
+            
+        except Exception as e:
+            self.logger.error(f"Error in humidity control: {e}")
+    
+    async def _schedule_turn_off(self, duration: float) -> None:
+        """
+        Schedule the humidifier to turn off after the specified duration.
+        
+        Args:
+            duration: Duration in seconds before turning off
+        """
+        try:
+            self.logger.info(f"Scheduled humidifier turn off in {duration:.1f}s")
+            
+            # Generate a unique cycle ID based on the start time
+            cycle_id = f"cycle_{int(self.last_activation_time)}"
+            
+            # Get current settings
+            settings = None
+            try:
+                settings = await self.device_manager.settings_manager.load_settings()
+            except Exception as e:
+                self.logger.error(f"Error loading settings during burst cycle: {e}")
+            
+            # Log the burst cycle starting (0% progress, 100% remaining)
+            await self.device_manager.log_burst_cycle(
+                cycle_active=True,
+                burst_progress=0.0,
+                time_remaining=duration,
+                burst_duration=duration,
+                humidity=None,  # We don't have current RH here
+                pid_output=None,
+                cycle_id=cycle_id,
+                timestamp=datetime.utcnow()
+            )
+            
+            # Wait for the burst duration
+            await asyncio.sleep(duration)
+            
+            if self.humidifier_state:  # Only turn off if still on
+                # Current humidity might not be available here, so pass None
+                # However, we do know this is a desired state change due to burst duration
+                reason = f"Burst duration {duration:.1f}s completed"
+                
+                # Log the desired state change to InfluxDB with timestamp
+                await self.device_manager.log_humidifier_state(
+                    state=True,  # Current state (ON)
+                    current_rh=None,  # We don't have current RH here
+                    desired_state=False,  # Desired state (OFF)
+                    reason=reason,
+                    burst_duration=duration,  # Include burst duration in log
+                    timestamp=datetime.utcnow()  # Add timestamp for precise logging
+                )
+                
+                # Log burst cycle complete
+                await self.device_manager.log_burst_cycle(
+                    cycle_active=False,
+                    burst_progress=100.0,
+                    time_remaining=0.0,
+                    burst_duration=duration,
+                    humidity=None,
+                    pid_output=None,
+                    cycle_id=cycle_id,
+                    timestamp=datetime.utcnow()
+                )
+                
+                # Actually turn off the humidifier
+                success = await self.device_manager.set_device_state('humidifier', False)
+                if success:
+                    self.humidifier_state = False
+                    self.logger.info(f"Burst duration {duration:.1f}s completed - humidifier turned OFF")
+                    
+                    # Also log the actual state change with timestamp
+                    await self.device_manager.log_humidifier_state(
+                        state=False,  # New actual state (OFF)
+                        current_rh=None,  # We don't have current RH here
+                        desired_state=False,  # Same as actual now
+                        reason=reason,
+                        burst_duration=duration,  # Include burst duration in log
+                        timestamp=datetime.utcnow()  # Add timestamp for precise logging
+                    )
+                    
+                    # Update the last activation time to enforce break time
+                    self.last_activation_time = time.time()
+        except asyncio.CancelledError:
+            self.logger.info("Burst duration cancelled")
+        except Exception as e:
+            self.logger.error(f"Error in scheduled turn off: {e}")
+    
+    async def _set_humidifier_state(self, state: bool) -> None:
+        """
+        Set the humidifier state and update the device if available.
+        
+        Args:
+            state: True to turn ON, False to turn OFF
+        """
+        if self.humidifier_state == state:
+            return  # No change needed
+        
+        old_state = self.humidifier_state
+        self.humidifier_state = state
+        
+        # Update the actual device if device manager is available
+        if self.device_manager:
+            try:
+                reason = "Manual state change" if self.current_burst_task is None else f"Burst cycle {'started' if state else 'ended'}"
+                burst_duration = self.current_burst_duration if state else 0.0
+                
+                # Log the desired state change before attempting the physical change
+                await self.device_manager.log_humidifier_state(
+                    state=old_state,
+                    current_rh=None,
+                    desired_state=state,
+                    reason=reason,
+                    burst_duration=burst_duration,
+                    timestamp=datetime.utcnow()
+                )
+                
+                success = await self.device_manager.set_device_state("humidifier", state)
+                if success:
+                    self.logger.info(f"Set humidifier to {'ON' if state else 'OFF'}")
+                    
+                    # Log the actual state change after the physical change is confirmed
+                    await self.device_manager.log_humidifier_state(
+                        state=state,
+                        current_rh=None,
+                        desired_state=state,
+                        reason=reason,
+                        burst_duration=burst_duration,
+                        timestamp=datetime.utcnow()
+                    )
+            except Exception as e:
+                self.logger.error(f"Error setting humidifier state: {e}")
+        else:
+            self.logger.info(f"Simulation mode: Humidifier set to {'ON' if state else 'OFF'}")
+    
+    def get_state(self) -> bool:
+        """
+        Get the current state of the humidifier.
+        
+        Returns:
+            bool: True if ON, False if OFF
+        """
+        return self.humidifier_state 
+    
+    async def _log_burst_cycle_status(self, current_rh: float, current_time: float) -> None:
+        """
+        Log the current burst cycle status to InfluxDB for monitoring.
+        
+        Args:
+            current_rh: Current relative humidity
+            current_time: Current timestamp
+        """
+        try:
+            # Check if it's time to log based on the burst_interval setting
+            if current_time - self.last_state_log < self.burst_interval:
+                return  # Skip logging if not enough time has passed
+            
+            # Calculate time elapsed in burst
+            time_elapsed = current_time - self.last_activation_time
+            remaining_time = max(0, self.current_burst_duration - time_elapsed)
+            
+            # Calculate percentage of burst completed
+            burst_progress = min(100, (time_elapsed / self.current_burst_duration) * 100) if self.current_burst_duration > 0 else 0
+            
+            # Get PID state
+            if self.pid.setpoint is not None:
+                pid_output = self.pid(current_rh)
+                error = self.pid.setpoint - current_rh
+                p_term = self.pid.Kp * error
+                i_term = self.pid._integral * self.pid.Ki
+                d_term = self.pid.Kd * self.pid._last_error if self.pid._last_error is not None else 0
+                
+                # Don't update internal PID state - we're just calculating for logging
+                self.pid._last_output = None
+            else:
+                pid_output = 0
+                error = 0
+                p_term = 0
+                i_term = 0
+                d_term = 0
+            
+            # Generate a unique cycle ID based on the start time
+            cycle_id = f"cycle_{int(self.last_activation_time)}"
+            
+            # Log the burst cycle status
+            if self.device_manager:
+                # Log detailed burst cycle data
+                await self.device_manager.log_burst_cycle(
+                    cycle_active=True,
+                    burst_progress=burst_progress,
+                    time_remaining=remaining_time,
+                    burst_duration=self.current_burst_duration,
+                    humidity=current_rh,
+                    pid_output=pid_output,
+                    cycle_id=cycle_id,
+                    timestamp=datetime.utcnow()
+                )
+                
+                # Log PID controller metrics
+                await self.device_manager.log_pid_metrics(
+                    controller_type="humidity",
+                    pid_output=pid_output,
+                    error=error,
+                    p_term=p_term,
+                    i_term=i_term,
+                    d_term=d_term,
+                    process_variable=current_rh,
+                    setpoint=self.pid.setpoint,
+                    timestamp=datetime.utcnow()
+                )
+                
+                # Also log a traditional state entry for compatibility
+                reason = f"Burst cycle progress: {burst_progress:.1f}% - Remaining: {remaining_time:.1f}s - PID: {pid_output:.2f}"
+                await self.device_manager.log_humidifier_state(
+                    state=True,  # Humidifier is ON during burst cycle
+                    current_rh=current_rh,
+                    desired_state=True,
+                    reason=reason,
+                    burst_duration=self.current_burst_duration,
+                    timestamp=datetime.utcnow()
+                )
+                
+            self.last_state_log = current_time
+        except Exception as e:
+            self.logger.error(f"Error logging burst cycle status: {e}") 

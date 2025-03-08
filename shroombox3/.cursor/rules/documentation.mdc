@@ -1,0 +1,11 @@
+---
+description: documentation
+globs: 
+alwaysApply: false
+---
+
+# Your rule content
+
+- remember to document project so its easy to understand how folders and files are meant to be used
+- keep these documents up to date
+- update these files if there have been made additions to the project or somethings has changed

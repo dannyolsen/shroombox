@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Environment Variables - Shroombox</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <style>
+        .env-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .env-form {
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .form-actions {
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn-primary {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .btn-secondary {
+            background-color: #f1f1f1;
+            color: #333;
+        }
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .alert-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="env-container" x-data="envSettings()">
+        <h1>Environment Variables Settings</h1>
+        
+        <div x-show="message.text" :class="['alert', message.type]">
+            <span x-text="message.text"></span>
+        </div>
+        
+        <div x-show="!envExists" class="alert alert-warning">
+            <p>No .env file found. Please fill out the form below to create one.</p>
+        </div>
+        
+        <div class="env-form">
+            <div class="form-group">
+                <h3>Tapo Smart Plug Settings</h3>
+                <label for="tapo_email">Tapo Email</label>
+                <input type="email" id="tapo_email" x-model="envVars.TAPO_EMAIL" placeholder="Enter your Tapo account email">
+            </div>
+            
+            <div class="form-group">
+                <label for="tapo_password">Tapo Password</label>
+                <input type="password" id="tapo_password" x-model="envVars.TAPO_PASSWORD" placeholder="Enter your Tapo account password">
+            </div>
+            
+            <div class="form-group">
+                <h3>InfluxDB Settings</h3>
+                <label for="influxdb_url">InfluxDB URL</label>
+                <input type="text" id="influxdb_url" x-model="envVars.INFLUXDB_URL" placeholder="http://localhost:8086">
+            </div>
+            
+            <div class="form-group">
+                <label for="influxdb_token">InfluxDB Token</label>
+                <input type="password" id="influxdb_token" x-model="envVars.INFLUXDB_TOKEN" placeholder="Enter your InfluxDB token">
+            </div>
+            
+            <div class="form-group">
+                <label for="influxdb_org">InfluxDB Organization</label>
+                <input type="text" id="influxdb_org" x-model="envVars.INFLUXDB_ORG" placeholder="supershrooms">
+            </div>
+            
+            <div class="form-group">
+                <label for="influxdb_bucket">InfluxDB Bucket</label>
+                <input type="text" id="influxdb_bucket" x-model="envVars.INFLUXDB_BUCKET" placeholder="test">
+            </div>
+            
+            <div class="form-actions">
+                <button class="btn btn-secondary" @click="resetForm">Reset</button>
+                <button class="btn btn-primary" @click="saveEnvVars">Save</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function envSettings() {
+            return {
+                envExists: false,
+                envVars: {
+                    TAPO_EMAIL: '',
+                    TAPO_PASSWORD: '',
+                    INFLUXDB_URL: 'http://localhost:8086',
+                    INFLUXDB_ORG: 'supershrooms',
+                    INFLUXDB_BUCKET: 'test',
+                    INFLUXDB_TOKEN: ''
+                },
+                message: {
+                    text: '',
+                    type: 'alert-info'
+                },
+                
+                init() {
+                    this.checkEnvStatus();
+                    this.loadEnvTemplate();
+                },
+                
+                checkEnvStatus() {
+                    fetch('/api/env/status')
+                        .then(response => response.json())
+                        .then(data => {
+                            this.envExists = data.exists;
+                        })
+                        .catch(error => {
+                            this.showMessage('Error checking environment status: ' + error, 'alert-danger');
+                        });
+                },
+                
+                loadEnvTemplate() {
+                    fetch('/api/env/template')
+                        .then(response => response.json())
+                        .then(data => {
+                            // Only update fields that are not empty in the template
+                            for (const key in data) {
+                                if (data[key] !== '') {
+                                    this.envVars[key] = data[key];
+                                }
+                            }
+                        })
+                        .catch(error => {
+                            this.showMessage('Error loading environment template: ' + error, 'alert-danger');
+                        });
+                },
+                
+                saveEnvVars() {
+                    // Validate required fields
+                    if (!this.envVars.TAPO_EMAIL || !this.envVars.TAPO_PASSWORD) {
+                        this.showMessage('Tapo email and password are required', 'alert-danger');
+                        return;
+                    }
+                    
+                    if (!this.envVars.INFLUXDB_TOKEN) {
+                        this.showMessage('InfluxDB token is required', 'alert-danger');
+                        return;
+                    }
+                    
+                    // Prepare data for submission
+                    const data = {};
+                    for (const key in this.envVars) {
+                        // Only include non-empty values
+                        if (this.envVars[key] !== '') {
+                            // Don't send masked values
+                            if (this.envVars[key] !== '********') {
+                                data[key] = this.envVars[key];
+                            }
+                        }
+                    }
+                    
+                    fetch('/api/env/variables', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.success) {
+                            this.showMessage('Environment variables saved successfully', 'alert-success');
+                            this.envExists = true;
+                        } else {
+                            this.showMessage('Failed to save environment variables: ' + result.message, 'alert-danger');
+                        }
+                    })
+                    .catch(error => {
+                        this.showMessage('Error saving environment variables: ' + error, 'alert-danger');
+                    });
+                },
+                
+                resetForm() {
+                    this.loadEnvTemplate();
+                    this.showMessage('Form reset to default values', 'alert-info');
+                },
+                
+                showMessage(text, type = 'alert-info') {
+                    this.message.text = text;
+                    this.message.type = type;
+                    
+                    // Clear message after 5 seconds
+                    setTimeout(() => {
+                        this.message.text = '';
+                    }, 5000);
+                }
+            };
+        }
+    </script>
+</body>
+</html> 
