@@ -601,9 +601,39 @@ class SettingsManager:
             return False
     
     async def invalidate_cache(self) -> None:
-        """Invalidate the settings cache, forcing next load to read from file."""
+        """Invalidate the settings cache."""
         self._last_read_time = 0
+        self._settings_cache = {}
         logger.debug("Settings cache invalidated")
+    
+    def load_settings_sync(self) -> Dict[str, Any]:
+        """Load settings from the config file synchronously.
+        
+        This is a synchronous version of load_settings for use in synchronous contexts.
+        
+        Returns:
+            Dict containing the settings
+        """
+        try:
+            logger.debug(f"Loading settings synchronously from: {self.config_path}")
+            with open(self.config_path, 'r') as f:
+                settings = json.load(f)
+            
+            # Ensure numeric values are properly converted
+            if 'environment' in settings and 'phases' in settings['environment']:
+                for phase_name, phase_data in settings['environment']['phases'].items():
+                    if 'temp_setpoint' in phase_data:
+                        phase_data['temp_setpoint'] = float(phase_data['temp_setpoint'])
+                    if 'rh_setpoint' in phase_data:
+                        phase_data['rh_setpoint'] = float(phase_data['rh_setpoint'])
+                    if 'co2_setpoint' in phase_data:
+                        phase_data['co2_setpoint'] = int(phase_data['co2_setpoint'])
+            
+            return settings
+        except Exception as e:
+            logger.error(f"Error loading settings synchronously: {e}")
+            # Return empty dict if file can't be read
+            return {}
 
 # Example usage
 async def test_settings_manager():

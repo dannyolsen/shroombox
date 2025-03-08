@@ -14,6 +14,10 @@ function fetchWithCacheBusting(url, options = {}) {
 // Add any initialization code here
 document.addEventListener('DOMContentLoaded', () => {
     console.log("DOM fully loaded");
+    
+    // Start measurement polling
+    startMeasurementPolling();
+    
     const phaseSelect = document.getElementById('phase-select');
     
     if (!phaseSelect) {
@@ -219,21 +223,29 @@ async function updateMeasurements() {
 
 function updateMeasurementsUI(data) {
     // Update temperature display
-    const tempElement = document.querySelector('.temperature-value');
-    if (tempElement && data.temperature) {
-        tempElement.textContent = `${data.temperature} °C`;
+    const temperatureElement = document.querySelector('.temperature-value');
+    if (temperatureElement && data.temperature !== undefined) {
+        temperatureElement.textContent = `${data.temperature} °C`;
     }
     
     // Update humidity display
     const humidityElement = document.querySelector('.humidity-value');
-    if (humidityElement && data.humidity) {
+    if (humidityElement && data.humidity !== undefined) {
         humidityElement.textContent = `${data.humidity} %`;
     }
     
     // Update CO2 display
     const co2Element = document.querySelector('.co2-value');
-    if (co2Element && data.co2) {
+    if (co2Element && data.co2 !== undefined) {
         co2Element.textContent = `${data.co2} ppm`;
+    }
+    
+    // Update fan speed display
+    const fanSpeedElement = document.querySelector('.fan-speed-display');
+    if (fanSpeedElement && data.fan_speed !== undefined) {
+        // Format fan speed to have exactly 1 decimal place
+        const formattedFanSpeed = parseFloat(data.fan_speed).toFixed(1);
+        fanSpeedElement.textContent = `Fan: ${formattedFanSpeed}%`;
     }
     
     // Update source indicators

@@ -230,9 +230,13 @@ async def update_measurements():
             # Get fresh measurements
             measurements = await device_manager.get_measurements()
             
+            # Get fan speed from device manager
+            fan_speed = device_manager.get_fan_speed()
+            fan_speed_rounded = round(fan_speed, 1)
+            
             if measurements:
                 co2, temp, rh = measurements
-                logger.info(f"Valid measurement: CO2={co2:.1f}ppm, Temp={temp:.1f}°C, RH={rh:.1f}%")
+                logger.info(f"Valid measurement: CO2={co2:.1f}ppm, Temp={temp:.1f}°C, RH={rh:.1f}%, Fan={fan_speed_rounded}%")
                 
                 # Round values for display
                 co2_rounded = round(co2)
@@ -244,6 +248,7 @@ async def update_measurements():
                     'co2': co2_rounded,
                     'temperature': temp_rounded,
                     'humidity': rh_rounded,
+                    'fan_speed': fan_speed_rounded,
                     'source': 'sensor',
                     'timestamp': datetime.now().isoformat(),
                     'unix_timestamp': time.time()
@@ -255,7 +260,7 @@ async def update_measurements():
                     json.dump(data, f, indent=2)
                 os.replace(temp_file, MEASUREMENTS_FILE)
                 
-                logger.info(f"Updated measurements: CO2={co2_rounded}ppm, Temp={temp_rounded}°C, RH={rh_rounded}%")
+                logger.info(f"Updated measurements: CO2={co2_rounded}ppm, Temp={temp_rounded}°C, RH={rh_rounded}%, Fan={fan_speed_rounded}%")
                 
                 # Log to InfluxDB
                 await log_to_influxdb(co2, temp, rh)
@@ -272,13 +277,14 @@ async def update_measurements():
                     cached = await device_manager.get_cached_measurements()
                     
                     if cached['co2'] is not None and cached['temperature'] is not None and cached['humidity'] is not None:
-                        logger.info(f"Using cached measurements: CO2={cached['co2']}ppm, Temp={cached['temperature']}°C, RH={cached['humidity']}%")
+                        logger.info(f"Using cached measurements: CO2={cached['co2']}ppm, Temp={cached['temperature']}°C, RH={cached['humidity']}%, Fan={fan_speed_rounded}%")
                         
                         # Prepare data from cache
                         data = {
                             'co2': cached['co2'],
                             'temperature': cached['temperature'],
                             'humidity': cached['humidity'],
+                            'fan_speed': fan_speed_rounded,
                             'source': 'cache',
                             'timestamp': datetime.now().isoformat(),
                             'unix_timestamp': time.time(),

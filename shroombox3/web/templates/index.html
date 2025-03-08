@@ -214,8 +214,9 @@
         function controlPanel() {
             return {
                 currentPhase: 'colonisation',
-                measurements: { temperature: '--', humidity: '--', co2: '--' },
+                measurements: { temperature: '--', humidity: '--', co2: '--', fan_speed: '--' },
                 setpoints: { temperature: 0, humidity: 0, co2: 0 },
+                pidSettings: { kp: 0, ki: 0, kd: 0 },
                 availableDevices: [],
                 selectedHeater: '',
                 selectedHumidifier: '',
@@ -317,16 +318,36 @@
                             co2: parseInt(phaseSettings.co2_setpoint) || 10000
                         };
                         
+                        // Load PID settings
+                        try {
+                            const pidSettings = data.co2?.pid || {};
+                            this.pidSettings = {
+                                kp: parseFloat(pidSettings.Kp || -1.0),
+                                ki: parseFloat(pidSettings.Ki || -0.01),
+                                kd: parseFloat(pidSettings.Kd || 0.0)
+                            };
+                            debugLog(`Loaded PID settings: ${JSON.stringify(this.pidSettings)}`);
+                        } catch (pidError) {
+                            debugLog(`Error loading PID settings: ${pidError.message}`, 'error');
+                            this.pidSettings = { kp: -1.0, ki: -0.01, kd: 0.0 };
+                        }
+                        
                         // Set input values directly - make a direct DOM update
                         setTimeout(() => {
                             try {
                                 const tempInput = document.getElementById('temperature-setpoint');
                                 const co2Input = document.getElementById('co2-setpoint');
                                 const humidityInput = document.getElementById('humidity-setpoint');
+                                const kpInput = document.getElementById('kp-setting');
+                                const kiInput = document.getElementById('ki-setting');
+                                const kdInput = document.getElementById('kd-setting');
                                 
                                 if (tempInput) tempInput.value = this.setpoints.temperature;
                                 if (co2Input) co2Input.value = this.setpoints.co2;
                                 if (humidityInput) humidityInput.value = this.setpoints.humidity;
+                                if (kpInput) kpInput.value = this.pidSettings.kp;
+                                if (kiInput) kiInput.value = this.pidSettings.ki;
+                                if (kdInput) kdInput.value = this.pidSettings.kd;
                                 
                                 debugLog('Input values set directly in DOM');
                             } catch (err) {
@@ -355,6 +376,7 @@
                             temperature: data.temperature ?? '--',
                             humidity: data.humidity ?? '--',
                             co2: data.co2 ?? '--',
+                            fan_speed: data.fan_speed ?? '--',
                             source: data.source || 'unknown',
                             timestamp: data.timestamp
                         };
@@ -390,6 +412,7 @@
                         temperature: data.temperature ?? this.measurements.temperature,
                         humidity: data.humidity ?? this.measurements.humidity,
                         co2: data.co2 ?? this.measurements.co2,
+                        fan_speed: data.fan_speed ?? this.measurements.fan_speed,
                         source: data.source || this.measurements.source,
                         timestamp: data.timestamp || new Date().toISOString()
                     };
@@ -772,6 +795,109 @@
                     }
                 },
 
+                // Function to update PID settings
+                async updatePidSetting(parameter) {
+                    try {
+                        debugLog(`Updating PID ${parameter} setting...`);
+                        
+                        // Get the current value from the pidSettings object
+                        const value = this.pidSettings[parameter];
+                        
+                        // Validate the value
+                        if (value === undefined || value === null || isNaN(value)) {
+                            throw new Error(`Invalid ${parameter} value: ${value}`);
+                        }
+                        
+                        // Get current settings
+                        const response = await fetch('/api/settings?update_states=false');
+                        if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+                        
+                        const settings = await response.json();
+                        
+                        // Ensure the co2.pid structure exists
+                        if (!settings.co2) settings.co2 = {};
+                        if (!settings.co2.pid) settings.co2.pid = {};
+                        
+                        // Update the parameter in the settings object
+                        if (parameter === 'kp') {
+                            settings.co2.pid.Kp = parseFloat(value);
+                        } else if (parameter === 'ki') {
+                            settings.co2.pid.Ki = parseFloat(value);
+                        } else if (parameter === 'kd') {
+                            settings.co2.pid.Kd = parseFloat(value);
+                        }
+                        
+                        // Show feedback
+                        const feedbackId = `${parameter}-feedback`;
+                        let feedbackDiv = document.getElementById(feedbackId);
+                        
+                        if (!feedbackDiv) {
+                            feedbackDiv = document.createElement('div');
+                            feedbackDiv.id = feedbackId;
+                            feedbackDiv.className = 'mt-2 text-xs text-blue-600';
+                            
+                            // Find the input element and add feedback after it
+                            const inputElement = document.getElementById(`${parameter}-setting`);
+                            if (inputElement && inputElement.parentNode) {
+                                inputElement.parentNode.appendChild(feedbackDiv);
+                            }
+                        }
+                        
+                        feedbackDiv.textContent = 'Saving...';
+                        
+                        // Save updated settings
+                        const saveResponse = await fetch('/api/settings', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(settings)
+                        });
+                        
+                        if (!saveResponse.ok) {
+                            throw new Error(`Failed to save PID ${parameter} setting: HTTP error ${saveResponse.status}`);
+                        }
+                        
+                        // Update feedback
+                        feedbackDiv.textContent = `PID ${parameter.toUpperCase()} updated`;
+                        feedbackDiv.className = 'mt-2 text-xs text-green-600';
+                        
+                        // Remove feedback after 3 seconds
+                        setTimeout(() => {
+                            if (feedbackDiv && feedbackDiv.parentNode) {
+                                feedbackDiv.parentNode.removeChild(feedbackDiv);
+                            }
+                        }, 3000);
+                        
+                        debugLog(`Successfully updated PID ${parameter} to ${value}`);
+                    } catch (error) {
+                        debugLog(`Error updating PID ${parameter}: ${error.message}`, 'error');
+                        
+                        // Show error feedback
+                        const feedbackId = `${parameter}-feedback`;
+                        let feedbackDiv = document.getElementById(feedbackId);
+                        
+                        if (!feedbackDiv) {
+                            feedbackDiv = document.createElement('div');
+                            feedbackDiv.id = feedbackId;
+                            
+                            // Find the input element and add feedback after it
+                            const inputElement = document.getElementById(`${parameter}-setting`);
+                            if (inputElement && inputElement.parentNode) {
+                                inputElement.parentNode.appendChild(feedbackDiv);
+                            }
+                        }
+                        
+                        feedbackDiv.textContent = `Error: ${error.message}`;
+                        feedbackDiv.className = 'mt-2 text-xs text-red-600';
+                        
+                        // Remove error feedback after 5 seconds
+                        setTimeout(() => {
+                            if (feedbackDiv && feedbackDiv.parentNode) {
+                                feedbackDiv.parentNode.removeChild(feedbackDiv);
+                            }
+                        }, 5000);
+                    }
+                },
+
                 // Cleanup method
                 cleanup() {
                     // Terminal-related cleanup removed
@@ -940,48 +1066,6 @@
                     </div>
                 </div>
 
-                <!-- CO2 Column -->
-                <div>
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">CO2</label>
-                        <div class="text-2xl font-medium co2-value" x-text="measurements.co2 + ' ppm'"></div>
-                        <div class="text-xs text-gray-500 flex items-center" x-show="measurements.source">
-                            <span x-show="measurements.source === 'sensor'" class="flex items-center measurement-source">
-                                <svg class="w-3 h-3 text-green-500 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                                </svg>
-                                Live
-                            </span>
-                            <span x-show="measurements.source === 'cache'" class="flex items-center measurement-source">
-                                <svg class="w-3 h-3 text-yellow-500 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
-                                </svg>
-                                Cached
-                            </span>
-                            <span x-show="measurements.source === 'influxdb'" class="flex items-center measurement-source">
-                                <svg class="w-3 h-3 text-blue-500 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd"></path>
-                                </svg>
-                                Database
-                            </span>
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Setpoint (ppm)</label>
-                        <input 
-                            id="co2-setpoint"
-                            type="number" 
-                            class="block w-24 rounded-md border border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 p-2"
-                            step="100"
-                            min="0"
-                            max="20000"
-                            :value="setpoints.co2"
-                            @input="setpoints.co2 = parseInt($el.value)"
-                            @change="updateSetpoint('co2')"
-                        >
-                    </div>
-                </div>
-
                 <!-- Humidity Column -->
                 <div>
                     <div class="mb-4">
@@ -1021,6 +1105,103 @@
                             @input="setpoints.humidity = parseFloat($el.value)"
                             @change="updateSetpoint('humidity')"
                         >
+                    </div>
+                </div>
+
+                <!-- CO2 Column -->
+                <div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">CO2</label>
+                        <div class="text-2xl font-medium co2-value" x-text="measurements.co2 + ' ppm'"></div>
+                        <div class="text-sm font-medium text-gray-600 fan-speed-display" x-text="'Fan: ' + (measurements.fan_speed !== undefined ? parseFloat(measurements.fan_speed).toFixed(1) : '--') + '%'"></div>
+                        <div class="text-xs text-gray-500 flex items-center" x-show="measurements.source">
+                            <span x-show="measurements.source === 'sensor'" class="flex items-center measurement-source">
+                                <svg class="w-3 h-3 text-green-500 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
+                                Live
+                            </span>
+                            <span x-show="measurements.source === 'cache'" class="flex items-center measurement-source">
+                                <svg class="w-3 h-3 text-yellow-500 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
+                                </svg>
+                                Cached
+                            </span>
+                            <span x-show="measurements.source === 'influxdb'" class="flex items-center measurement-source">
+                                <svg class="w-3 h-3 text-blue-500 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd"></path>
+                                </svg>
+                                Database
+                            </span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Setpoint (ppm)</label>
+                        <input 
+                            id="co2-setpoint"
+                            type="number" 
+                            class="block w-24 rounded-md border border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 p-2"
+                            step="100"
+                            min="0"
+                            max="20000"
+                            :value="setpoints.co2"
+                            @input="setpoints.co2 = parseInt($el.value)"
+                            @change="updateSetpoint('co2')"
+                        >
+                    </div>
+                </div>
+
+                <!-- Fan PID Parameters Column -->
+                <div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Fan PID Parameters</label>
+                        <div class="text-xs text-gray-500 mb-2">
+                            (Negative value: higher CO2 → higher fan speed)
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <div class="flex items-center">
+                            <label class="w-8 text-sm font-medium text-gray-700 mr-2">Kp:</label>
+                            <input 
+                                id="kp-setting"
+                                type="number" 
+                                class="block w-20 rounded-md border border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 p-2"
+                                step="0.1"
+                                min="-10"
+                                max="0"
+                                :value="pidSettings.kp"
+                                @input="pidSettings.kp = parseFloat($el.value)"
+                                @change="updatePidSetting('kp')"
+                            >
+                        </div>
+                        <div class="flex items-center">
+                            <label class="w-8 text-sm font-medium text-gray-700 mr-2">Ki:</label>
+                            <input 
+                                id="ki-setting"
+                                type="number" 
+                                class="block w-20 rounded-md border border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 p-2"
+                                step="0.01"
+                                min="-1"
+                                max="0"
+                                :value="pidSettings.ki"
+                                @input="pidSettings.ki = parseFloat($el.value)"
+                                @change="updatePidSetting('ki')"
+                            >
+                        </div>
+                        <div class="flex items-center">
+                            <label class="w-8 text-sm font-medium text-gray-700 mr-2">Kd:</label>
+                            <input 
+                                id="kd-setting"
+                                type="number" 
+                                class="block w-20 rounded-md border border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 p-2"
+                                step="0.01"
+                                min="-1"
+                                max="1"
+                                :value="pidSettings.kd"
+                                @input="pidSettings.kd = parseFloat($el.value)"
+                                @change="updatePidSetting('kd')"
+                            >
+                        </div>
                     </div>
                 </div>
             </div>

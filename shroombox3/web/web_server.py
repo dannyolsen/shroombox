@@ -429,66 +429,82 @@ async def scan_devices():
 async def get_system_status():
     """Get current system status including fan speed, device states, and CPU temp."""
     try:
-        if not controller:
-            return jsonify({'error': 'Controller not initialized'}), 500
-            
+        # Get fan speed from measurements.json
+        fan_speed = 0
+        try:
+            if os.path.exists(MEASUREMENTS_FILE):
+                with open(MEASUREMENTS_FILE, 'r') as f:
+                    measurements_data = json.load(f)
+                    fan_speed = measurements_data.get('fan_speed', 0)
+                    logger.info(f"Got fan speed from measurements.json: {fan_speed}%")
+        except Exception as measurements_error:
+            logger.error(f"Error reading fan speed from measurements.json: {measurements_error}")
+            # Fallback to getting fan speed from device manager
+            fan_speed = device_manager.get_fan_speed()
+            logger.info(f"Got fan speed from device manager: {fan_speed}%")
+        
         # Get CPU temperature
-        cpu_temp = get_cpu_temperature()
+        cpu_temp = device_manager.get_cpu_temperature()
         
-        # Get fan speed
-        fan_speed = controller.fan_percentage if controller else 0
+        # Get heater state
+        heater_state = False
+        heater_ip = None
+        try:
+            heater_device = next((d for d in device_manager.devices if d.role == 'heater'), None)
+            if heater_device:
+                heater_state = heater_device.get_state()
+                heater_ip = heater_device.ip_address
+        except Exception as heater_error:
+            logger.error(f"Error getting heater state: {heater_error}")
         
-        # Get device states from controller
-        heater_state = controller.heater_on if controller else False
-        humidifier_state = controller.humidifier_on if controller else False
-        
-        # Get device IPs
-        heater_ip = controller.heater_ip if controller else None
-        humidifier_ip = controller.humidifier_ip if controller else None
-        
-        # Check if we should update device states from physical devices
-        update_states = request.args.get('update_states', 'true').lower() == 'true'
-        
-        # If update_states is true, get the actual device states
-        if update_states and controller.tapo:
-            if heater_ip:
-                heater_state = await controller.tapo.get_device_state(heater_ip)
-                # Update controller's tracking
-                controller.heater_on = heater_state
-                
-            if humidifier_ip:
-                humidifier_state = await controller.tapo.get_device_state(humidifier_ip)
-                # Update controller's tracking
-                controller.humidifier_on = humidifier_state
+        # Get humidifier state
+        humidifier_state = False
+        humidifier_ip = None
+        try:
+            humidifier_device = next((d for d in device_manager.devices if d.role == 'humidifier'), None)
+            if humidifier_device:
+                humidifier_state = humidifier_device.get_state()
+                humidifier_ip = humidifier_device.ip_address
+        except Exception as humidifier_error:
+            logger.error(f"Error getting humidifier state: {humidifier_error}")
         
         return jsonify({
-            'cpu_temperature': cpu_temp,
-            'fan_speed': fan_speed,
+            'fan_speed': round(float(fan_speed), 1) if fan_speed is not None else 0.0,
+            'cpu_temp': round(cpu_temp, 1) if cpu_temp is not None else None,
             'heater': {
-                'ip': heater_ip,
-                'state': heater_state
+                'state': heater_state,
+                'ip': heater_ip
             },
             'humidifier': {
-                'ip': humidifier_ip,
-                'state': humidifier_state
+                'state': humidifier_state,
+                'ip': humidifier_ip
             }
         })
         
     except Exception as e:
         logger.error(f"Error getting system status: {e}")
         
-        # Try to get fan speed from settings.json
+        # Try to get fan speed from measurements.json
         fan_speed = 0
         try:
-            settings_file = os.path.join(BASE_DIR, 'config', 'settings.json')
-            with open(settings_file, 'r') as f:
-                settings = json.load(f)
-                fan_speed = settings.get('fan', {}).get('speed', 0)
-        except Exception as settings_error:
-            logger.error(f"Error reading fan speed from settings: {settings_error}")
+            if os.path.exists(MEASUREMENTS_FILE):
+                with open(MEASUREMENTS_FILE, 'r') as f:
+                    measurements_data = json.load(f)
+                    fan_speed = measurements_data.get('fan_speed', 0)
+        except Exception as measurements_error:
+            logger.error(f"Error reading fan speed from measurements.json: {measurements_error}")
+            
+            # Fallback to getting fan speed from settings.json
+            try:
+                settings_file = os.path.join(BASE_DIR, 'config', 'settings.json')
+                with open(settings_file, 'r') as f:
+                    settings = json.load(f)
+                    fan_speed = settings.get('fan', {}).get('speed', 0)
+            except Exception as settings_error:
+                logger.error(f"Error reading fan speed from settings: {settings_error}")
         
         return jsonify({
-            'fan_speed': round(fan_speed, 1) if fan_speed is not None else 0,
+            'fan_speed': round(float(fan_speed), 1) if fan_speed is not None else 0.0,
             'cpu_temp': None,
             'heater': {'state': False, 'ip': None},
             'humidifier': {'state': False, 'ip': None}
@@ -573,8 +589,12 @@ async def get_latest_measurements():
                         # Add age to the response
                         file_data['cache_age'] = age
                         
-                        # Get fan speed from device manager
-                        file_data['fan_speed'] = device_manager.get_fan_speed()
+                        # Use fan_speed from measurements.json if available, otherwise get from device manager
+                        if 'fan_speed' not in file_data:
+                            file_data['fan_speed'] = round(float(device_manager.get_fan_speed()), 1)
+                        else:
+                            # Ensure fan_speed is rounded to 1 decimal place
+                            file_data['fan_speed'] = round(float(file_data['fan_speed']), 1)
                         
                         return jsonify(file_data)
                     else:
@@ -594,8 +614,8 @@ async def get_latest_measurements():
             temp = round(temp, 1) if temp is not None else None
             rh = round(rh, 1) if rh is not None else None
             
-            # Get fan speed from device manager
-            fan_speed = device_manager.get_fan_speed()
+            # Get fan speed from device manager and round to 1 decimal place
+            fan_speed = round(float(device_manager.get_fan_speed()), 1)
             
             return jsonify({
                 'co2': co2,
@@ -612,11 +632,15 @@ async def get_latest_measurements():
             
             if cached_data['is_fresh']:
                 logger.info(f"Using cached measurements from device manager: {cached_data}")
+                
+                # Get fan speed from device manager and round to 1 decimal place
+                fan_speed = round(float(device_manager.get_fan_speed()), 1)
+                
                 return jsonify({
                     'co2': round(cached_data['co2']) if cached_data['co2'] is not None else None,
                     'temperature': round(cached_data['temperature'], 1) if cached_data['temperature'] is not None else None,
                     'humidity': round(cached_data['humidity'], 1) if cached_data['humidity'] is not None else None,
-                    'fan_speed': device_manager.get_fan_speed(),
+                    'fan_speed': fan_speed,
                     'timestamp': datetime.now().isoformat(),
                     'source': 'cache',
                     'cache_age': cached_data['age']
@@ -629,6 +653,13 @@ async def get_latest_measurements():
             
             if influx_data:
                 logger.info(f"Using measurements from InfluxDB: {influx_data}")
+                
+                # Ensure fan_speed is rounded to 1 decimal place
+                if 'fan_speed' in influx_data:
+                    influx_data['fan_speed'] = round(float(influx_data['fan_speed']), 1)
+                else:
+                    influx_data['fan_speed'] = round(float(device_manager.get_fan_speed()), 1)
+                
                 return jsonify({
                     'co2': influx_data.get('co2'),
                     'temperature': influx_data.get('temperature'),
@@ -644,7 +675,7 @@ async def get_latest_measurements():
                     'co2': None,
                     'temperature': None,
                     'humidity': None,
-                    'fan_speed': None,
+                    'fan_speed': 0.0,
                     'timestamp': datetime.now().isoformat(),
                     'message': 'No measurements available'
                 })

@@ -22,15 +22,15 @@
     "co2": {
         "pid": {
             "Kd": 0,
-            "Ki": -0.01,
-            "Kp": -0.1
+            "Ki": -0.001,
+            "Kp": -0.01
         }
     },
     "control_states": {
         "heater": {
             "desired_state": false,
-            "last_change": 1741454583.1354744,
-            "last_change_reason": "Temperature 22.27100944519043\u00b0C above upper bound 10.5\u00b0C"
+            "last_change": 1741457384.169342,
+            "last_change_reason": "Temperature 21.934545516967773\u00b0C above upper bound 10.5\u00b0C"
         },
         "humidifier": {
             "desired_state": true,

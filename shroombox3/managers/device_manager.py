@@ -166,14 +166,28 @@ class DeviceManager:
     
     def get_fan_speed(self) -> float:
         """
-        Get the current fan speed as a percentage.
+        Get the current fan speed as a percentage from settings.json.
         
         Returns:
             float: Current fan speed (0-100)
         """
-        if hasattr(self, 'fan') and self.fan:
-            return self.fan.get_speed()
-        return 0.0
+        try:
+            # Get fan speed from settings.json
+            settings = self.settings_manager.load_settings_sync()
+            if settings and 'fan' in settings and 'speed' in settings['fan']:
+                return float(settings['fan']['speed'])
+            
+            # Fallback to fan object if settings don't have the value
+            if hasattr(self, 'fan') and self.fan:
+                return self.fan.get_speed()
+            
+            return 0.0
+        except Exception as e:
+            logger.error(f"Error getting fan speed from settings: {e}")
+            # Fallback to fan object if there's an error
+            if hasattr(self, 'fan') and self.fan:
+                return self.fan.get_speed()
+            return 0.0
     
     async def get_device_state(self, role: str) -> Optional[bool]:
         """
