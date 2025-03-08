@@ -1128,6 +1128,15 @@ async def control_device_direct():
         logger.error(f"Error controlling device directly: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
+@app.route('/settings')
+async def settings_page():
+    """Render the settings page."""
+    try:
+        return await render_template('settings.html')
+    except Exception as e:
+        logger.error(f"Error rendering settings page: {e}")
+        return "Error loading settings page", 500
+
 if __name__ == '__main__':
     config = Config()
     config.bind = ["0.0.0.0:5000"]

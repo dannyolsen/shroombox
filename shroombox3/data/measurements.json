@@ -1,8 +1,8 @@
 {
-  "co2": 641.4,
-  "temperature": 22.2,
-  "humidity": 37.6,
+  "co2": 643.7,
+  "temperature": 24.6,
+  "humidity": 37.8,
   "source": "sensor",
-  "timestamp": "2025-03-08T19:14:14.604445",
-  "unix_timestamp": 1741457654.6044598
+  "timestamp": "2025-03-08T20:24:45.741223",
+  "unix_timestamp": 1741461885.7412386
 }

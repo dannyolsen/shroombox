@@ -979,35 +979,45 @@ class TapoController(Device):
                 
             logger.info(f"Discovered {len(discovered_devices)} devices")
             
-            # Log detailed device information
+            # For each discovered device, try to get the actual name directly from the device
             for device in discovered_devices:
-                logger.info(f"Device details - Name: {device.get('name', 'None')}, IP: {device.get('ip', 'Unknown')}, MAC: {device.get('mac', 'Unknown')}")
+                logger.info(f"Processing device - IP: {device.get('ip', 'Unknown')}, MAC: {device.get('mac', 'Unknown')}")
                 
-                # If the device has a name in settings.json, use that name
+                # First check if we already have a name for this device in settings.json
                 if device['mac'] in existing_device_names:
                     original_name = device['name']
                     device['name'] = existing_device_names[device['mac']]
                     logger.info(f"Using existing name from settings for {device['mac']}: '{original_name}' -> '{device['name']}'")
+                    continue  # Skip to next device since we're using the existing name
                 
-                # If name is still None or empty, try to get it directly from the device
-                if not device.get('name'):
+                # If this is a new device, try to get the actual name directly from the device
+                try:
                     logger.info(f"Attempting to get name directly for device at {device.get('ip')}")
-                    try:
-                        tapo_device = await self.get_device(device.get('ip'))
-                        if tapo_device:
-                            device_info = await tapo_device.get_device_info()
-                            if device_info and 'alias' in device_info:
-                                device['name'] = device_info['alias']
-                                logger.info(f"Retrieved name directly: {device['name']}")
-                            else:
-                                # Set a default name based on model and IP if alias not available
-                                device['name'] = f"{device.get('model', 'Device')} ({device.get('ip', 'Unknown')})"
-                                logger.info(f"Set default name: {device['name']}")
-                    except Exception as e:
-                        logger.warning(f"Error getting device name directly: {e}")
-                        # Set a default name based on model and IP
-                        device['name'] = f"{device.get('model', 'Device')} ({device.get('ip', 'Unknown')})"
-                        logger.info(f"Set default name after error: {device['name']}")
+                    tapo_device = await self.get_device(device.get('ip'))
+                    if tapo_device:
+                        device_info = await tapo_device.get_device_info()
+                        
+                        # Handle different return types from the API
+                        actual_name = None
+                        
+                        # Try to extract the alias/name from device_info
+                        if hasattr(device_info, 'alias') and device_info.alias:
+                            actual_name = device_info.alias
+                        elif isinstance(device_info, dict) and 'alias' in device_info and device_info['alias']:
+                            actual_name = device_info['alias']
+                        elif hasattr(device_info, 'nickname') and device_info.nickname:
+                            actual_name = device_info.nickname
+                        elif isinstance(device_info, dict) and 'nickname' in device_info and device_info['nickname']:
+                            actual_name = device_info['nickname']
+                        
+                        # If we found a name, use it
+                        if actual_name:
+                            logger.info(f"Retrieved actual name from device: '{actual_name}' (was '{device['name']}')")
+                            device['name'] = actual_name
+                        else:
+                            logger.warning(f"No alias or nickname found in device_info for {device.get('ip')}")
+                except Exception as e:
+                    logger.warning(f"Error getting device name directly: {e}")
             
             # Update or add devices
             if 'available_devices' not in settings:
