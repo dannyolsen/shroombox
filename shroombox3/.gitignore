@@ -31,3 +31,5 @@ shroombox3.code-workspace
 
 # Backup files
 *.bak
+
+data/measurements.json
