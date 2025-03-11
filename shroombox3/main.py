@@ -34,14 +34,43 @@ logger = logging.getLogger('shroombox')
 shutdown_requested = False
 
 def signal_handler(sig, frame):
-    """Handle termination signals"""
+    """Handle signals gracefully and log the exit reason."""
     global shutdown_requested
-    logger.info(f"Received signal {sig}, shutting down...")
+    
+    signal_names = {
+        signal.SIGINT: "SIGINT (Ctrl+C)",
+        signal.SIGTERM: "SIGTERM",
+        signal.SIGHUP: "SIGHUP",
+        signal.SIGQUIT: "SIGQUIT"
+    }
+    signal_name = signal_names.get(sig, f"Signal {sig}")
+    logger.warning(f"Received {signal_name} signal - initiating shutdown")
+    
+    # Log stack trace to help debug unexpected exits
+    stack_trace = ''.join(traceback.format_stack(frame))
+    logger.info(f"Stack trace at exit:\n{stack_trace}")
+    
+    # Set shutdown flag to trigger graceful shutdown
     shutdown_requested = True
+    
+    # Don't call asyncio.run() here as it can't be used inside an existing event loop
+    # The main loop will handle cleanup when it detects shutdown_requested = True
 
 # Register signal handlers
-signal.signal(signal.SIGINT, signal_handler)   # Ctrl+C
-signal.signal(signal.SIGTERM, signal_handler)  # Termination
+signal.signal(signal.SIGINT, signal_handler)
+signal.signal(signal.SIGTERM, signal_handler)
+signal.signal(signal.SIGHUP, signal_handler)
+signal.signal(signal.SIGQUIT, signal_handler)
+
+# Add a sys.excepthook to log unhandled exceptions
+def exception_handler(exc_type, exc_value, exc_traceback):
+    """Log unhandled exceptions."""
+    logger.critical("Unhandled exception - program will exit", 
+                   exc_info=(exc_type, exc_value, exc_traceback))
+    # Call the original excepthook
+    sys.__excepthook__(exc_type, exc_value, exc_traceback)
+
+sys.excepthook = exception_handler
 
 async def initialize_components():
     """Initialize system components with timeouts"""

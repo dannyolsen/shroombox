@@ -241,27 +241,64 @@ function updateMeasurementsUI(data) {
     }
     
     // Update fan speed display
-    const fanSpeedElement = document.querySelector('.fan-speed-display');
+    const fanSpeedElement = document.querySelector('.fan-speed-value');
     if (fanSpeedElement && data.fan_speed !== undefined) {
-        // Format fan speed to have exactly 1 decimal place
-        const formattedFanSpeed = parseFloat(data.fan_speed).toFixed(1);
-        fanSpeedElement.textContent = `Fan: ${formattedFanSpeed}%`;
+        fanSpeedElement.textContent = `${data.fan_speed} %`;
     }
     
-    // Update source indicators
-    const sourceElements = document.querySelectorAll('.measurement-source');
-    sourceElements.forEach(element => {
+    // Update data source indicator
+    const sourceElement = document.querySelector('.data-source');
+    if (sourceElement) {
+        let sourceText = 'Unknown';
+        let sourceClass = 'text-gray-500';
+        
         if (data.source === 'sensor') {
-            element.textContent = 'Live';
-            element.className = 'measurement-source text-green-500 text-xs';
+            sourceText = 'Sensor (Real-time)';
+            sourceClass = 'text-green-600';
         } else if (data.source === 'cache') {
-            element.textContent = 'Cached';
-            element.className = 'measurement-source text-yellow-500 text-xs';
+            sourceText = `Cached (${Math.round(data.cache_age)}s old)`;
+            sourceClass = 'text-yellow-600';
         } else if (data.source === 'influxdb') {
-            element.textContent = 'Database';
-            element.className = 'measurement-source text-blue-500 text-xs';
+            sourceText = 'InfluxDB (Historical)';
+            sourceClass = 'text-blue-600';
         }
-    });
+        
+        sourceElement.textContent = sourceText;
+        sourceElement.className = `data-source ${sourceClass} text-sm`;
+    }
+    
+    // Update sensor status indicators if they exist
+    if (data.sensor_status) {
+        // Warning indicator (when sensor is not available)
+        const statusContainer = document.getElementById('sensor-status-container');
+        if (statusContainer) {
+            if (!data.sensor_status.available) {
+                statusContainer.classList.remove('hidden');
+                
+                const statusMessage = document.getElementById('sensor-status-message');
+                if (statusMessage) {
+                    statusMessage.textContent = data.sensor_status.message;
+                }
+            } else {
+                statusContainer.classList.add('hidden');
+            }
+        }
+        
+        // Success indicator (when sensor is available)
+        const successContainer = document.getElementById('sensor-status-success');
+        if (successContainer) {
+            if (data.sensor_status.available) {
+                successContainer.classList.remove('hidden');
+                
+                const successMessage = document.getElementById('sensor-status-success-message');
+                if (successMessage) {
+                    successMessage.textContent = 'Sensor connected and working properly';
+                }
+            } else {
+                successContainer.classList.add('hidden');
+            }
+        }
+    }
 }
 
 // Start both polling mechanisms when the page loads

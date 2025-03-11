@@ -541,20 +541,32 @@ async def fan_control():
         data = await request.get_json()
         speed = data.get('speed', 0)
         
-        # Use the device_manager to set fan speed
-        success = await device_manager.set_fan_speed(speed)
+        logger.info(f"Setting fan speed to {speed}%")
         
-        if success:
+        # Use the device_manager to set fan speed
+        try:
+            await device_manager.set_fan_speed(speed)
+            
             # If controller exists, update its fan_percentage to keep in sync
             if controller:
                 controller.fan_percentage = speed
+                logger.info(f"Updated controller fan_percentage to {speed}%")
+            
+            # Get the current fan speed from the device manager to confirm it was set
+            current_speed = device_manager.get_fan_speed()
+            logger.info(f"Fan speed successfully set to {current_speed}%")
                 
-            return jsonify({'success': True, 'message': f'Fan speed set to {speed}%'})
-        else:
-            return jsonify({'error': 'Failed to set fan speed'}), 500
+            return jsonify({
+                'success': True, 
+                'message': f'Fan speed set to {current_speed}%',
+                'current_speed': current_speed
+            })
+        except Exception as e:
+            logger.error(f"Error setting fan speed: {e}")
+            return jsonify({'error': f'Failed to set fan speed: {str(e)}'}), 500
         
     except Exception as e:
-        logger.error(f"Error controlling fan: {e}")
+        logger.error(f"Error in fan control endpoint: {e}")
         return jsonify({'error': str(e)}), 500
 
 def get_cpu_temperature():
@@ -573,6 +585,35 @@ async def get_latest_measurements():
     """Get latest sensor measurements."""
     try:
         logger.info("get_latest_measurements called")
+        
+        # Default sensor status
+        sensor_status = {
+            'available': False,
+            'message': 'Sensor not initialized'
+        }
+        
+        # Try to get measurements from the sensor first to check if it's working
+        if device_manager.sensor:
+            try:
+                # Try to get measurements directly to verify the sensor is working
+                measurements = await device_manager.sensor.get_measurements()
+                if measurements:
+                    # If we got measurements, the sensor is working
+                    sensor_status['available'] = True
+                    sensor_status['message'] = 'Sensor connected and working'
+                    logger.info(f"Sensor is working, got measurements: {measurements}")
+                else:
+                    # If we didn't get measurements, the sensor might be having issues
+                    sensor_status['available'] = False
+                    sensor_status['message'] = 'Sensor not providing measurements'
+                    logger.warning("Sensor returned None for measurements")
+            except Exception as e:
+                logger.warning(f"Error getting measurements from sensor: {e}")
+                sensor_status['available'] = False
+                sensor_status['message'] = f'Sensor error: {str(e)}'
+        else:
+            sensor_status['message'] = 'No sensor configured'
+            logger.warning("No sensor configured in device manager")
         
         # First try to get measurements from the file
         try:
@@ -596,6 +637,9 @@ async def get_latest_measurements():
                             # Ensure fan_speed is rounded to 1 decimal place
                             file_data['fan_speed'] = round(float(file_data['fan_speed']), 1)
                         
+                        # Add sensor status
+                        file_data['sensor_status'] = sensor_status
+                        
                         return jsonify(file_data)
                     else:
                         logger.info(f"File measurements are stale ({age:.1f}s old), trying real-time")
@@ -617,13 +661,18 @@ async def get_latest_measurements():
             # Get fan speed from device manager and round to 1 decimal place
             fan_speed = round(float(device_manager.get_fan_speed()), 1)
             
+            # If we got measurements, the sensor is available
+            sensor_status['available'] = True
+            sensor_status['message'] = 'Sensor connected and working'
+            
             return jsonify({
                 'co2': co2,
                 'temperature': temp,
                 'humidity': rh,
                 'fan_speed': fan_speed,
                 'timestamp': datetime.now().isoformat(),
-                'source': 'sensor'
+                'source': 'sensor',
+                'sensor_status': sensor_status
             })
         else:
             # Try to get cached measurements from device manager
@@ -643,7 +692,8 @@ async def get_latest_measurements():
                     'fan_speed': fan_speed,
                     'timestamp': datetime.now().isoformat(),
                     'source': 'cache',
-                    'cache_age': cached_data['age']
+                    'cache_age': cached_data['age'],
+                    'sensor_status': sensor_status
                 })
             
             # If no cached data, try to get the latest from InfluxDB
@@ -666,7 +716,8 @@ async def get_latest_measurements():
                     'humidity': influx_data.get('humidity'),
                     'fan_speed': influx_data.get('fan_speed'),
                     'timestamp': datetime.now().isoformat(),
-                    'source': 'influxdb'
+                    'source': 'influxdb',
+                    'sensor_status': sensor_status
                 })
             else:
                 # If no measurements available from any source
@@ -677,7 +728,8 @@ async def get_latest_measurements():
                     'humidity': None,
                     'fan_speed': 0.0,
                     'timestamp': datetime.now().isoformat(),
-                    'message': 'No measurements available'
+                    'message': 'No measurements available',
+                    'sensor_status': sensor_status
                 })
     except Exception as e:
         logger.error(f"Error getting latest measurements: {e}")

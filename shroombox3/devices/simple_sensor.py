@@ -269,17 +269,28 @@ class SimpleSCD30Controller(Device):
             rh: Relative humidity as percentage
             
         Returns:
-            bool: True if the measurement is valid, False otherwise
+            bool: True if the measurement is valid (possibly after adjustment), False otherwise
         """
         # Check for NaN values
         if math.isnan(co2) or math.isnan(temp) or math.isnan(rh):
             logger.warning("Measurement contains NaN values")
             return False
             
-        # Check CO2 range (0-40000 ppm, but typically 400-5000)
-        if co2 < 0 or co2 > 40000:
-            logger.warning(f"CO2 value out of range: {co2} ppm")
+        # Check and cap CO2 range (0-40000 ppm, but typically 400-5000)
+        if co2 < 0:
+            logger.warning(f"CO2 value out of range: {co2} ppm (negative)")
             return False
+        elif co2 > 40000:
+            logger.warning(f"CO2 value out of range: {co2} ppm (above maximum)")
+            return False
+        elif co2 > 5000:
+            # Cap extremely high values to 5000 ppm but still accept the reading
+            logger.warning(f"CO2 value unusually high: {co2} ppm - capping to 5000 ppm")
+            co2 = 5000.0
+            # Update the last measurement with the capped value
+            if self._last_measurement is not None:
+                _, temp_old, rh_old = self._last_measurement
+                self._last_measurement = (co2, temp_old, rh_old)
             
         # Check temperature range (-40 to 70°C)
         if temp < -40 or temp > 70:

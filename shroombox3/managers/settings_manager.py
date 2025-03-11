@@ -4,6 +4,7 @@ import asyncio
 import logging
 import copy
 import time
+import math
 from typing import Dict, Any, Optional, List
 from utils import logging_setup
 
@@ -90,6 +91,22 @@ class SettingsManager:
             logger.error(f"Error creating default settings file: {e}")
             raise
 
+    def get_cached_settings(self) -> Dict[str, Any]:
+        """
+        Get the cached settings without async.
+        
+        This method is intended for use in synchronous contexts where
+        awaiting load_settings() is not possible. It returns the current
+        cached settings without checking for file modifications.
+        
+        Returns:
+            Dict[str, Any]: The cached settings or a new settings object if cache is empty
+        """
+        if self._settings_cache is None:
+            # If cache is empty, create default settings
+            return self._create_default_settings()
+        return self._settings_cache
+        
     async def load_settings(self, force_reload: bool = False) -> Dict[str, Any]:
         """Load settings from the config file.
         
@@ -119,7 +136,14 @@ class SettingsManager:
             async with self._file_lock:
                 logger.debug(f"Loading settings from: {self.config_path}")
                 with open(self.config_path, 'r') as f:
-                    self.settings = json.load(f)
+                    # Read the file content
+                    file_content = f.read()
+                    
+                    # Replace NaN with 0 to ensure valid JSON
+                    file_content = file_content.replace('NaN', '0')
+                    
+                    # Parse the modified content
+                    self.settings = json.loads(file_content)
                 
                 # Update cache
                 self._settings_cache = copy.deepcopy(self.settings)
@@ -140,6 +164,15 @@ class SettingsManager:
                             phase_data['rh_setpoint'] = float(phase_data['rh_setpoint'])
                         if 'co2_setpoint' in phase_data:
                             phase_data['co2_setpoint'] = int(phase_data['co2_setpoint'])
+                
+                # Fix fan speed if it's NaN
+                if 'fan' in self.settings and 'speed' in self.settings['fan']:
+                    if isinstance(self.settings['fan']['speed'], str) and self.settings['fan']['speed'].lower() == 'nan':
+                        logger.warning("Found NaN value in fan speed, replacing with 0")
+                        self.settings['fan']['speed'] = 0
+                    elif self.settings['fan']['speed'] is None or (isinstance(self.settings['fan']['speed'], float) and math.isnan(self.settings['fan']['speed'])):
+                        logger.warning("Found NaN value in fan speed, replacing with 0")
+                        self.settings['fan']['speed'] = 0
                 
                 return self.settings
         except Exception as e:
@@ -617,7 +650,14 @@ class SettingsManager:
         try:
             logger.debug(f"Loading settings synchronously from: {self.config_path}")
             with open(self.config_path, 'r') as f:
-                settings = json.load(f)
+                # Read the file content
+                file_content = f.read()
+                
+                # Replace NaN with 0 to ensure valid JSON
+                file_content = file_content.replace('NaN', '0')
+                
+                # Parse the modified content
+                settings = json.loads(file_content)
             
             # Ensure numeric values are properly converted
             if 'environment' in settings and 'phases' in settings['environment']:
@@ -628,6 +668,15 @@ class SettingsManager:
                         phase_data['rh_setpoint'] = float(phase_data['rh_setpoint'])
                     if 'co2_setpoint' in phase_data:
                         phase_data['co2_setpoint'] = int(phase_data['co2_setpoint'])
+            
+            # Fix fan speed if it's NaN
+            if 'fan' in settings and 'speed' in settings['fan']:
+                if isinstance(settings['fan']['speed'], str) and settings['fan']['speed'].lower() == 'nan':
+                    logger.warning("Found NaN value in fan speed, replacing with 0")
+                    settings['fan']['speed'] = 0
+                elif settings['fan']['speed'] is None or (isinstance(settings['fan']['speed'], float) and math.isnan(settings['fan']['speed'])):
+                    logger.warning("Found NaN value in fan speed, replacing with 0")
+                    settings['fan']['speed'] = 0
             
             return settings
         except Exception as e:

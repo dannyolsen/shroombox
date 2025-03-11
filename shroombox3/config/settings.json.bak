@@ -6,7 +6,7 @@
             "model": "P115",
             "name": "Heatmat",
             "role": "heater",
-            "state": false,
+            "state": true,
             "type": "SMART.TAPOPLUG"
         },
         {
@@ -31,20 +31,20 @@
     "co2": {
         "pid": {
             "Kd": 0,
-            "Ki": -0.001,
+            "Ki": -1e-05,
             "Kp": -0.01
         }
     },
     "control_states": {
         "heater": {
             "desired_state": false,
-            "last_change": 1741460899.7927248,
-            "last_change_reason": "Temperature 24.506071090698242\u00b0C above upper bound 24.5\u00b0C"
+            "last_change": 1741695000.8260834,
+            "last_change_reason": "Temperature 25.510114669799805\u00b0C above upper bound 25.5\u00b0C"
         },
         "humidifier": {
             "desired_state": true,
-            "last_change": 1741454953.912961,
-            "last_change_reason": "Humidity 44.81939697265625% below lower bound 48.0% - PID: 0.00 - Burst duration: 2.0s"
+            "last_change": 1741606728.2793567,
+            "last_change_reason": "Humidity 72.8% below lower bound 73.0% - PID: 0.00 - Burst duration: 2.0s"
         }
     },
     "environment": {
@@ -57,10 +57,10 @@
                 "temp_setpoint": 19.0
             },
             "colonisation": {
-                "co2_setpoint": 700,
-                "rh_setpoint": 80.0,
+                "co2_setpoint": 10000,
+                "rh_setpoint": 75.0,
                 "temp_hysteresis": 0.5,
-                "temp_setpoint": 24.0
+                "temp_setpoint": 25.0
             },
             "growing": {
                 "co2_setpoint": 550,
@@ -71,8 +71,8 @@
         }
     },
     "fan": {
-        "manual_control": false,
-        "speed": 0.0
+        "manual_control": true,
+        "speed": 5
     },
     "humidifier": {
         "break_time": 180,

@@ -214,7 +214,7 @@
         function controlPanel() {
             return {
                 currentPhase: 'colonisation',
-                measurements: { temperature: '--', humidity: '--', co2: '--', fan_speed: '--' },
+                measurements: { temperature: '--', humidity: '--', co2: '--', fan_speed: '--', sensor_status: null },
                 setpoints: { temperature: 0, humidity: 0, co2: 0 },
                 pidSettings: { kp: 0, ki: 0, kd: 0 },
                 availableDevices: [],
@@ -231,6 +231,11 @@
                     terminal: false
                 },
                 initErrors: [],
+                fanControl: {
+                    manualMode: false,
+                    speed: 50
+                },
+                isRefreshing: false,
 
                 init() {
                     debugLog('Initializing control panel...');
@@ -332,6 +337,19 @@
                             this.pidSettings = { kp: -1.0, ki: -0.01, kd: 0.0 };
                         }
                         
+                        // Load fan control settings
+                        try {
+                            const fanSettings = data.fan || {};
+                            this.fanControl = {
+                                manualMode: !!fanSettings.manual_control,
+                                speed: parseFloat(fanSettings.speed || 50)
+                            };
+                            debugLog(`Loaded fan control settings: ${JSON.stringify(this.fanControl)}`);
+                        } catch (fanError) {
+                            debugLog(`Error loading fan control settings: ${fanError.message}`, 'error');
+                            this.fanControl = { manualMode: false, speed: 50 };
+                        }
+                        
                         // Set input values directly - make a direct DOM update
                         setTimeout(() => {
                             try {
@@ -378,7 +396,8 @@
                             co2: data.co2 ?? '--',
                             fan_speed: data.fan_speed ?? '--',
                             source: data.source || 'unknown',
-                            timestamp: data.timestamp
+                            timestamp: data.timestamp,
+                            sensor_status: data.sensor_status || null
                         };
                         
                         // Add visual indicator for data source
@@ -414,7 +433,8 @@
                         co2: data.co2 ?? this.measurements.co2,
                         fan_speed: data.fan_speed ?? this.measurements.fan_speed,
                         source: data.source || this.measurements.source,
-                        timestamp: data.timestamp || new Date().toISOString()
+                        timestamp: data.timestamp || new Date().toISOString(),
+                        sensor_status: data.sensor_status || this.measurements.sensor_status
                     };
                     
                     // Add visual indicator for data source
@@ -901,6 +921,131 @@
                 // Cleanup method
                 cleanup() {
                     // Terminal-related cleanup removed
+                },
+
+                // Refresh data function for the refresh button
+                async refreshData() {
+                    try {
+                        debugLog('Refreshing dashboard data...');
+                        
+                        // Set refreshing state
+                        this.isRefreshing = true;
+                        
+                        // Refresh measurements, setpoints, and devices in parallel
+                        await Promise.all([
+                            this.fetchMeasurements(),
+                            this.fetchSetpoints(),
+                            this.fetchDevices()
+                        ]);
+                        
+                        debugLog('Dashboard data refreshed successfully');
+                    } catch (error) {
+                        debugLog(`Error refreshing data: ${error.message}`, 'error');
+                    } finally {
+                        // Reset refreshing state
+                        this.isRefreshing = false;
+                    }
+                },
+
+                toggleManualFanControl() {
+                    debugLog(`Toggling manual fan control to: ${this.fanControl.manualMode}`);
+                    
+                    // If enabling manual mode, set the initial speed to the current fan speed
+                    if (this.fanControl.manualMode && this.measurements.fan_speed !== '--') {
+                        this.fanControl.speed = parseFloat(this.measurements.fan_speed);
+                    }
+                    
+                    // Update the settings on the server
+                    this.updateFanSettings();
+                },
+                
+                async updateFanSettings() {
+                    try {
+                        debugLog(`Updating fan settings - Manual mode: ${this.fanControl.manualMode}, Speed: ${this.fanControl.speed}%`);
+                        
+                        // Get current settings
+                        const response = await fetch('/api/settings?update_states=false');
+                        if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+                        
+                        const settings = await response.json();
+                        
+                        // Update fan settings
+                        if (!settings.fan) settings.fan = {};
+                        settings.fan.manual_control = this.fanControl.manualMode;
+                        settings.fan.speed = parseFloat(this.fanControl.speed);
+                        
+                        // Save updated settings
+                        const saveResponse = await fetch('/api/settings', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(settings)
+                        });
+                        
+                        if (!saveResponse.ok) {
+                            throw new Error(`Failed to save fan settings: HTTP error ${saveResponse.status}`);
+                        }
+                        
+                        debugLog(`Successfully updated fan settings`);
+                    } catch (error) {
+                        debugLog(`Error updating fan settings: ${error.message}`, 'error');
+                        alert(`Failed to update fan settings: ${error.message}`);
+                    }
+                },
+                
+                async updateManualFanSpeed() {
+                    if (!this.fanControl.manualMode) return;
+                    
+                    try {
+                        debugLog(`Setting fan speed to ${this.fanControl.speed}%`);
+                        
+                        // Clear any previous feedback
+                        const feedbackDiv = document.querySelector('#fan-speed-feedback');
+                        if (feedbackDiv) {
+                            feedbackDiv.textContent = '';
+                        }
+                        
+                        // Call the fan control API
+                        const response = await fetch('/api/fan/control', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ speed: parseFloat(this.fanControl.speed) })
+                        });
+                        
+                        if (!response.ok) {
+                            throw new Error(`Failed to set fan speed: HTTP error ${response.status}`);
+                        }
+                        
+                        const data = await response.json();
+                        debugLog(`Fan speed set successfully: ${data.message}`);
+                        
+                        // Show success message
+                        if (feedbackDiv) {
+                            feedbackDiv.textContent = data.message;
+                            feedbackDiv.className = 'mt-2 text-sm text-green-600';
+                            
+                            // Hide the message after 3 seconds
+                            setTimeout(() => {
+                                feedbackDiv.textContent = '';
+                            }, 3000);
+                        }
+                        
+                        // Also update the settings
+                        this.updateFanSettings();
+                    } catch (error) {
+                        debugLog(`Error setting fan speed: ${error.message}`, 'error');
+                        
+                        // Show error message
+                        const feedbackDiv = document.querySelector('#fan-speed-feedback');
+                        if (feedbackDiv) {
+                            feedbackDiv.textContent = `Error: ${error.message}`;
+                            feedbackDiv.className = 'mt-2 text-sm text-red-600';
+                            
+                            // Hide the message after 5 seconds
+                            setTimeout(() => {
+                                feedbackDiv.textContent = '';
+                            }, 5000);
+                        }
+                    }
                 }
             };
         }
@@ -972,6 +1117,23 @@
             100% { transform: rotate(360deg); }
         }
         
+        /* Toggle Switch Styles */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #3b82f6;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #3b82f6;
+        }
+        .toggle-checkbox {
+            right: 0;
+            z-index: 5;
+            transition: all 0.3s;
+        }
+        .toggle-label {
+            transition: background-color 0.3s;
+        }
+        
         /* Safari-specific adjustments */
         .safari-browser input[type="number"] {
             -webkit-appearance: none;
@@ -1005,6 +1167,43 @@
                 <a href="/logging" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
                     Logging Control
                 </a>
+            </div>
+        </div>
+
+        <!-- Dashboard Header -->
+        <div class="bg-white shadow rounded-lg p-4 mb-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800">Shroombox Dashboard</h1>
+                    <p class="text-gray-600">Current phase: <span x-text="currentPhase" class="font-medium"></span></p>
+                </div>
+                
+                <!-- Sensor Status Alert - Warning (when not working) -->
+                <div id="sensor-status-container"
+                     x-show="measurements.sensor_status && !measurements.sensor_status.available" 
+                     class="mt-4 md:mt-0 p-2 bg-yellow-100 border border-yellow-400 text-yellow-700 rounded flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                    </svg>
+                    <span id="sensor-status-message" x-text="measurements.sensor_status ? measurements.sensor_status.message : ''"></span>
+                </div>
+                
+                <!-- Sensor Status Alert - Success (when working) -->
+                <div id="sensor-status-success"
+                     x-show="measurements.sensor_status && measurements.sensor_status.available" 
+                     class="mt-4 md:mt-0 p-2 bg-green-100 border border-green-400 text-green-700 rounded flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                    </svg>
+                    <span id="sensor-status-success-message" x-text="measurements.sensor_status && measurements.sensor_status.available ? 'Sensor connected and working properly' : ''"></span>
+                </div>
+                
+                <div class="mt-4 md:mt-0">
+                    <button @click="refreshData" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded shadow">
+                        <span x-show="!isRefreshing">Refresh</span>
+                        <span x-show="isRefreshing">Refreshing...</span>
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -1145,12 +1344,51 @@
                             type="number" 
                             class="block w-24 rounded-md border border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 p-2"
                             step="100"
-                            min="0"
-                            max="20000"
+                            min="400"
+                            max="10000"
                             :value="setpoints.co2"
-                            @input="setpoints.co2 = parseInt($el.value)"
+                            @input="setpoints.co2 = Math.min(10000, Math.max(400, parseInt($el.value) || 400))"
                             @change="updateSetpoint('co2')"
                         >
+                        <p class="text-xs text-gray-500 mt-1">Range: 400-10,000 ppm</p>
+                    </div>
+                    
+                    <!-- Manual Fan Control -->
+                    <div class="mt-4 border-t pt-4">
+                        <div class="flex items-center mb-2">
+                            <label class="block text-sm font-medium text-gray-700 mr-2">Manual Fan Control:</label>
+                            <div class="relative inline-block w-10 mr-2 align-middle select-none">
+                                <input 
+                                    type="checkbox" 
+                                    id="manual-fan-toggle" 
+                                    x-model="fanControl.manualMode"
+                                    @change="toggleManualFanControl"
+                                    class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
+                                />
+                                <label 
+                                    for="manual-fan-toggle" 
+                                    class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
+                                ></label>
+                            </div>
+                            <span class="text-sm text-gray-600" x-text="fanControl.manualMode ? 'Enabled' : 'Disabled'"></span>
+                        </div>
+                        
+                        <div x-show="fanControl.manualMode" class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-700">Fan Speed (%)</label>
+                            <div class="flex items-center space-x-2">
+                                <input 
+                                    type="range" 
+                                    min="0" 
+                                    max="100" 
+                                    step="1" 
+                                    x-model="fanControl.speed"
+                                    @change="updateManualFanSpeed"
+                                    class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                                />
+                                <span class="text-sm font-medium w-10 text-right" x-text="fanControl.speed + '%'"></span>
+                            </div>
+                            <div id="fan-speed-feedback" class="mt-2 text-sm"></div>
+                        </div>
                     </div>
                 </div>
 

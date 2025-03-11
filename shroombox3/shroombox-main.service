@@ -12,7 +12,8 @@ Environment=PATH=/home/danny/Github/shroombox/shroombox3/venv/bin:/usr/local/bin
 Environment=PYTHONPATH=/home/danny/Github/shroombox/shroombox3
 EnvironmentFile=/home/danny/Github/shroombox/shroombox3/.env
 ExecStart=/home/danny/Github/shroombox/shroombox3/venv/bin/python main.py
-# Restart=always
+Restart=on-failure
+RestartSec=10
 StandardOutput=append:/var/log/shroombox/main.log
 StandardError=append:/var/log/shroombox/main.log
 

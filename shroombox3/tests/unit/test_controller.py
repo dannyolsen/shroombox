@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Test script for the SCD30 controller.
-This script tests the SCD30Controller class.
+This script tests the deprecated SCD30Controller class.
 """
 
 import os
@@ -16,7 +16,9 @@ parent_dir = os.path.dirname(os.path.dirname(current_dir))  # Go up two levels
 sys.path.insert(0, parent_dir)
 
 # Import from project
-from devices.sensor import SCD30Controller
+# Note: This imports the deprecated controller for testing purposes only
+sys.path.insert(0, os.path.join(parent_dir, 'deprecated'))
+from deprecated.sensor import SCD30Controller
 from utils import logging_setup
 
 # Set up logging
@@ -24,8 +26,8 @@ logging_setup.setup_logging()
 logger = logging_setup.get_logger('test_controller')
 
 async def test_controller():
-    """Test the modified SCD30Controller class"""
-    print("Initializing SCD30Controller...")
+    """Test the deprecated SCD30Controller class"""
+    print("Initializing SCD30Controller (DEPRECATED)...")
     controller = SCD30Controller()
     
     print("Waiting for sensor to warm up...")

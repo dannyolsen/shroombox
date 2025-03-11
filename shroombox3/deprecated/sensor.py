@@ -4,6 +4,20 @@ Manages the SCD30 CO2, temperature, and humidity sensor.
 
 DEPRECATED: This implementation is deprecated and will be removed in a future version.
 Please use the SimpleSCD30Controller from devices.simple_sensor instead.
+
+############################################################################
+#                                                                          #
+#  WARNING: THIS FILE IS DEPRECATED                                        #
+#                                                                          #
+#  This sensor implementation has been replaced by SimpleSCD30Controller   #
+#  in the devices/simple_sensor.py file.                                   #
+#                                                                          #
+#  Please use SimpleSCD30Controller for all new code.                      #
+#                                                                          #
+#  This file is kept for backward compatibility but will be removed        #
+#  in a future version.                                                    #
+#                                                                          #
+############################################################################
 """
 
 import logging

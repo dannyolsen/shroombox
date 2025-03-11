@@ -7,6 +7,7 @@ import os
 import time
 import asyncio
 import logging
+import json
 from typing import Optional, Dict, Any, Tuple
 from datetime import datetime
 
@@ -131,16 +132,20 @@ class DeviceManager:
         """
         return await self.settings_manager.save_settings(settings)
     
-    async def set_fan_speed(self, speed: float) -> None:
+    async def set_fan_speed(self, speed: float) -> bool:
         """
         Set fan speed and update settings.
         
         Args:
             speed: Fan speed percentage (0-100)
+            
+        Returns:
+            bool: True if successful, False otherwise
         """
         async with self._fan_lock:
             try:
                 # Set fan speed
+                logger.info(f"Setting fan speed to {speed}%")
                 self.fan.set_speed(speed)
                 self.fan_percentage = speed
                 
@@ -158,11 +163,18 @@ class DeviceManager:
                     
                     success = await self.settings_manager.update_settings(updates)
                     if success:
-                        logger.debug(f"Updated fan speed in settings to {speed}%")
+                        logger.info(f"Updated fan speed in settings to {speed}%")
                     else:
                         logger.error("Failed to save settings with updated fan speed")
+                
+                # Verify the fan speed was set correctly
+                actual_speed = self.fan.get_speed()
+                logger.info(f"Fan speed verification: set={speed}%, actual={actual_speed}%")
+                
+                return True
             except Exception as e:
                 logger.error(f"Error setting fan speed: {e}")
+                return False
     
     def get_fan_speed(self) -> float:
         """
@@ -220,41 +232,53 @@ class DeviceManager:
         return self.fan.get_cpu_temp()
     
     async def get_measurements(self) -> Optional[Tuple[float, float, float]]:
-        """
-        Get measurements from the sensor.
-        
-        Returns:
-            Optional[Tuple[float, float, float]]: (CO2, temperature, humidity) or None if failed
-        """
-        async with self._sensor_lock:
-            # Try to get fresh measurements from the sensor
-            measurements = await self.sensor.get_measurements()
+        """Get measurements from the sensor or fallback to measurements.json file."""
+        try:
+            # Try to get measurements from the sensor first
+            if self.sensor and self.sensor.is_initialized:
+                measurements = await self.sensor.get_measurements()
+                if measurements:
+                    return measurements
             
-            # If we got valid measurements, update the cache
-            if measurements is not None:
-                co2, temp, rh = measurements
-                self._measurement_cache['co2'] = co2
-                self._measurement_cache['temperature'] = temp
-                self._measurement_cache['humidity'] = rh
-                self._measurement_cache['timestamp'] = time.time()
-                logger.debug(f"Updated measurement cache with fresh data: CO2={co2}, Temp={temp}, RH={rh}")
-                return measurements
+            # If sensor measurements failed or sensor is not initialized, try reading from measurements.json
+            logger.info("Sensor measurements not available, falling back to measurements.json file")
             
-            # If no fresh measurements, check if we have valid cached data
-            if self._measurement_cache['timestamp'] is not None:
-                # Check if cache is still valid
-                cache_age = time.time() - self._measurement_cache['timestamp']
-                if cache_age < self._measurement_cache['cache_ttl']:
-                    logger.debug(f"Using cached measurements (age: {cache_age:.1f}s)")
-                    return (
-                        self._measurement_cache['co2'],
-                        self._measurement_cache['temperature'],
-                        self._measurement_cache['humidity']
-                    )
-                else:
-                    logger.debug(f"Cached measurements expired (age: {cache_age:.1f}s)")
+            # Find the measurements.json file
+            script_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            measurements_file = os.path.join(script_dir, 'data', 'measurements.json')
             
-            # No valid measurements available
+            if os.path.exists(measurements_file):
+                try:
+                    with open(measurements_file, 'r') as f:
+                        data = json.load(f)
+                        
+                    # Extract measurements
+                    co2 = float(data.get('co2', 0))
+                    temp = float(data.get('temperature', 0))
+                    rh = float(data.get('humidity', 0))
+                    
+                    # Validate measurements
+                    if co2 <= 0 or temp <= 0 or rh <= 0:
+                        logger.warning(f"Invalid measurements from file: CO2={co2}, Temp={temp}, RH={rh}")
+                        return None
+                    
+                    # Cap extremely high CO2 readings
+                    if co2 > 5000:
+                        logger.warning(f"CO2 value unusually high: {co2} ppm - capping to 5000 ppm")
+                        co2 = 5000.0
+                    
+                    logger.info(f"Using measurements from file: CO2={co2:.1f}ppm, Temp={temp:.1f}°C, RH={rh:.1f}%")
+                    return co2, temp, rh
+                    
+                except Exception as e:
+                    logger.error(f"Error reading measurements from file: {e}")
+            else:
+                logger.warning(f"Measurements file not found: {measurements_file}")
+            
+            return None
+            
+        except Exception as e:
+            logger.error(f"Error getting measurements: {e}")
             return None
             
     async def get_cached_measurements(self) -> Dict[str, Any]:

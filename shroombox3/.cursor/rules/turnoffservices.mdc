@@ -6,4 +6,5 @@ alwaysApply: false
 
 # Your rule content
 
-- when creating services they should only restart on-failure and NOT restart always
+- when creating services they should only restart on-failure
+- when making implementations to the project always determine if we need to restart services in order so verify if changes are working. If services need to be restarted restart them

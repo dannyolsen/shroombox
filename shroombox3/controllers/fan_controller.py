@@ -106,6 +106,21 @@ class FanController:
         """
         current_time = time.time()
         
+        # Check if manual control is enabled
+        try:
+            # Get the manual control setting directly without using asyncio.run()
+            # This is safe because we're just reading a cached value
+            settings = self.settings_manager.get_cached_settings()
+            manual_control = settings.get('fan', {}).get('manual_control', False)
+            
+            if manual_control:
+                # If manual control is enabled, just return the current fan speed
+                logger.info("Manual fan control is enabled, skipping PID control")
+                return self.fan_percentage
+        except Exception as e:
+            logger.error(f"Error checking manual control setting: {e}")
+            # Continue with PID control if we can't check the setting
+        
         # Calculate time delta since last update (in seconds)
         dt = current_time - self.last_co2_control_time
         

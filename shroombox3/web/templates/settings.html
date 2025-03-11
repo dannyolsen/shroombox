@@ -121,6 +121,102 @@
                         .replace(/_/g, ' ')
                         .replace(/([A-Z])/g, ' $1')
                         .replace(/^./, str => str.toUpperCase());
+                },
+                
+                // Special handler for fan speed to ensure it's saved as a number
+                updateFanSpeed(value) {
+                    // Convert to number and handle NaN
+                    const numValue = parseFloat(value);
+                    if (isNaN(numValue)) {
+                        this.settings.fan.speed = 0;
+                    } else {
+                        this.settings.fan.speed = numValue;
+                    }
+                    console.log("Fan speed updated to:", this.settings.fan.speed);
+                },
+                
+                // Toggle fan manual control
+                toggleFanManualControl() {
+                    this.settings.fan.manual_control = !this.settings.fan.manual_control;
+                    console.log("Fan manual control toggled to:", this.settings.fan.manual_control);
+                },
+                
+                // Handle keypress events for inputs
+                handleKeypress(event, callback) {
+                    // Check if Enter key was pressed
+                    if (event.key === 'Enter') {
+                        callback();
+                    }
+                },
+                
+                // Update a specific setpoint and save immediately
+                async updateSetpoint(phase, type, value) {
+                    try {
+                        console.log(`Updating ${type} setpoint for ${phase} phase to ${value}...`);
+                        
+                        // Validate the value
+                        if (value === undefined || value === null || isNaN(value)) {
+                            throw new Error(`Invalid ${type} value: ${value}`);
+                        }
+                        
+                        // Create field mapping
+                        const fieldMapping = {
+                            'temperature': 'temp_setpoint',
+                            'humidity': 'rh_setpoint',
+                            'co2': 'co2_setpoint'
+                        };
+                        
+                        // Get the correct field name
+                        const fieldName = fieldMapping[type];
+                        if (!fieldName) {
+                            throw new Error(`Unknown setpoint type: ${type}`);
+                        }
+                        
+                        // Update the setpoint in the settings object with validation
+                        if (type === 'co2') {
+                            // Enforce CO2 limits between 400 and 10,000 ppm
+                            const co2Value = parseInt(value);
+                            if (co2Value < 400) {
+                                console.warn(`CO2 setpoint ${co2Value} is below minimum (400). Setting to 400.`);
+                                this.settings.environment.phases[phase][fieldName] = 400;
+                            } else if (co2Value > 10000) {
+                                console.warn(`CO2 setpoint ${co2Value} is above maximum (10,000). Setting to 10,000.`);
+                                this.settings.environment.phases[phase][fieldName] = 10000;
+                            } else {
+                                this.settings.environment.phases[phase][fieldName] = co2Value;
+                            }
+                        } else {
+                            this.settings.environment.phases[phase][fieldName] = parseFloat(value);
+                        }
+                        
+                        // Show saving indicator
+                        this.saveMessage = `Saving ${type} setpoint...`;
+                        
+                        // Save updated settings
+                        const saveResponse = await fetch('/api/settings', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(this.settings)
+                        });
+                        
+                        if (!saveResponse.ok) {
+                            throw new Error(`Failed to save ${type} setpoint: HTTP error ${saveResponse.status}`);
+                        }
+                        
+                        // Show success message
+                        this.saveMessage = `${type.charAt(0).toUpperCase() + type.slice(1)} setpoint updated successfully`;
+                        setTimeout(() => {
+                            this.saveMessage = '';
+                        }, 3000);
+                        
+                        console.log(`Successfully updated ${type} setpoint to ${value}`);
+                    } catch (error) {
+                        console.error(`Error updating ${type} setpoint:`, error);
+                        this.saveError = `Failed to save ${type} setpoint: ${error.message}`;
+                        setTimeout(() => {
+                            this.saveError = '';
+                        }, 5000);
+                    }
                 }
             };
         }
@@ -167,6 +263,58 @@
                     </span>
                     <span x-text="isSaving ? 'Saving...' : 'Save Settings'"></span>
                 </button>
+            </div>
+            
+            <!-- Special Fan Controls Section -->
+            <div x-show="settings && settings.fan" class="bg-white rounded-lg shadow-sm overflow-hidden">
+                <div 
+                    @click="toggleSection('fan')"
+                    class="p-4 bg-gray-50 flex justify-between items-center cursor-pointer hover:bg-gray-100"
+                >
+                    <h2 class="text-lg font-medium text-gray-800">Fan Controls</h2>
+                    <svg 
+                        class="h-5 w-5 text-gray-500 transition-transform duration-200" 
+                        :class="{'transform rotate-180': expandedSections['fan']}"
+                        xmlns="http://www.w3.org/2000/svg" 
+                        viewBox="0 0 20 20" 
+                        fill="currentColor"
+                    >
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                
+                <div x-show="expandedSections['fan']" class="p-4 border-t border-gray-200">
+                    <div class="space-y-4">
+                        <!-- Manual Control Toggle -->
+                        <div class="flex flex-col space-y-1">
+                            <label class="block text-sm font-medium text-gray-700">Manual Control</label>
+                            <div class="flex items-center">
+                                <input 
+                                    type="checkbox" 
+                                    class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                                    :checked="settings.fan.manual_control"
+                                    @change="toggleFanManualControl()"
+                                >
+                                <span class="ml-2 text-sm text-gray-600" x-text="settings.fan.manual_control ? 'Enabled' : 'Disabled'"></span>
+                            </div>
+                        </div>
+                        
+                        <!-- Fan Speed Input -->
+                        <div class="flex flex-col space-y-1">
+                            <label class="block text-sm font-medium text-gray-700">Fan Speed (%)</label>
+                            <input 
+                                type="number" 
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                :value="settings.fan.speed"
+                                @input="updateFanSpeed($event.target.value)"
+                                min="0"
+                                max="100"
+                                step="0.1"
+                            >
+                            <p class="text-xs text-gray-500 mt-1">Set the fan speed percentage (0-100)</p>
+                        </div>
+                    </div>
+                </div>
             </div>
             
             <!-- Settings Sections -->
@@ -242,7 +390,19 @@
                                                                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                                                                     x-model="settings[key][subKey][nestedKey]"
                                                                     :step="typeof nestedValue === 'number' && String(nestedValue).includes('.') ? '0.1' : '1'"
+                                                                    :min="nestedKey === 'co2_setpoint' ? 400 : undefined"
+                                                                    :max="nestedKey === 'co2_setpoint' ? 10000 : undefined"
+                                                                    @keypress="key === 'environment' && subKey === 'phases' && 
+                                                                        (nestedKey === 'temp_setpoint' || nestedKey === 'rh_setpoint' || nestedKey === 'co2_setpoint') ? 
+                                                                        handleKeypress($event, () => {
+                                                                            const type = nestedKey === 'temp_setpoint' ? 'temperature' : 
+                                                                                        nestedKey === 'rh_setpoint' ? 'humidity' : 'co2';
+                                                                            updateSetpoint(itemKey, type, settings[key][subKey][itemKey][nestedKey]);
+                                                                        }) : null"
                                                                 >
+                                                                <template x-if="nestedKey === 'co2_setpoint'">
+                                                                    <p class="text-xs text-gray-500 mt-1">Valid range: 400-10,000 ppm</p>
+                                                                </template>
                                                             </template>
                                                         </div>
                                                     </template>
