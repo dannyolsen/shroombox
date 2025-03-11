@@ -1,9 +1,9 @@
 {
-  "co2": 669,
+  "co2": 674,
   "temperature": 21.9,
   "humidity": 51.8,
   "fan_speed": 5.0,
   "source": "sensor",
-  "timestamp": "2025-03-11T14:40:22.010538",
-  "unix_timestamp": 1741700422.0105672
+  "timestamp": "2025-03-11T14:47:44.294812",
+  "unix_timestamp": 1741700864.2948334
 }
