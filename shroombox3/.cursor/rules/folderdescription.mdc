@@ -1,8 +1,9 @@
 ---
-description: 
+description: place folder description files in each folder
 globs: 
 alwaysApply: false
 ---
+
 # Folder Description Guidelines
 
 This rule ensures consistent documentation of the project's folder structure.
@@ -55,3 +56,7 @@ Files in this directory follow these naming conventions:
 - Create a folder description file in every directory, even if it seems obvious
 - Update folder descriptions when adding new file types or changing conventions
 - Reference the folder description in code comments when appropriate
+
+# Your rule content
+
+- place folder description files in each folder and give the descriptionfiles a name so they will be the first file to be shown in the folder when sorted alfabetically. I would think like 1FOLDER_DESCRIPTION fx

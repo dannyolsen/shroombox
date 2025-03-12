@@ -1,8 +1,9 @@
 ---
-description: 
+description: documentation
 globs: 
 alwaysApply: false
 ---
+
 # Documentation Guidelines
 
 This rule ensures comprehensive and up-to-date documentation throughout the Shroombox project.

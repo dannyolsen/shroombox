@@ -1,0 +1,58 @@
+# SHROOMBOX PROJECT TODO LIST
+
+## HIGH PRIORITY
+[ ] Fix SCD30 sensor initialization errors
+    - Investigate [Errno 121] Remote I/O error
+    - Check sensor wiring and connections
+    - Test with alternative I2C address
+
+[ ] Resolve environment controller initialization issue
+    - Fix "EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'" error
+    - Update controller initialization parameters
+
+[ ] Improve error handling for sensor failures
+    - Implement better fallback mechanisms
+    - Add automatic recovery procedures
+    - Improve notification system for persistent failures
+
+## MEDIUM PRIORITY
+[ ] Optimize fan control algorithm
+    - Reduce oscillation in fan speed
+    - Implement smoother transitions between speeds
+    - Add adaptive control based on environmental conditions
+
+[ ] Add data visualization improvements to web interface
+    - Create historical data charts
+    - Add trend analysis
+    - Implement customizable dashboard
+
+[ ] Implement better logging for troubleshooting
+    - Add log rotation
+    - Improve log message clarity
+    - Create log analysis tools
+
+## LOW PRIORITY
+[ ] Add documentation for new features
+    - Update README.md
+    - Create user guide
+    - Document API endpoints
+
+[ ] Clean up unused code
+    - Remove deprecated functions
+    - Consolidate duplicate code
+    - Improve code organization
+
+[ ] Improve test coverage
+    - Add unit tests for core components
+    - Implement integration tests
+    - Create automated test pipeline
+
+## COMPLETED TASKS
+[x] Set up basic monitoring system
+[x] Implement web interface
+[x] Configure systemd services
+
+## NOTES
+- Update this list regularly
+- Mark tasks as [x] when completed
+- Add new tasks as they are identified 

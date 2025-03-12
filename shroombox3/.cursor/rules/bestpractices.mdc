@@ -1,8 +1,9 @@
 ---
-description: 
+description: make code always suggest best practices to optimize and maintain code and preserve stability
 globs: 
 alwaysApply: false
 ---
+
 # Best Practices
 
 This rule ensures code quality, maintainability, and stability throughout the Shroombox project.
@@ -51,4 +52,4 @@ def save_measurements(data, filepath):
         if os.path.exists(temp_file):
             os.remove(temp_file)
         raise
-```
+

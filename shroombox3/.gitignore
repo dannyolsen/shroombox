@@ -1,6 +1,7 @@
 # Ignore log files
 logs/*.log
 logs/*.log.*
+logs/web/web_errors.log
 
 # Python bytecode files
 __pycache__/
@@ -32,7 +33,9 @@ shroombox3.code-workspace
 # Backup files
 *.bak
 
+# Data files
+data/measurements.json
+scripts/data/measurements.json
 
-
-shroombox3/data/measurements.json
-shroombox3/scripts/data/measurements.json
+# Test files
+test_gitignore_file.tmp
