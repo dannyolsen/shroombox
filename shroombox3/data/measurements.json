@@ -4,6 +4,6 @@
   "humidity": 100.0,
   "fan_speed": 100.0,
   "source": "sensor",
-  "timestamp": "2025-03-12T13:29:07.058173",
-  "unix_timestamp": 1741782547.0581968
+  "timestamp": "2025-03-12T13:35:02.839497",
+  "unix_timestamp": 1741782902.8395185
 }
