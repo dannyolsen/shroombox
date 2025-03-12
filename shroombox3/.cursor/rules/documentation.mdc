@@ -1,11 +1,51 @@
 ---
-description: documentation
+description: 
 globs: 
 alwaysApply: false
 ---
+# Documentation Guidelines
 
-# Your rule content
+This rule ensures comprehensive and up-to-date documentation throughout the Shroombox project.
 
-- remember to document project so its easy to understand how folders and files are meant to be used
-- keep these documents up to date
-- update these files if there have been made additions to the project or somethings has changed
+## Documentation Types
+
+### Folder Documentation
+- Each folder must have a `1FOLDER_DESCRIPTION.md` file explaining:
+  - The purpose of the folder
+  - What types of files belong there
+  - How the files in the folder relate to the overall system
+  - Any naming conventions specific to that folder
+
+### Code Documentation
+- Use docstrings for all modules, classes, and functions
+- Include parameter descriptions, return values, and exceptions raised
+- Document complex algorithms with explanations of the approach
+- Add inline comments for non-obvious code sections
+
+### System Documentation
+- Maintain a comprehensive README.md at the project root
+- Include setup instructions, dependencies, and usage examples
+- Document the system architecture and component interactions
+- Provide troubleshooting guides for common issues
+
+## Maintenance Guidelines
+- Update documentation whenever code functionality changes
+- Review documentation for accuracy during code reviews
+- Keep the todo.txt file updated with current tasks and progress
+- Document API endpoints with expected inputs and outputs
+
+## Example Docstring Format
+```python
+def get_measurements():
+    """
+    Retrieve current sensor measurements.
+    
+    Returns:
+        tuple: A tuple containing (co2_ppm, temperature_celsius, humidity_percent)
+              or None if measurements could not be obtained
+    
+    Raises:
+        SensorConnectionError: If the sensor cannot be reached
+        CalibrationError: If the sensor is not properly calibrated
+    """
+```

@@ -30,7 +30,7 @@ sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
 # Import the components we want to test
 from managers.device_manager import DeviceManager
-from controllers.environment_controller import EnvironmentController
+from managers.environment_controller import EnvironmentController
 
 # Global flag for shutdown
 shutdown_requested = False

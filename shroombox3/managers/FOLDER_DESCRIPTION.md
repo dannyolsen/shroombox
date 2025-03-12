@@ -1,77 +1,42 @@
-# Managers Directory
+# Controllers
 
-This directory contains manager classes that coordinate between devices and services in the Shroombox project. These managers handle higher-level functionality by orchestrating multiple devices and providing interfaces for the application logic.
+This directory contains controller classes for various subsystems of the Shroombox project. Controllers are responsible for implementing control logic for specific hardware components or environmental parameters.
 
 ## Files
 
-- `__init__.py`: Exports the manager classes and provides package initialization
-- `device_manager.py`: Manages all devices in the system
-- `env_manager.py`: Manages environmental conditions (temperature, humidity, CO2)
-- `influxdb_manager.py`: Manages data storage and retrieval with InfluxDB
-- `settings_manager.py`: Manages application settings and configuration
+- `__init__.py`: Package initialization file that exports controller classes
+- `fan_controller.py`: Controller for fan speed based on CO2 levels using PID control
 
-## Manager Classes
+## Controllers
 
-### Device Manager
-The `device_manager.py` file defines the `DeviceManager` class that:
-- Initializes and manages all hardware devices
-- Provides a unified interface for device control
-- Handles device errors and recovery
-- Maintains device status information
+### FanController
 
-### Environment Manager
-The `env_manager.py` file defines the `EnvironmentManager` class that:
-- Monitors environmental conditions (temperature, humidity, CO2)
-- Controls devices to maintain optimal growing conditions
-- Implements environmental control algorithms
-- Provides alerts for out-of-range conditions
+The `FanController` class in `fan_controller.py` implements PID control for the fan based on CO2 readings. It handles:
 
-### InfluxDB Manager
-The `influxdb_manager.py` file defines the `InfluxDBManager` class that:
-- Connects to the InfluxDB time-series database
-- Stores sensor readings and device states
-- Retrieves historical data for analysis
-- Provides data aggregation and querying capabilities
+- Initialization of PID controller with parameters from settings
+- CO2 control logic using PID algorithm
+- Synchronization of fan speed with settings.json
+- Updating PID parameters and setpoints
 
-### Settings Manager
-The `settings_manager.py` file defines the `SettingsManager` class that:
-- Loads and saves application settings
-- Provides interfaces for modifying settings
-- Validates setting values
-- Handles setting persistence
+The controller uses a negative PID control loop (higher CO2 → higher fan speed) to maintain CO2 levels at the desired setpoint by controlling the exhaust fan.
 
-## Usage Examples
+## Usage
+
+Controllers are typically instantiated by the main `EnvironmentController` class and used to delegate specific control tasks. For example:
 
 ```python
-# Example: Using the DeviceManager
-from managers import DeviceManager
+# Create a fan controller
+fan_controller = FanController(
+    fan=fan_instance,
+    settings_manager=settings_manager_instance,
+    set_fan_speed_callback=device_manager.set_fan_speed
+)
 
-device_manager = DeviceManager()
-device_manager.initialize_devices()
-sensor = device_manager.get_device('co2_sensor')
-fan = device_manager.get_device('exhaust_fan')
+# Initialize from settings
+await fan_controller.initialize_from_settings(settings)
 
-# Example: Using the EnvironmentManager
-from managers import EnvironmentManager
-
-env_manager = EnvironmentManager()
-env_manager.start_monitoring()
-current_conditions = env_manager.get_current_conditions()
-print(f"CO2: {current_conditions['co2']}ppm")
-
-# Example: Using the InfluxDBManager
-from managers import InfluxDBManager
-
-db_manager = InfluxDBManager()
-db_manager.connect()
-db_manager.write_measurement('co2', 800)
-data = db_manager.query_measurements('co2', start='-1h')
+# Update CO2 control
+fan_controller.update_co2_control(co2_value)
 ```
 
-## Adding New Managers
-
-When adding new manager classes:
-1. Create a new file for the manager type
-2. Implement the required functionality
-3. Add the new class to `__init__.py` for easy importing
-4. Ensure the manager integrates with existing managers as needed 
+This modular approach allows for better separation of concerns and more maintainable code. 

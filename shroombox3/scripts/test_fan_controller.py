@@ -16,7 +16,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from devices.fan import NoctuaFan
 from managers.settings_manager import SettingsManager
-from controllers.fan_controller import FanController
+from managers.fan_controller import FanController
 
 # Set up logging
 logging.basicConfig(

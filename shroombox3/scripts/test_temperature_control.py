@@ -17,7 +17,7 @@ parent_dir = os.path.dirname(current_dir)
 sys.path.insert(0, parent_dir)
 
 # Import our modules
-from controllers.temperature_controller import TemperatureController
+from managers.temperature_controller import TemperatureController
 from managers.device_manager import DeviceManager
 
 # Create logs directory if it doesn't exist

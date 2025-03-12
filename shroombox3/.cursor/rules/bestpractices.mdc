@@ -1,10 +1,54 @@
 ---
-description: make code always suggest best practices to optimize and maintain code and preserve stability
+description: 
 globs: 
 alwaysApply: false
 ---
+# Best Practices
 
-# Your rule content
-- suggest best practices for better file structure and maintenance and code stability
-- make use of managers singleton style if it makes sense
+This rule ensures code quality, maintainability, and stability throughout the Shroombox project.
 
+## Code Structure
+- Use the singleton pattern for managers (DeviceManager, SettingsManager, etc.)
+- Implement proper error handling with specific exceptions and meaningful error messages
+- Follow PEP 8 style guidelines for Python code
+- Keep functions focused on a single responsibility
+- Use type hints to improve code readability and IDE support
+
+## File Organization
+- Group related functionality in appropriate directories
+- Use consistent naming conventions (as defined in FOLDER_DESCRIPTION files)
+- Avoid duplicate code and files across the project
+- Maintain a clear separation between core functionality and utilities
+
+## Performance & Stability
+- Cache expensive operations when appropriate
+- Implement timeouts for network operations
+- Use atomic file operations when writing to configuration or data files
+- Add graceful degradation when components fail (e.g., sensor fallbacks)
+- Include logging at appropriate levels for debugging and monitoring
+
+## Examples
+```python
+# Good: Singleton pattern for managers
+class DeviceManager:
+    _instance = None
+    
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super(DeviceManager, cls).__new__(cls)
+            cls._instance.initialize()
+        return cls._instance
+        
+# Good: Atomic file writing
+def save_measurements(data, filepath):
+    temp_file = f"{filepath}.tmp"
+    try:
+        with open(temp_file, 'w') as f:
+            json.dump(data, f, indent=2)
+        os.replace(temp_file, filepath)  # Atomic operation
+    except Exception as e:
+        logger.error(f"Failed to save measurements: {e}")
+        if os.path.exists(temp_file):
+            os.remove(temp_file)
+        raise
+```

@@ -1,4 +1,0 @@
-Environment=INFLUXDB_URL=http://localhost:8086
-Environment=INFLUXDB_TOKEN=c2Rv1eicxKISzPKmJQO8bwwdvgWWBqdVc-5sYJMffEqUG_GTMnmITLCHq-AES_p0la3Fyb5QRHAxwKJ7T6f2Rg==
-Environment=INFLUXDB_ORG=supershrooms
-Environment=INFLUXDB_BUCKET=test

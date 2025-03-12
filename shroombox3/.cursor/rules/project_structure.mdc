@@ -1,0 +1,132 @@
+---
+description: maintain consistent folder structure across the project
+globs: 
+alwaysApply: false
+---
+
+# Project Structure Guidelines
+
+This rule ensures consistent organization of the Shroombox project codebase to help maintain consistency and make it easier to find files.
+
+## Project Structure Diagram
+
+```
+shroombox/
+├── config/             # Configuration files
+├── devices/            # Hardware device interfaces
+│   ├── __init__.py
+│   ├── base.py         # Base device interface
+│   ├── fan.py          # Noctua PWM fan controller
+│   ├── sensor.py       # SCD30 CO2 sensor controller
+│   └── smart_plug.py   # Tapo smart plug controller
+├── logs/               # Log files
+├── managers/           # High-level managers
+│   ├── __init__.py
+│   ├── device_manager.py   # Manages all hardware devices
+│   └── settings_manager.py # Handles configuration
+├── scripts/            # Utility scripts
+│   ├── run_tests.sh    # Script to run all tests
+│   └── run_web.sh      # Script to run the web server
+├── tests/              # Test files
+│   ├── integration/    # Integration tests
+│   └── unit/           # Unit tests
+├── utils/              # Utility functions
+│   ├── __init__.py
+│   ├── logging_setup.py    # Logging configuration
+│   └── singleton.py        # Singleton pattern implementation
+├── web/                # Web interface
+│   ├── static/         # Static files (CSS, JS, etc.)
+│   ├── templates/      # HTML templates
+│   └── web_server.py   # Web server implementation
+├── data/               # Data storage
+├── main.py             # Main application entry point
+└── README.md           # Project documentation
+```
+
+## Top-Level Directories
+
+- **`devices/`**: Device controller classes for hardware components
+  - All hardware devices should implement the `Device` interface defined in `devices/base.py`
+  - Examples: NoctuaFan, SCD30Controller, TapoController
+
+- **`managers/`**: Manager classes that coordinate between devices and services
+  - Should follow the singleton pattern
+  - Examples: DeviceManager, SettingsManager
+
+- **`utils/`**: Utility functions and helper classes
+  - General-purpose code used across the project
+  - Examples: logging setup, singleton implementation
+
+- **`web/`**: Web interface and API
+  - Contains the web server, templates, and static assets
+  - Organized into static/, templates/, and server implementation
+
+- **`config/`**: Configuration files
+  - JSON, YAML, or other configuration formats
+
+- **`data/`**: Data storage
+  - Persistent data, databases, and cached information
+
+- **`logs/`**: Log files
+  - Application logs organized by date or component
+
+- **`scripts/`**: Utility scripts and tools
+  - Scripts meant to be run directly
+
+- **`tests/`**: Automated tests
+  - Unit and integration tests
+
+## Scripts Directory
+
+The `scripts/` directory contains utility scripts and tools that are meant to be run directly. These scripts should follow these naming conventions:
+
+### Naming Conventions
+
+- **`util_*.py`**: Utility scripts for system administration and maintenance
+- **`test_*.py`**: Test scripts for testing specific components
+- **`calibrate_*.py`**: Calibration scripts for sensors and devices
+- **`run_*.sh`**: Shell scripts for running services or components
+- **`install_*.sh`**: Installation scripts
+
+### Categories of Scripts
+
+1. **Utility Scripts**: Tools for system administration and maintenance
+   - Example: `util_find_tapo_devices.py`: Find and identify Tapo smart devices on the network
+
+2. **Test Scripts**: Scripts for testing specific components
+   - Example: `test_scd30.py`: Test the SCD30 CO2 sensor
+
+3. **Calibration Scripts**: Scripts for calibrating sensors
+   - Example: `calibrate_scd30_sensor.py`: Calibrate the SCD30 CO2 sensor
+
+4. **Service Scripts**: Scripts for managing services
+   - Example: `run_web.sh`: Run the web interface
+
+## Tests Directory
+
+The `tests/` directory contains automated tests for verifying code functionality. These tests should be organized into:
+
+- **`unit/`**: Unit tests for individual components
+- **`integration/`**: Integration tests for testing multiple components together
+
+Tests should follow the naming convention `test_*.py` and should be designed to be run with a testing framework.
+
+## Development Guidelines
+
+When adding new devices:
+
+1. Create a new class in the `devices` directory that implements the `Device` interface
+2. Add the device to the `DeviceManager` class
+3. Update the `__init__.py` files to expose the new device
+
+When adding new files:
+
+1. **Scripts vs Tests**: 
+   - If it's meant to be run directly as a utility, put it in `scripts/`
+   - If it's meant to verify code functionality in an automated way, put it in `tests/`
+
+2. **Follow naming conventions** to make the purpose of files clear
+
+3. **Maintain the structure** by placing files in the appropriate directories
+
+4. **Create folder description files** in each directory following the folderdescription rule

@@ -1,9 +1,57 @@
 ---
-description: place folder description files in each folder
+description: 
 globs: 
 alwaysApply: false
 ---
+# Folder Description Guidelines
 
-# Your rule content
+This rule ensures consistent documentation of the project's folder structure.
 
-- place folder description files in each folder and give the descriptionfiles a name so they will be the first file to be shown in the folder when sorted alfabetically. I would think like 1FOLDER_DESCRIPTION fx
+## Naming Convention
+- Name all folder description files as `1FOLDER_DESCRIPTION.md` so they appear first when sorted alphabetically
+- Use Markdown format for all folder description files
+
+## Required Content
+Each folder description file must include:
+
+1. **Title**: The name of the folder with a brief description
+2. **Purpose**: What the folder is used for in the project
+3. **File Types**: What types of files should be stored in this folder
+4. **Naming Conventions**: Any specific naming patterns for files in this folder
+5. **Usage Examples**: How to properly use or interact with files in this folder
+
+## Template
+```markdown
+# [Folder Name] Directory
+
+This directory contains [brief description of contents and purpose].
+
+## File Types
+
+- `*.py`: [Description of Python files in this folder]
+- `*.json`: [Description of JSON files in this folder]
+- [Other file types as needed]
+
+## Naming Conventions
+
+Files in this directory follow these naming conventions:
+- `[pattern]_*.py`: [Description of what these files do]
+- [Other naming patterns as needed]
+
+## Usage Examples
+
+### [Example Name]
+```python
+# Example code showing how to use files from this directory
+```
+
+## Important Notes
+
+- [Any special considerations or warnings]
+- [Common pitfalls to avoid]
+```
+
+## Implementation
+- Create a folder description file in every directory, even if it seems obvious
+- Update folder descriptions when adding new file types or changing conventions
+- Reference the folder description in code comments when appropriate

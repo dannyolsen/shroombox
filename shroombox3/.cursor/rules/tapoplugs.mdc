@@ -1,9 +1,67 @@
 ---
-description: about functions involving tapo plugs
+description: 
 globs: 
 alwaysApply: false
 ---
+# Tapo Smart Plug Integration Guidelines
 
-# Your rule content
+This rule ensures consistent and reliable integration with TP-Link Tapo smart plugs throughout the Shroombox project.
 
-- it should be possible to find tapo plugs according to name, not just the ip address
+## Device Identification
+- Support finding Tapo plugs by name, not just by IP address
+- Maintain a mapping of device names to IP addresses in the settings
+- Implement automatic device discovery on the local network
+- Handle IP address changes gracefully with periodic rediscovery
+
+## Device Control
+- Implement proper error handling for all device operations
+- Add retry logic for failed operations with exponential backoff
+- Cache device states to reduce unnecessary network requests
+- Implement graceful degradation when devices are unreachable
+
+## Configuration
+- Allow assigning roles to devices (heater, humidifier, etc.)
+- Support custom naming of devices in the user interface
+- Provide clear status indicators for device connectivity
+- Allow manual override of automatic device control
+
+## Security
+- Store device credentials securely
+- Implement proper authentication for device control
+- Validate all inputs before sending to devices
+- Log all device control operations for auditing
+
+## Example Implementation
+```python
+class TapoDeviceManager:
+    def find_device_by_name(self, name):
+        """
+        Find a Tapo device by its friendly name.
+        
+        Args:
+            name (str): The friendly name of the device
+            
+        Returns:
+            dict: Device information including IP, MAC, etc.
+            None: If no device with that name is found
+        """
+        # Implementation details
+        
+    def control_device(self, identifier, state, retries=3):
+        """
+        Control a Tapo device by name or IP address.
+        
+        Args:
+            identifier (str): Device name or IP address
+            state (bool): True to turn on, False to turn off
+            retries (int): Number of retry attempts if control fails
+            
+        Returns:
+            bool: True if successful, False otherwise
+            
+        Raises:
+            DeviceNotFoundError: If the device cannot be found
+            ConnectionError: If connection to the device fails
+        """
+        # Implementation details
+```

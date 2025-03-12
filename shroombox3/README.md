@@ -4,38 +4,25 @@ A Raspberry Pi-based environmental control system for mushroom cultivation.
 
 ## Project Structure
 
-The project has been reorganized into a more modular structure:
+The project has been reorganized into a more modular structure. For detailed information about the project structure, see [Project Structure Documentation](docs/project_structure.md).
 
 ```
-shroombox/
-├── config/             # Configuration files
-├── devices/            # Hardware device interfaces
-│   ├── __init__.py
-│   ├── base.py         # Base device interface
-│   ├── fan.py          # Noctua PWM fan controller
-│   ├── sensor.py       # SCD30 CO2 sensor controller
-│   └── smart_plug.py   # Tapo smart plug controller
-├── logs/               # Log files
-├── managers/           # High-level managers
-│   ├── __init__.py
-│   ├── device_manager.py   # Manages all hardware devices
-│   └── settings_manager.py # Handles configuration
-├── scripts/            # Utility scripts
-│   ├── run_tests.sh    # Script to run all tests
-│   └── run_web.sh      # Script to run the web server
-├── tests/              # Test files
-│   ├── integration/    # Integration tests
-│   └── unit/           # Unit tests
-├── utils/              # Utility functions
-│   ├── __init__.py
-│   ├── logging_setup.py    # Logging configuration
-│   └── singleton.py        # Singleton pattern implementation
-├── web/                # Web interface
-│   ├── static/         # Static files (CSS, JS, etc.)
-│   ├── templates/      # HTML templates
-│   └── web_server.py   # Web server implementation
-├── main.py             # Main application entry point
-└── README.md           # This file
+shroombox3/
+├── api/                  # API endpoints
+├── backup/               # Backup files and deprecated code
+├── config/               # Configuration files
+│   ├── grafana/          # Grafana dashboard configurations
+│   └── services/         # Systemd service files
+├── data/                 # Data storage
+├── devices/              # Device-specific code
+├── docs/                 # Documentation
+├── logs/                 # Log files
+├── managers/             # High-level managers and controllers
+├── scripts/              # Utility scripts
+├── tests/                # Test files
+│   └── unit/             # Unit tests
+├── utils/                # Utility functions and helpers
+└── web/                  # Web interface and frontend
 ```
 
 ## Key Components
@@ -52,6 +39,7 @@ All hardware devices implement the `Device` interface defined in `devices/base.p
 
 - **DeviceManager**: Provides a unified interface for accessing all hardware devices
 - **SettingsManager**: Handles loading, saving, and updating configuration
+- **Controllers**: High-level controllers for environment, fan, humidity, and temperature management
 
 ### Utils
 
@@ -77,13 +65,30 @@ python main.py
 ### Running the Web Interface
 
 ```bash
-./scripts/run_web.sh
+sudo systemctl start shroombox-web
 ```
 
 ### Running Tests
 
 ```bash
-./scripts/run_tests.sh
+cd tests
+python -m unittest discover
+```
+
+## Project Cleanup
+
+The project has undergone a cleanup process to better organize files and directories. The cleanup plan is documented in [Cleanup Plan](cleanup_plan.md).
+
+To run the cleanup script:
+
+```bash
+./scripts/cleanup_project.sh
+```
+
+To analyze directories for potential merges:
+
+```bash
+./scripts/analyze_directories.sh
 ```
 
 ## Development

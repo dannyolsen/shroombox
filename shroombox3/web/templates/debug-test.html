@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Panel Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        
+        /* Debug panel */
+        #debug-panel {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #00ff00;
+            font-family: monospace;
+            font-size: 12px;
+            padding: 10px;
+            width: 400px;
+            height: 200px;
+            overflow-y: auto;
+            z-index: 9999;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .debug-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #333;
+        }
+        
+        .debug-panel-controls {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .debug-panel-btn {
+            background: none;
+            border: none;
+            color: #ccc;
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 1;
+            padding: 0 5px;
+        }
+        
+        #debug-log {
+            flex: 1;
+            overflow-y: auto;
+            padding-top: 5px;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <h1>Debug Panel Test</h1>
+    
+    <button id="toggle-debug">Toggle Debug Panel</button>
+    
+    <!-- Debug Panel -->
+    <div id="debug-panel" class="hidden">
+        <div class="debug-panel-header">
+            <div>Debug Panel</div>
+            <div class="debug-panel-controls">
+                <button id="debug-panel-close" class="debug-panel-btn" title="Close">×</button>
+            </div>
+        </div>
+        <div id="debug-log"></div>
+    </div>
+    
+    <script>
+        // Debug logging function
+        function debugLog(message) {
+            const debugLog = document.getElementById('debug-log');
+            if (!debugLog) return;
+            
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.textContent = `[${timestamp}] ${message}`;
+            
+            debugLog.appendChild(logEntry);
+            console.log(message);
+            
+            // Auto-scroll to bottom
+            debugLog.scrollTop = debugLog.scrollHeight;
+        }
+        
+        // Initialize debug panel
+        document.addEventListener('DOMContentLoaded', function() {
+            const debugPanel = document.getElementById('debug-panel');
+            const toggleBtn = document.getElementById('toggle-debug');
+            const closeBtn = document.getElementById('debug-panel-close');
+            
+            // Toggle button
+            toggleBtn.addEventListener('click', function() {
+                console.log('Toggle button clicked');
+                debugPanel.classList.toggle('hidden');
+                debugLog('Debug panel toggled');
+            });
+            
+            // Close button
+            closeBtn.addEventListener('click', function() {
+                debugPanel.classList.add('hidden');
+            });
+            
+            // Add some initial logs
+            setTimeout(() => {
+                debugLog('Debug panel initialized');
+                debugLog('Click the toggle button to show/hide this panel');
+            }, 500);
+        });
+    </script>
+</body>
+</html> 

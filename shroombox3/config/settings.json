@@ -6,7 +6,7 @@
             "model": "P115",
             "name": "Heatmat",
             "role": "heater",
-            "state": false,
+            "state": true,
             "type": "SMART.TAPOPLUG"
         },
         {
@@ -37,42 +37,39 @@
     },
     "control_states": {
         "heater": {
-            "desired_state": false,
-            "last_change": 1741695000.8260834,
-            "last_change_reason": "Temperature 25.510114669799805\u00b0C above upper bound 25.5\u00b0C"
+            "desired_state": true,
+            "last_change": 1741779961.9014184,
+            "last_change_reason": "Temperature 22.7\u00b0C below lower bound 24.5\u00b0C"
         },
         "humidifier": {
-            "desired_state": true,
-            "last_change": 1741606728.2793567,
-            "last_change_reason": "Humidity 72.8% below lower bound 73.0% - PID: 0.00 - Burst duration: 2.0s"
+            "desired_state": false,
+            "last_change": 1741723939.0045435,
+            "last_change_reason": "Humidity 94.04281616210938% above upper bound 77.0%"
         }
     },
     "environment": {
         "current_phase": "colonisation",
         "phases": {
-            "cake": {
-                "co2_setpoint": 500,
-                "rh_setpoint": 0.0,
-                "temp_hysteresis": 0.5,
-                "temp_setpoint": 19.0
-            },
             "colonisation": {
-                "co2_setpoint": 10000,
-                "rh_setpoint": 75.0,
-                "temp_hysteresis": 0.5,
-                "temp_setpoint": 25.0
+                "co2_setpoint": 5000,
+                "rh_setpoint": 85,
+                "temp_setpoint": 25
             },
-            "growing": {
-                "co2_setpoint": 550,
-                "rh_setpoint": 85.0,
-                "temp_hysteresis": 0.5,
-                "temp_setpoint": 19.0
+            "fruiting": {
+                "co2_setpoint": 800,
+                "rh_setpoint": 90,
+                "temp_setpoint": 18
+            },
+            "vegetative": {
+                "co2_setpoint": 1200,
+                "rh_setpoint": 85,
+                "temp_setpoint": 0
             }
         }
     },
     "fan": {
         "manual_control": true,
-        "speed": 5
+        "speed": 100
     },
     "humidifier": {
         "break_time": 180,

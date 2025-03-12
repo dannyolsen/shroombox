@@ -78,7 +78,7 @@ async def initialize_components():
         # Import components here to avoid issues before event loop is set
         from managers.device_manager import DeviceManager
         from managers.settings_manager import SettingsManager
-        from controllers.environment_controller import EnvironmentController
+        from managers.environment_controller import EnvironmentController
         
         logger.info("Creating device manager...")
         device_manager = DeviceManager()

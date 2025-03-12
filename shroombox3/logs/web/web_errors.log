@@ -8280,3 +8280,1669 @@ Error getting humidifier state: 'DeviceManager' object has no attribute 'devices
 Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
 Error getting heater state: 'DeviceManager' object has no attribute 'devices'
 Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+get_latest_measurements called
+get_latest_measurements called
+Sensor is working, got measurements: (739.2630004882812, 22.257658004760742, 55.402732849121094)
+Using measurements from file (age: 4.0s)
+Sensor is working, got measurements: (739.2630004882812, 22.257658004760742, 55.402732849121094)
+Using measurements from file (age: 4.0s)
+get_latest_measurements called
+get_latest_measurements called
+Sensor is working, got measurements: (739.2630004882812, 22.257658004760742, 55.402732849121094)
+Using measurements from file (age: 2.4s)
+Sensor is working, got measurements: (739.2630004882812, 22.257658004760742, 55.402732849121094)
+Using measurements from file (age: 2.4s)
+get_latest_measurements called
+get_latest_measurements called
+Sensor is working, got measurements: (739.2630004882812, 22.257658004760742, 55.402732849121094)
+Using measurements from file (age: 0.9s)
+Sensor is working, got measurements: (739.2630004882812, 22.257658004760742, 55.402732849121094)
+Using measurements from file (age: 0.9s)
+get_latest_measurements called
+get_latest_measurements called
+Sensor is working, got measurements: (739.2630004882812, 22.257658004760742, 55.402732849121094)
+Using measurements from file (age: 6.0s)
+Sensor is working, got measurements: (739.2630004882812, 22.257658004760742, 55.402732849121094)
+Using measurements from file (age: 6.0s)
+get_latest_measurements called
+get_latest_measurements called
+Sensor is working, got measurements: (739.2630004882812, 22.257658004760742, 55.402732849121094)
+Using measurements from file (age: 4.8s)
+Sensor is working, got measurements: (739.2630004882812, 22.257658004760742, 55.402732849121094)
+Using measurements from file (age: 4.8s)
+get_latest_measurements called
+get_latest_measurements called
+get_latest_measurements called
+Sensor is working, got measurements: (21012.333984375, 23.508922576904297, 65.63147735595703)
+Using measurements from file (age: 0.0s)
+get_latest_measurements called
+Sensor is working, got measurements: (21012.333984375, 23.508922576904297, 65.63147735595703)
+Using measurements from file (age: 0.0s)
+get_latest_measurements called
+Sensor is working, got measurements: (20785.125, 23.45009994506836, 66.50047302246094)
+Using measurements from file (age: 0.0s)
+get_latest_measurements called
+Sensor is working, got measurements: (20785.125, 23.45009994506836, 66.50047302246094)
+Using measurements from file (age: 0.0s)
+get_latest_measurements called
+Sensor is working, got measurements: (20949.658203125, 23.40823745727539, 67.18367767333984)
+Using measurements from file (age: 0.0s)
+get_latest_measurements called
+Sensor is working, got measurements: (20949.658203125, 23.40823745727539, 67.18367767333984)
+Using measurements from file (age: 0.0s)
+get_latest_measurements called
+Sensor is working, got measurements: (21031.095703125, 23.39666175842285, 67.80748748779297)
+Using measurements from file (age: 0.0s)
+get_latest_measurements called
+Sensor is working, got measurements: (21031.095703125, 23.39666175842285, 67.80748748779297)
+Using measurements from file (age: 0.0s)
+get_latest_measurements called
+Sensor is working, got measurements: (21293.62890625, 23.3369140625, 68.68817901611328)
+Using measurements from file (age: 0.0s)
+get_latest_measurements called
+Sensor is working, got measurements: (21293.62890625, 23.3369140625, 68.68817901611328)
+Using measurements from file (age: 0.0s)
+get_latest_measurements called
+Sensor is working, got measurements: (21542.455078125, 23.32754135131836, 68.91539764404297)
+Using measurements from file (age: 0.0s)
+get_latest_measurements called
+Sensor is working, got measurements: (21542.455078125, 23.32754135131836, 68.91539764404297)
+Using measurements from file (age: 0.0s)
+get_latest_measurements called
+get_latest_measurements called
+Sensor is working, got measurements: (20722.845703125, 23.203468322753906, 68.56281280517578)
+Using measurements from file (age: 0.0s)
+Sensor is working, got measurements: (20722.845703125, 23.203468322753906, 68.56281280517578)
+Using measurements from file (age: 0.9s)
+get_latest_measurements called
+Sensor is working, got measurements: (19124.361328125, 23.116018295288086, 69.45333099365234)
+Using measurements from file (age: 0.0s)
+get_latest_measurements called
+Sensor is working, got measurements: (19124.361328125, 23.116018295288086, 69.45333099365234)
+Using measurements from file (age: 0.1s)
+get_latest_measurements called
+Sensor is working, got measurements: (17614.310546875, 22.949769973754883, 71.58099365234375)
+Using measurements from file (age: 0.0s)
+get_latest_measurements called
+Sensor is working, got measurements: (17614.310546875, 22.949769973754883, 71.58099365234375)
+Using measurements from file (age: 0.0s)
+Received shutdown signal, cleaning up...
+Tapo controller cleaned up
+Shutting down web server...
+Web server shutdown complete
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Error getting heater state: 'DeviceManager' object has no attribute 'devices'
+Error getting humidifier state: 'DeviceManager' object has no attribute 'devices'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Error initializing controller: EnvironmentController.__init__() got an unexpected keyword argument 'device_manager_instance'
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements
+Sensor returned None for measurements

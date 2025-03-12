@@ -8,18 +8,37 @@
     <meta http-equiv="Expires" content="0">
     <title>Shroombox Control Panel</title>
 
+    <!-- Preload critical resources -->
+    <link rel="preload" href="https://unpkg.com/alpinejs@3.12.0/dist/cdn.min.js" as="script">
+    <link rel="preload" href="/static/js/main.js" as="script">
+    
     <!-- Load Alpine.js and Tailwind directly -->
     <script src="https://unpkg.com/alpinejs@3.12.0/dist/cdn.min.js" defer></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="/static/js/main.js"></script>
+    <script src="/static/js/main.js" defer></script>
+
+    <!-- Include navbar CSS and JS -->
+    <link rel="stylesheet" href="/static/css/navbar.css">
+    <script src="/static/js/navbar.js" defer></script>
 
     <script>
+        // Performance monitoring
+        const perfEntries = {};
+        function markPerf(name) {
+            perfEntries[name] = performance.now();
+            console.log(`Performance mark: ${name} at ${perfEntries[name].toFixed(2)}ms`);
+        }
+        
+        markPerf('script-start');
+        
         // Detect Safari for special handling
         const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
         console.log("Safari detected:", isSafari);
         
         // Add a fallback for Alpine.js in case the CDN fails
         document.addEventListener('DOMContentLoaded', function() {
+            markPerf('dom-content-loaded');
+            
             setTimeout(function() {
                 if (typeof Alpine === 'undefined') {
                     console.error('Alpine.js failed to load from CDN, loading fallback');
@@ -33,9 +52,12 @@
             // Add a safety timeout to hide the loading overlay after 10 seconds
             setTimeout(function() {
                 const loadingOverlay = document.getElementById('loading-overlay');
-                if (loadingOverlay && loadingOverlay.style.display !== 'none') {
+                if (loadingOverlay && !loadingOverlay.classList.contains('hidden')) {
                     console.warn('Loading timeout reached, forcing overlay removal');
-                    loadingOverlay.style.display = 'none';
+                    loadingOverlay.classList.add('opacity-0');
+                    setTimeout(() => {
+                        loadingOverlay.classList.add('hidden');
+                    }, 300);
                     
                     // For Safari: force complete loading state
                     if (isSafari) {
@@ -44,7 +66,7 @@
                         window.dispatchEvent(new Event('load'));
                     }
                 }
-            }, 10000);
+            }, 8000); // Reduced from 10s to 8s
             
             // Special Safari fix to ensure page completes loading
             if (isSafari) {
@@ -74,13 +96,17 @@
         // Register service worker for better caching
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/service-worker.js')
-                    .then(registration => {
-                        console.log('Service Worker registered with scope:', registration.scope);
-                    })
-                    .catch(error => {
-                        console.error('Service Worker registration failed:', error);
-                    });
+                markPerf('window-load');
+                // Delay service worker registration to prioritize UI rendering
+                setTimeout(() => {
+                    navigator.serviceWorker.register('/service-worker.js')
+                        .then(registration => {
+                            console.log('Service Worker registered with scope:', registration.scope);
+                        })
+                        .catch(error => {
+                            console.error('Service Worker registration failed:', error);
+                        });
+                }, 3000);
             });
         }
         
@@ -88,7 +114,18 @@
         let alpineLoaded = false;
         let tailwindLoaded = false;
         
+        // Debounce function to limit how often a function can be called
+        function debounce(func, wait) {
+            let timeout;
+            return function(...args) {
+                const context = this;
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(context, args), wait);
+            };
+        }
+        
         document.addEventListener('alpine:init', () => {
+            markPerf('alpine-init');
             console.log('Alpine.js initialized successfully');
             alpineLoaded = true;
             
@@ -173,6 +210,21 @@
                 }
                 const data = await response.json();
                 
+                // Get the last scan timestamp if available
+                let lastScanInfo = null;
+                if (data.last_device_scan && data.last_device_scan.timestamp) {
+                    try {
+                        const scanDate = new Date(data.last_device_scan.timestamp);
+                        lastScanInfo = {
+                            timestamp: scanDate.toLocaleTimeString(),
+                            count: data.last_device_scan.count
+                        };
+                        console.log(`Last device scan: ${lastScanInfo.timestamp} (${lastScanInfo.count} devices)`);
+                    } catch (e) {
+                        console.warn(`Error parsing scan timestamp: ${e}`);
+                    }
+                }
+                
                 if (data.available_devices && Array.isArray(data.available_devices)) {
                     console.log(`Preloaded ${data.available_devices.length} devices`);
                     
@@ -197,6 +249,11 @@
                         console.warn("Error getting system status:", error);
                     }
                     
+                    // Add the last scan info to the result
+                    if (lastScanInfo) {
+                        data.available_devices.lastScanInfo = lastScanInfo;
+                    }
+                    
                     return data.available_devices;
                 } else {
                     console.warn("No available_devices found in settings");
@@ -213,74 +270,441 @@
 
         function controlPanel() {
             return {
-                currentPhase: 'colonisation',
-                measurements: { temperature: '--', humidity: '--', co2: '--', fan_speed: '--', sensor_status: null },
-                setpoints: { temperature: 0, humidity: 0, co2: 0 },
-                pidSettings: { kp: 0, ki: 0, kd: 0 },
-                availableDevices: [],
-                selectedHeater: '',
-                selectedHumidifier: '',
-                isScanning: false,
-                lastDeviceUpdate: '',
-                eventSource: null,
-                initStatus: {
-                    phase: false,
-                    setpoints: false,
-                    measurements: false,
-                    devices: false,
-                    terminal: false
+                // Initialize properties
+                measurements: {
+                    temperature: '--',
+                    humidity: '--',
+                    co2: '--',
+                    fan_speed: '--',
+                    source: 'unknown',
+                    timestamp: null,
+                    sensor_status: null
                 },
-                initErrors: [],
+                setpoints: {
+                    temperature: 0,
+                    humidity: 0,
+                    co2: 0
+                },
+                pidSettings: {
+                    kp: 0,
+                    ki: 0,
+                    kd: 0
+                },
                 fanControl: {
                     manualMode: false,
-                    speed: 50
+                    speed: 0
                 },
+                availableDevices: [],
+                selectedDevices: {
+                    heater: null,
+                    humidifier: null
+                },
+                currentPhase: 'vegetative',
                 isRefreshing: false,
-
-                init() {
-                    debugLog('Initializing control panel...');
+                isScanning: false,
+                lastDeviceUpdate: null,
+                initStatus: {
+                    measurements: false,
+                    setpoints: false,
+                    devices: false,
+                    phase: false
+                },
+                initErrors: [],
+                
+                // Create debounced versions of update methods
+                debouncedUpdateFanSettings: null,
+                debouncedUpdateSetpoint: null,
+                debouncedUpdatePidSetting: null,
+                
+                // Initialize the component
+                async init() {
+                    console.debug('Initializing control panel...');
                     
-                    // Initialize lastDeviceUpdate
-                    const now = new Date();
-                    this.lastDeviceUpdate = now.toLocaleTimeString();
+                    // Initialize toast system
+                    this.toasts = [];
+                    this.isScanning = false;
                     
-                    // Ensure loading overlay is hidden after initialization
-                    setTimeout(() => {
-                        const loadingOverlay = document.getElementById('loading-overlay');
-                        if (loadingOverlay && loadingOverlay.style.display !== 'none') {
-                            loadingOverlay.style.display = 'none';
-                            debugLog('Automatically hiding loading overlay after init timeout', 'warning');
+                    // Initialize debounced functions
+                    this.debouncedUpdateFanSettings = debounce(this.updateFanSettings.bind(this), 500);
+                    this.debouncedUpdateSetpoint = debounce(this.updateSetpoint.bind(this), 500);
+                    this.debouncedUpdatePidSetting = debounce(this.updatePidSetting.bind(this), 500);
+                    
+                    try {
+                        // OPTIMIZATION: Load settings and devices first, before anything else
+                        // This ensures all UI elements are displayed immediately
+                        debugLog('Loading settings and devices first to ensure immediate UI updates...');
+                        await this.loadSettingsImmediately();
+                        
+                        // Then fetch other data in parallel
+                        debugLog('Loading other data in parallel...');
+                        const [measurementsResult, systemStatusResult] = await Promise.allSettled([
+                            this.fetchMeasurements(),
+                            this.fetchSystemStatus()
+                        ]);
+                        
+                        // Check results and handle any errors
+                        if (measurementsResult.status === 'rejected') {
+                            console.error('Error fetching measurements:', measurementsResult.reason);
+                            this.showToast(`Error fetching measurements: ${measurementsResult.reason.message}`, 'error');
                         }
-                    }, 5000);
-                    
-                    // Use preloaded devices first, then continue with other initialization
-                    preloadedDevicesPromise.then(devices => {
-                        if (devices && devices.length > 0) {
-                            this.availableDevices = devices;
-                            debugLog(`Loaded ${devices.length} preloaded devices`);
+                        
+                        if (systemStatusResult.status === 'rejected') {
+                            console.error('Error fetching system status:', systemStatusResult.reason);
+                            this.showToast(`Error fetching system status: ${systemStatusResult.reason.message}`, 'error');
+                        }
+                        
+                        console.debug('Control panel initialized');
+                        
+                        // Hide loading overlay on successful initialization
+                        const loadingOverlay = document.getElementById('loading-overlay');
+                        if (loadingOverlay) {
+                            loadingOverlay.style.display = 'none';
+                            console.debug('Loading overlay hidden after successful initialization');
+                        }
+                    } catch (error) {
+                        console.error('Error initializing control panel:', error);
+                        this.showToast('Error initializing dashboard. Please refresh the page.', 'error');
+                        
+                        // Show error in loading overlay
+                        const errorElement = document.getElementById('loading-error');
+                        if (errorElement) {
+                            errorElement.textContent = `Error: ${error.message}`;
+                            errorElement.style.display = 'block';
+                        }
+                    }
+                },
+                
+                // New optimized method for immediate settings loading
+                async loadSettingsImmediately() {
+                    try {
+                        debugLog('Loading settings with high priority...');
+                        
+                        // OPTIMIZATION: Load settings and devices in parallel for faster loading
+                        const [settingsPromise, devicesPromise] = await Promise.all([
+                            // Fetch settings
+                            (async () => {
+                                // Add cache-busting to prevent stale data
+                                const cacheBuster = `_cb=${Date.now()}`;
+                                const url = `/api/settings?update_states=false&${cacheBuster}`;
+                                
+                                // Use a timeout to abort if it takes too long
+                                const controller = new AbortController();
+                                const timeoutId = setTimeout(() => controller.abort(), 5000);
+                                
+                                try {
+                                    const response = await fetch(url, { signal: controller.signal });
+                                    clearTimeout(timeoutId);
+                                    
+                                    if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+                                    return await response.json();
+                                } catch (error) {
+                                    clearTimeout(timeoutId);
+                                    throw error;
+                                }
+                            })(),
+                            
+                            // Fetch devices
+                            (async () => {
+                                try {
+                                    const controller = new AbortController();
+                                    const timeoutId = setTimeout(() => controller.abort(), 5000);
+                                    
+                                    const response = await fetch('/api/devices/available', { 
+                                        signal: controller.signal 
+                                    });
+                                    clearTimeout(timeoutId);
+                                    
+                                    if (!response.ok) {
+                                        throw new Error(`Failed to fetch available devices: ${response.status}`);
+                                    }
+                                    
+                                    return await response.json();
+                                } catch (error) {
+                                    debugLog(`Error fetching devices immediately: ${error.message}`, 'error');
+                                    return { devices: [] };
+                                }
+                            })()
+                        ]);
+                        
+                        // Process settings data
+                        const data = settingsPromise;
+                        debugLog('Settings data received, updating UI immediately...');
+                        
+                        // OPTIMIZATION: Update growth phase immediately
+                        this.currentPhase = data.environment?.current_phase || 'colonisation';
+                        const phaseSelect = document.getElementById('phase-select');
+                        if (phaseSelect) {
+                            phaseSelect.value = this.currentPhase;
+                            debugLog(`Growth phase set to ${this.currentPhase}`);
+                        }
+                        
+                        // OPTIMIZATION: Update setpoints immediately
+                        try {
+                            const phaseSettings = data.environment?.phases?.[this.currentPhase] || {};
+                            
+                            // Set default values if missing
+                            this.setpoints = {
+                                temperature: parseInt(phaseSettings.temp_setpoint) || 23,
+                                humidity: parseInt(phaseSettings.rh_setpoint) || 85,
+                                co2: parseInt(phaseSettings.co2_setpoint) || 5000
+                            };
+                            
+                            // Update input fields directly for immediate display
+                            const tempInput = document.getElementById('temperature-setpoint');
+                            const humidityInput = document.getElementById('humidity-setpoint');
+                            const co2Input = document.getElementById('co2-setpoint');
+                            
+                            if (tempInput) tempInput.value = this.setpoints.temperature;
+                            if (humidityInput) humidityInput.value = this.setpoints.humidity;
+                            if (co2Input) co2Input.value = this.setpoints.co2;
+                            
+                            debugLog(`Setpoints updated immediately: ${JSON.stringify(this.setpoints)}`);
+                        } catch (phaseError) {
+                            debugLog(`Error setting immediate setpoints: ${phaseError.message}`, 'error');
+                        }
+                        
+                        // OPTIMIZATION: Update PID settings immediately
+                        try {
+                            const pidSettings = data.co2?.pid || {};
+                            this.pidSettings = {
+                                kp: parseFloat(pidSettings.Kp || -1.0),
+                                ki: parseFloat(pidSettings.Ki || -0.01),
+                                kd: parseFloat(pidSettings.Kd || 0.0)
+                            };
+                            
+                            // Ensure numeric values
+                            if (isNaN(this.pidSettings.kp) || this.pidSettings.kp === 0) this.pidSettings.kp = -1.0;
+                            if (isNaN(this.pidSettings.ki) || this.pidSettings.ki === 0) this.pidSettings.ki = -0.01;
+                            if (isNaN(this.pidSettings.kd)) this.pidSettings.kd = 0.0;
+                            
+                            // Update input fields directly
+                            const kpInput = document.getElementById('kp-setting');
+                            const kiInput = document.getElementById('ki-setting');
+                            const kdInput = document.getElementById('kd-setting');
+                            
+                            if (kpInput) kpInput.value = this.pidSettings.kp;
+                            if (kiInput) kiInput.value = this.pidSettings.ki;
+                            if (kdInput) kdInput.value = this.pidSettings.kd;
+                            
+                            debugLog(`PID settings updated immediately: ${JSON.stringify(this.pidSettings)}`);
+                        } catch (pidError) {
+                            debugLog(`Error setting immediate PID settings: ${pidError.message}`, 'error');
+                        }
+                        
+                        // OPTIMIZATION: Update fan control settings immediately
+                        try {
+                            const fanSettings = data.fan || {};
+                            this.fanControl = {
+                                manualMode: !!fanSettings.manual_control,
+                                speed: parseFloat(fanSettings.speed || 50)
+                            };
+                            
+                            // Update fan speed slider directly
+                            const fanSpeedSlider = document.getElementById('fan-speed-slider');
+                            if (fanSpeedSlider) fanSpeedSlider.value = this.fanControl.speed;
+                            
+                            debugLog(`Fan settings updated immediately: ${JSON.stringify(this.fanControl)}`);
+                        } catch (fanError) {
+                            debugLog(`Error setting immediate fan settings: ${fanError.message}`, 'error');
+                        }
+                        
+                        // OPTIMIZATION: Process device data immediately
+                        try {
+                            const deviceData = devicesPromise;
+                            this.availableDevices = deviceData.devices || [];
                             
                             // Set selected devices based on roles
                             this.setSelectedDevicesByRole();
                             
-                            this.initStatus.devices = true;
-                        } else {
-                            debugLog('No preloaded devices found, fetching devices...', 'warning');
-                            this.fetchDevices();
+                            // Update device dropdowns immediately
+                            this.updateDeviceDropdowns();
+                            
+                            // Update last scan information if available
+                            if (deviceData.last_scan_time) {
+                                this.lastScanTime = new Date(deviceData.last_scan_time);
+                                this.lastDeviceUpdate = this.lastScanTime.toLocaleTimeString();
+                                debugLog(`Last device scan: ${this.lastDeviceUpdate} (${deviceData.device_count} devices)`);
+                            }
+                            
+                            debugLog(`Device settings updated immediately: ${this.availableDevices.length} devices`);
+                        } catch (deviceError) {
+                            debugLog(`Error setting immediate device settings: ${deviceError.message}`, 'error');
                         }
                         
-                        // Continue with other initialization
-                        this.fetchCurrentPhase();
-                        this.fetchSetpoints();
-                        this.fetchMeasurements();
+                        // Process any missing phases or settings in the background
+                        this.processSettingsInBackground(data);
                         
-                        // Start device polling
-                        if (typeof startDevicePolling === 'function') {
-                            startDevicePolling();
-                            debugLog('Started device polling');
+                        return data;
+                    } catch (error) {
+                        if (error.name === 'AbortError') {
+                            debugLog('Settings fetch timed out, using default values', 'warning');
+                            // Set default values for critical UI elements
+                            this.setDefaultValuesForUI();
                         } else {
-                            debugLog('Device polling function not available', 'warning');
+                            debugLog(`Error loading settings immediately: ${error.message}`, 'error');
+                            console.error('Error loading settings:', error);
                         }
-                    });
+                        
+                        // Don't show toast for timeout to avoid overwhelming the user
+                        if (error.name !== 'AbortError') {
+                            this.showToast(`Error loading settings: ${error.message}`, 'error');
+                        }
+                        
+                        return null;
+                    }
+                },
+                
+                // Set default values for UI elements if settings fetch fails
+                setDefaultValuesForUI() {
+                    // Set default phase
+                    this.currentPhase = 'colonisation';
+                    const phaseSelect = document.getElementById('phase-select');
+                    if (phaseSelect) phaseSelect.value = this.currentPhase;
+                    
+                    // Set default setpoints
+                    this.setpoints = { temperature: 23, humidity: 85, co2: 5000 };
+                    const tempInput = document.getElementById('temperature-setpoint');
+                    const humidityInput = document.getElementById('humidity-setpoint');
+                    const co2Input = document.getElementById('co2-setpoint');
+                    
+                    if (tempInput) tempInput.value = this.setpoints.temperature;
+                    if (humidityInput) humidityInput.value = this.setpoints.humidity;
+                    if (co2Input) co2Input.value = this.setpoints.co2;
+                    
+                    // Set default PID settings
+                    this.pidSettings = { kp: -1.0, ki: -0.01, kd: 0.0 };
+                    const kpInput = document.getElementById('kp-setting');
+                    const kiInput = document.getElementById('ki-setting');
+                    const kdInput = document.getElementById('kd-setting');
+                    
+                    if (kpInput) kpInput.value = this.pidSettings.kp;
+                    if (kiInput) kiInput.value = this.pidSettings.ki;
+                    if (kdInput) kdInput.value = this.pidSettings.kd;
+                    
+                    // Set default fan settings
+                    this.fanControl = { manualMode: false, speed: 50 };
+                    
+                    // Set default device settings
+                    this.availableDevices = [];
+                    this.selectedDevices = { heater: null, humidifier: null };
+                    
+                    debugLog('Default values set for UI elements');
+                },
+                
+                // Process settings in the background after UI is updated
+                async processSettingsInBackground(data) {
+                    try {
+                        // Check if phases exist in the data
+                        if (!data.environment || !data.environment.phases) {
+                            debugLog('Phases not found in settings, creating default phase settings', 'warning');
+                            
+                            // Create default phases if they don't exist
+                            if (!data.environment) {
+                                data.environment = {};
+                            }
+                            
+                            data.environment.phases = {
+                                'colonisation': {
+                                    'temp_setpoint': 23,
+                                    'rh_setpoint': 85,
+                                    'co2_setpoint': 5000
+                                },
+                                'fruiting': {
+                                    'temp_setpoint': 18,
+                                    'rh_setpoint': 90,
+                                    'co2_setpoint': 800
+                                },
+                                'vegetative': {
+                                    'temp_setpoint': 24,
+                                    'rh_setpoint': 85,
+                                    'co2_setpoint': 1200
+                                }
+                            };
+                            
+                            // Save the updated settings with phases
+                            try {
+                                const saveResponse = await fetch('/api/settings', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ environment: data.environment })
+                                });
+                                
+                                if (!saveResponse.ok) {
+                                    throw new Error(`Failed to save default phases: HTTP error ${saveResponse.status}`);
+                                }
+                                
+                                debugLog('Created and saved default phase settings');
+                            } catch (saveError) {
+                                debugLog(`Error saving default phases: ${saveError.message}`, 'error');
+                                console.error('Error saving default phases:', saveError);
+                            }
+                        }
+                        
+                        // Update the phase dropdown with available phases
+                        this.updatePhaseDropdown(data.environment.phases);
+                        
+                        // Ensure current phase exists
+                        if (!data.environment.phases[this.currentPhase]) {
+                            debugLog(`Current phase ${this.currentPhase} not found in settings, creating it`, 'warning');
+                            
+                            // Create the phase with default values
+                            data.environment.phases[this.currentPhase] = {
+                                'temp_setpoint': 23,
+                                'rh_setpoint': 85,
+                                'co2_setpoint': 5000
+                            };
+                            
+                            // Save the updated settings with the new phase
+                            try {
+                                const saveResponse = await fetch('/api/settings', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ environment: data.environment })
+                                });
+                                
+                                if (!saveResponse.ok) {
+                                    throw new Error(`Failed to save missing phase: HTTP error ${saveResponse.status}`);
+                                }
+                                
+                                debugLog('Created and saved missing phase');
+                            } catch (saveError) {
+                                debugLog(`Error saving missing phase: ${saveError.message}`, 'error');
+                                console.error('Error saving missing phase:', saveError);
+                            }
+                        }
+                    } catch (error) {
+                        debugLog(`Error processing settings in background: ${error.message}`, 'error');
+                        console.error('Error processing settings in background:', error);
+                    }
+                },
+                
+                // Update the phase dropdown with available phases
+                updatePhaseDropdown(phases) {
+                    try {
+                        if (!phases) return;
+                        
+                        const phaseSelect = document.getElementById('phase-select');
+                        if (!phaseSelect) return;
+                        
+                        // Get existing options
+                        const existingOptions = Array.from(phaseSelect.options).map(opt => opt.value);
+                        
+                        // Add any missing phases
+                        Object.keys(phases).forEach(phase => {
+                            if (!existingOptions.includes(phase)) {
+                                const option = document.createElement('option');
+                                option.value = phase;
+                                option.textContent = phase.charAt(0).toUpperCase() + phase.slice(1);
+                                phaseSelect.appendChild(option);
+                                debugLog(`Added new phase option: ${phase}`);
+                            }
+                        });
+                        
+                        // Set the current phase
+                        phaseSelect.value = this.currentPhase;
+                    } catch (error) {
+                        debugLog(`Error updating phase dropdown: ${error.message}`, 'error');
+                    }
                 },
 
                 async fetchCurrentPhase() {
@@ -307,11 +731,84 @@
                         if (!response.ok) throw new Error(`HTTP error ${response.status}`);
                         
                         const data = await response.json();
-                        const phaseSettings = data.environment.phases[this.currentPhase];
-
-                        if (!phaseSettings) {
-                            throw new Error(`Phase settings not found for ${this.currentPhase}`);
+                        
+                        // Check if phases exist in the data
+                        if (!data.environment || !data.environment.phases) {
+                            debugLog('Phases not found in settings, creating default phase settings', 'warning');
+                            
+                            // Create default phases if they don't exist
+                            if (!data.environment) {
+                                data.environment = {};
+                            }
+                            
+                            data.environment.phases = {
+                                'colonisation': {
+                                    'temp_setpoint': 23,
+                                    'rh_setpoint': 85,
+                                    'co2_setpoint': 5000
+                                },
+                                'fruiting': {
+                                    'temp_setpoint': 18,
+                                    'rh_setpoint': 90,
+                                    'co2_setpoint': 800
+                                },
+                                'vegetative': {
+                                    'temp_setpoint': 24,
+                                    'rh_setpoint': 85,
+                                    'co2_setpoint': 1200
+                                }
+                            };
+                            
+                            // Save the updated settings with phases
+                            try {
+                                const saveResponse = await fetch('/api/settings', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ environment: data.environment })
+                                });
+                                
+                                if (!saveResponse.ok) {
+                                    throw new Error(`Failed to save default phases: HTTP error ${saveResponse.status}`);
+                                }
+                                
+                                debugLog('Created and saved default phase settings');
+                            } catch (saveError) {
+                                debugLog(`Error saving default phases: ${saveError.message}`, 'error');
+                                this.showToast(`Error saving default phases: ${saveError.message}`, 'error');
+                            }
                         }
+                        
+                        // Ensure current phase exists
+                        if (!data.environment.phases[this.currentPhase]) {
+                            debugLog(`Current phase ${this.currentPhase} not found in settings, creating it`, 'warning');
+                            
+                            // Create the phase with default values
+                            data.environment.phases[this.currentPhase] = {
+                                'temp_setpoint': 23,
+                                'rh_setpoint': 85,
+                                'co2_setpoint': 5000
+                            };
+                            
+                            // Save the updated settings
+                            try {
+                                const saveResponse = await fetch('/api/settings', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ environment: data.environment })
+                                });
+                                
+                                if (!saveResponse.ok) {
+                                    throw new Error(`Failed to save new phase: HTTP error ${saveResponse.status}`);
+                                }
+                                
+                                debugLog(`Created and saved new phase: ${this.currentPhase}`);
+                            } catch (saveError) {
+                                debugLog(`Error saving new phase: ${saveError.message}`, 'error');
+                                this.showToast(`Error saving new phase: ${saveError.message}`, 'error');
+                            }
+                        }
+                        
+                        const phaseSettings = data.environment.phases[this.currentPhase];
 
                         // Log the raw values for debugging
                         debugLog(`Raw phase settings: ${JSON.stringify(phaseSettings)}`);
@@ -319,66 +816,37 @@
                         // Ensure we have valid numbers for all setpoints
                         this.setpoints = {
                             temperature: parseFloat(phaseSettings.temp_setpoint) || 23,
-                            humidity: parseFloat(phaseSettings.rh_setpoint) || 60,
-                            co2: parseInt(phaseSettings.co2_setpoint) || 10000
+                            humidity: parseFloat(phaseSettings.rh_setpoint) || 85,
+                            co2: parseInt(phaseSettings.co2_setpoint) || 5000
                         };
                         
-                        // Load PID settings
-                        try {
-                            const pidSettings = data.co2?.pid || {};
-                            this.pidSettings = {
-                                kp: parseFloat(pidSettings.Kp || -1.0),
-                                ki: parseFloat(pidSettings.Ki || -0.01),
-                                kd: parseFloat(pidSettings.Kd || 0.0)
-                            };
-                            debugLog(`Loaded PID settings: ${JSON.stringify(this.pidSettings)}`);
-                        } catch (pidError) {
-                            debugLog(`Error loading PID settings: ${pidError.message}`, 'error');
-                            this.pidSettings = { kp: -1.0, ki: -0.01, kd: 0.0 };
-                        }
-                        
-                        // Load fan control settings
-                        try {
-                            const fanSettings = data.fan || {};
-                            this.fanControl = {
-                                manualMode: !!fanSettings.manual_control,
-                                speed: parseFloat(fanSettings.speed || 50)
-                            };
-                            debugLog(`Loaded fan control settings: ${JSON.stringify(this.fanControl)}`);
-                        } catch (fanError) {
-                            debugLog(`Error loading fan control settings: ${fanError.message}`, 'error');
-                            this.fanControl = { manualMode: false, speed: 50 };
-                        }
-                        
-                        // Set input values directly - make a direct DOM update
-                        setTimeout(() => {
-                            try {
-                                const tempInput = document.getElementById('temperature-setpoint');
-                                const co2Input = document.getElementById('co2-setpoint');
-                                const humidityInput = document.getElementById('humidity-setpoint');
-                                const kpInput = document.getElementById('kp-setting');
-                                const kiInput = document.getElementById('ki-setting');
-                                const kdInput = document.getElementById('kd-setting');
-                                
-                                if (tempInput) tempInput.value = this.setpoints.temperature;
-                                if (co2Input) co2Input.value = this.setpoints.co2;
-                                if (humidityInput) humidityInput.value = this.setpoints.humidity;
-                                if (kpInput) kpInput.value = this.pidSettings.kp;
-                                if (kiInput) kiInput.value = this.pidSettings.ki;
-                                if (kdInput) kdInput.value = this.pidSettings.kd;
-                                
-                                debugLog('Input values set directly in DOM');
-                            } catch (err) {
-                                debugLog(`Error setting input values: ${err.message}`, 'error');
-                            }
-                        }, 200);
-                        
-                        this.initStatus.setpoints = true;
                         debugLog(`Loaded setpoints: ${JSON.stringify(this.setpoints)}`);
+                        
+                        // Update input fields directly
+                        const tempInput = document.getElementById('temperature-setpoint');
+                        const humidityInput = document.getElementById('humidity-setpoint');
+                        const co2Input = document.getElementById('co2-setpoint');
+                        
+                        if (tempInput) tempInput.value = this.setpoints.temperature;
+                        if (humidityInput) humidityInput.value = this.setpoints.humidity;
+                        if (co2Input) co2Input.value = this.setpoints.co2;
+                        
+                        // Show toast notification
+                        this.showToast(`Loaded setpoints for ${this.currentPhase} phase`, 'success');
+                        
+                        return this.setpoints;
                     } catch (error) {
-                        debugLog(`Error loading setpoints: ${error.message}`, 'error');
-                        this.initErrors.push('Failed to load setpoints');
-                        throw error;
+                        debugLog(`Error fetching setpoints: ${error.message}`, 'error');
+                        this.showToast(`Error loading setpoints: ${error.message}`, 'error');
+                        
+                        // Use default values if there's an error
+                        this.setpoints = {
+                            temperature: 23,
+                            humidity: 85,
+                            co2: 5000
+                        };
+                        
+                        return this.setpoints;
                     }
                 },
 
@@ -402,7 +870,11 @@
                         
                         // Add visual indicator for data source
                         if (data.source === 'sensor') {
-                            debugLog('Using real-time sensor data');
+                            if (data.sensor_status && !data.sensor_status.available) {
+                                debugLog('Sensor error detected: ' + (data.sensor_status.message || 'Unknown error'), 'warning');
+                            } else {
+                                debugLog('Using real-time sensor data');
+                            }
                         } else if (data.source === 'cache') {
                             debugLog(`Using cached data (${data.cache_age.toFixed(1)}s old)`);
                         } else if (data.source === 'influxdb') {
@@ -439,7 +911,11 @@
                     
                     // Add visual indicator for data source
                     if (data.source === 'sensor') {
-                        debugLog('Using real-time sensor data from polling');
+                        if (data.sensor_status && !data.sensor_status.available) {
+                            debugLog('Sensor error detected: ' + (data.sensor_status.message || 'Unknown error'), 'warning');
+                        } else {
+                            debugLog('Using real-time sensor data from polling');
+                        }
                     } else if (data.source === 'cache') {
                         debugLog(`Using cached data from polling (${data.cache_age?.toFixed(1) || '?'}s old)`);
                     } else if (data.source === 'influxdb') {
@@ -484,6 +960,24 @@
                                 // Continue with the states from settings.json
                             }
                             
+                            // Update the last scan timestamp from the server
+                            if (data.last_device_scan && data.last_device_scan.timestamp) {
+                                try {
+                                    const scanDate = new Date(data.last_device_scan.timestamp);
+                                    this.lastDeviceUpdate = scanDate.toLocaleTimeString();
+                                    debugLog(`Last device scan: ${this.lastDeviceUpdate} (${data.last_device_scan.count} devices)`);
+                                } catch (e) {
+                                    debugLog(`Error parsing scan timestamp: ${e}`, 'warning');
+                                    // Fallback to current time if parsing fails
+                                    const now = new Date();
+                                    this.lastDeviceUpdate = now.toLocaleTimeString();
+                                }
+                            } else {
+                                // If no timestamp in settings, use current time
+                                const now = new Date();
+                                this.lastDeviceUpdate = now.toLocaleTimeString();
+                            }
+                            
                             this.initStatus.devices = true;
                         } else {
                             debugLog("No available_devices found in settings");
@@ -499,9 +993,9 @@
                 setSelectedDevicesByRole() {
                     this.availableDevices.forEach(device => {
                         if (device.role === 'heater') {
-                            this.selectedHeater = device.ip;
+                            this.selectedDevices.heater = device.ip;
                         } else if (device.role === 'humidifier') {
-                            this.selectedHumidifier = device.ip;
+                            this.selectedDevices.humidifier = device.ip;
                         }
                     });
                 },
@@ -512,8 +1006,8 @@
                         
                         // Disable the select while updating
                         const selectElement = role === 'heater' ? 
-                            document.querySelector('select[x-model="selectedHeater"]') : 
-                            document.querySelector('select[x-model="selectedHumidifier"]');
+                            document.querySelector('select[x-model="selectedDevices.heater"]') : 
+                            document.querySelector('select[x-model="selectedDevices.humidifier"]');
                         
                         if (selectElement) selectElement.disabled = true;
                         
@@ -523,7 +1017,7 @@
                         const settings = await response.json();
                         
                         // Get the selected IP based on role
-                        const selectedIp = role === 'heater' ? this.selectedHeater : this.selectedHumidifier;
+                        const selectedIp = role === 'heater' ? this.selectedDevices.heater : this.selectedDevices.humidifier;
                         
                         if (!selectedIp) {
                             debugLog(`No device selected for ${role}`);
@@ -557,42 +1051,142 @@
                     } finally {
                         // Re-enable the select
                         const selectElement = role === 'heater' ? 
-                            document.querySelector('select[x-model="selectedHeater"]') : 
-                            document.querySelector('select[x-model="selectedHumidifier"]');
+                            document.querySelector('select[x-model="selectedDevices.heater"]') : 
+                            document.querySelector('select[x-model="selectedDevices.humidifier"]');
                         
                         if (selectElement) selectElement.disabled = false;
                     }
                 },
 
                 async rescanDevices() {
+                    if (this.isScanning) {
+                        this.showToast('Already scanning for devices', 'info');
+                        return;
+                    }
+                    
+                    this.isScanning = true;
+                    this.showToast('Scanning for devices...', 'info');
+                    console.debug('Scanning for devices...');
+                    
                     try {
-                        this.isScanning = true;
-                        debugLog('Scanning for devices...');
-                        
                         const response = await fetch('/api/devices/scan?force_scan=true', {
-                            method: 'POST'
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
                         });
                         
                         if (!response.ok) {
-                            throw new Error(`Device scan failed: HTTP error ${response.status}`);
+                            throw new Error(`Failed to scan devices: ${response.status} ${response.statusText}`);
                         }
                         
-                        // Reload available devices after scan
-                        await this.fetchDevices();
+                        const data = await response.json();
+                        console.debug('Scan response:', data);
                         
-                        // Also update system status to get latest device states
-                        debugLog("Skipping system status update");
+                        // Check if scan is running in background
+                        if (data.message && data.message.includes('background')) {
+                            this.showToast('Scanning for devices in background...', 'info');
+                            this.startScanPolling();
+                            return;
+                        }
                         
-                        // Update the last update timestamp
-                        const now = new Date();
-                        this.lastDeviceUpdate = now.toLocaleTimeString();
+                        // If not background scan, update devices immediately
+                        await this.fetchAvailableDevices();
+                        await this.fetchSystemStatus();
                         
-                        debugLog("Device scan completed and UI updated");
-                    } catch (error) {
-                        debugLog('Error during device scan:', error, 'error');
-                        alert(`Device scan failed: ${error.message || 'Unknown error'}`);
-                    } finally {
                         this.isScanning = false;
+                        this.showToast('Device scan complete!', 'success');
+                        console.debug('Device scan complete');
+                        
+                    } catch (error) {
+                        console.error('Error scanning devices:', error);
+                        this.isScanning = false;
+                        this.showToast(`Error scanning devices: ${error.message}`, 'error');
+                    }
+                },
+                
+                startScanPolling() {
+                    // Clear any existing polling interval
+                    if (this.scanPollingInterval) {
+                        clearInterval(this.scanPollingInterval);
+                    }
+                    
+                    // Set a timeout to stop polling after 30 seconds
+                    const maxPollTime = 30000; // 30 seconds
+                    const startTime = Date.now();
+                    
+                    this.scanPollingInterval = setInterval(() => {
+                        // Check if we've exceeded max poll time
+                        if (Date.now() - startTime > maxPollTime) {
+                            clearInterval(this.scanPollingInterval);
+                            this.isScanning = false;
+                            this.showToast('Device scan timed out', 'warning');
+                            return;
+                        }
+                        
+                        this.checkScanComplete();
+                    }, 2000); // Poll every 2 seconds
+                },
+                
+                async checkScanComplete() {
+                    try {
+                        // Fetch settings to check last scan time
+                        const response = await fetch('/api/settings');
+                        if (!response.ok) {
+                            throw new Error('Failed to fetch settings');
+                        }
+                        
+                        const settings = await response.json();
+                        
+                        // Check if tapo section exists and has last_scan_time
+                        if (settings.tapo && settings.tapo.last_scan_time) {
+                            const lastScanTime = new Date(settings.tapo.last_scan_time);
+                            const now = new Date();
+                            
+                            // If scan was completed in the last 10 seconds, consider it done
+                            if ((now - lastScanTime) < 10000) {
+                                clearInterval(this.scanPollingInterval);
+                                this.isScanning = false;
+                                
+                                // Update devices and status
+                                await this.fetchAvailableDevices();
+                                await this.fetchSystemStatus();
+                                
+                                this.showToast('Device scan complete!', 'success');
+                                console.debug('Device scan complete');
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error checking scan status:', error);
+                    }
+                },
+                
+                // Toast notification system
+                toastIdCounter: 0,
+                toasts: [],
+                
+                showToast(message, type = 'info', duration = 5000) {
+                    const id = this.toastIdCounter++;
+                    const toast = { id, message, type, visible: true };
+                    this.toasts.push(toast);
+                    
+                    if (duration > 0) {
+                        setTimeout(() => {
+                            this.hideToast(id);
+                        }, duration);
+                    }
+                    
+                    return id;
+                },
+                
+                hideToast(id) {
+                    const toast = this.toasts.find(t => t.id === id);
+                    if (toast) {
+                        toast.visible = false;
+                        // Remove from array after animation completes
+                        setTimeout(() => {
+                            this.toasts = this.toasts.filter(t => t.id !== id);
+                        }, 300);
                     }
                 },
 
@@ -686,11 +1280,52 @@
                             throw new Error(`Invalid ${type} value: ${value}`);
                         }
                         
+                        // Show feedback immediately
+                        const feedbackId = `${type}-feedback`;
+                        let feedbackDiv = document.getElementById(feedbackId);
+                        
+                        if (!feedbackDiv) {
+                            feedbackDiv = document.createElement('div');
+                            feedbackDiv.id = feedbackId;
+                            feedbackDiv.className = 'mt-2 text-xs text-blue-600';
+                            
+                            // Find the input element and add feedback after it
+                            const inputElement = document.getElementById(`${type}-setpoint`);
+                            if (inputElement && inputElement.parentNode) {
+                                inputElement.parentNode.appendChild(feedbackDiv);
+                            }
+                        }
+                        
+                        feedbackDiv.textContent = 'Saving...';
+                        
+                        // Highlight the input field
+                        const inputElement = document.getElementById(`${type}-setpoint`);
+                        if (inputElement) {
+                            const originalBorderColor = inputElement.style.borderColor;
+                            const originalBackgroundColor = inputElement.style.backgroundColor;
+                            
+                            inputElement.style.borderColor = '#3B82F6'; // Blue color
+                            inputElement.style.backgroundColor = '#EFF6FF'; // Light blue background
+                        }
+                        
                         // Get current settings
                         const response = await fetch('/api/settings?update_states=false');
                         if (!response.ok) throw new Error(`HTTP error ${response.status}`);
                         
                         const settings = await response.json();
+                        
+                        // Ensure the environment and phases structure exists
+                        if (!settings.environment) {
+                            settings.environment = {};
+                        }
+                        
+                        if (!settings.environment.phases) {
+                            settings.environment.phases = {};
+                        }
+                        
+                        if (!settings.environment.phases[this.currentPhase]) {
+                            settings.environment.phases[this.currentPhase] = {};
+                        }
                         
                         // Create field mapping
                         const fieldMapping = {
@@ -709,24 +1344,6 @@
                         settings.environment.phases[this.currentPhase][fieldName] = type === 'co2' ? 
                             parseInt(value) : parseFloat(value);
                         
-                        // Show feedback
-                        const feedbackId = `${type}-feedback`;
-                        let feedbackDiv = document.getElementById(feedbackId);
-                        
-                        if (!feedbackDiv) {
-                            feedbackDiv = document.createElement('div');
-                            feedbackDiv.id = feedbackId;
-                            feedbackDiv.className = 'mt-2 text-xs text-blue-600';
-                            
-                            // Find the input element and add feedback after it
-                            const inputElement = document.getElementById(`${type}-setpoint`);
-                            if (inputElement && inputElement.parentNode) {
-                                inputElement.parentNode.appendChild(feedbackDiv);
-                            }
-                        }
-                        
-                        feedbackDiv.textContent = 'Saving...';
-                        
                         // Save updated settings
                         const saveResponse = await fetch('/api/settings', {
                             method: 'POST',
@@ -741,6 +1358,21 @@
                         // Update feedback
                         feedbackDiv.textContent = `${type.charAt(0).toUpperCase() + type.slice(1)} setpoint updated`;
                         feedbackDiv.className = 'mt-2 text-xs text-green-600';
+                        
+                        // Reset input field styling to success
+                        if (inputElement) {
+                            inputElement.style.borderColor = '#10B981'; // Green color
+                            inputElement.style.backgroundColor = '#D1FAE5'; // Light green background
+                            
+                            // Reset to original after 2 seconds
+                            setTimeout(() => {
+                                inputElement.style.borderColor = '';
+                                inputElement.style.backgroundColor = '';
+                            }, 2000);
+                        }
+                        
+                        // Show toast notification
+                        this.showToast(`${type.charAt(0).toUpperCase() + type.slice(1)} setpoint updated to ${value}`, 'success');
                         
                         // Remove feedback after 3 seconds
                         setTimeout(() => {
@@ -771,6 +1403,22 @@
                         feedbackDiv.textContent = `Error: ${error.message}`;
                         feedbackDiv.className = 'mt-2 text-xs text-red-600';
                         
+                        // Highlight input field with error
+                        const inputElement = document.getElementById(`${type}-setpoint`);
+                        if (inputElement) {
+                            inputElement.style.borderColor = '#EF4444'; // Red color
+                            inputElement.style.backgroundColor = '#FEE2E2'; // Light red background
+                            
+                            // Reset to original after 3 seconds
+                            setTimeout(() => {
+                                inputElement.style.borderColor = '';
+                                inputElement.style.backgroundColor = '';
+                            }, 3000);
+                        }
+                        
+                        // Show toast notification
+                        this.showToast(`Error updating ${type} setpoint: ${error.message}`, 'error');
+                        
                         // Remove error feedback after 5 seconds
                         setTimeout(() => {
                             if (feedbackDiv && feedbackDiv.parentNode) {
@@ -784,6 +1432,29 @@
                 async updatePhase() {
                     try {
                         debugLog(`Updating phase to ${this.currentPhase}...`);
+                        
+                        // Show loading indicator
+                        const phaseSelect = document.getElementById('phase-select');
+                        
+                        // Remove any existing indicator first
+                        const existingIndicator = document.getElementById('phase-loading-indicator');
+                        if (existingIndicator && existingIndicator.parentNode) {
+                            existingIndicator.parentNode.removeChild(existingIndicator);
+                        }
+                        
+                        const loadingIndicator = document.createElement('span');
+                        loadingIndicator.id = 'phase-loading-indicator';
+                        loadingIndicator.className = 'ml-2 text-sm text-blue-600';
+                        loadingIndicator.textContent = 'Updating...';
+                        
+                        if (phaseSelect && phaseSelect.parentNode) {
+                            phaseSelect.parentNode.appendChild(loadingIndicator);
+                        }
+                        
+                        // Disable the select while updating
+                        if (phaseSelect) {
+                            phaseSelect.disabled = true;
+                        }
                         
                         // Get current settings
                         const response = await fetch('/api/settings?update_states=false');
@@ -808,10 +1479,52 @@
                         // Reload setpoints for the new phase
                         await this.fetchSetpoints();
                         
+                        // Show success indicator
+                        if (loadingIndicator) {
+                            loadingIndicator.className = 'ml-2 text-sm text-green-600';
+                            loadingIndicator.textContent = 'Updated!';
+                            
+                            // Remove success indicator after 3 seconds
+                            setTimeout(() => {
+                                if (loadingIndicator.parentNode) {
+                                    loadingIndicator.parentNode.removeChild(loadingIndicator);
+                                }
+                            }, 3000);
+                        }
+                        
+                        // Re-enable the select
+                        if (phaseSelect) {
+                            phaseSelect.disabled = false;
+                        }
+                        
+                        // Show toast notification
+                        this.showToast(`Phase updated to ${this.currentPhase}`, 'success');
+                        
                         debugLog(`Successfully updated phase to ${this.currentPhase}`);
                     } catch (error) {
                         debugLog(`Error updating phase: ${error.message}`, 'error');
-                        alert(`Failed to update phase: ${error.message}`);
+                        
+                        // Show error indicator
+                        const loadingIndicator = document.getElementById('phase-loading-indicator');
+                        if (loadingIndicator) {
+                            loadingIndicator.className = 'ml-2 text-sm text-red-600';
+                            loadingIndicator.textContent = 'Error!';
+                            
+                            // Remove error indicator after 5 seconds
+                            setTimeout(() => {
+                                if (loadingIndicator.parentNode) {
+                                    loadingIndicator.parentNode.removeChild(loadingIndicator);
+                                }
+                            }, 5000);
+                        }
+                        
+                        // Re-enable the select
+                        const phaseSelect = document.getElementById('phase-select');
+                        if (phaseSelect) {
+                            phaseSelect.disabled = false;
+                        }
+                        
+                        this.showToast(`Failed to update phase: ${error.message}`, 'error');
                     }
                 },
 
@@ -1001,7 +1714,8 @@
                         // Clear any previous feedback
                         const feedbackDiv = document.querySelector('#fan-speed-feedback');
                         if (feedbackDiv) {
-                            feedbackDiv.textContent = '';
+                            feedbackDiv.textContent = 'Updating...';
+                            feedbackDiv.className = 'mt-2 text-sm text-blue-600';
                         }
                         
                         // Call the fan control API
@@ -1029,8 +1743,8 @@
                             }, 3000);
                         }
                         
-                        // Also update the settings
-                        this.updateFanSettings();
+                        // Also update the settings using the debounced method
+                        this.debouncedUpdateFanSettings();
                     } catch (error) {
                         debugLog(`Error setting fan speed: ${error.message}`, 'error');
                         
@@ -1045,6 +1759,183 @@
                                 feedbackDiv.textContent = '';
                             }, 5000);
                         }
+                    }
+                },
+                
+                async fetchAvailableDevices() {
+                    // If we already have device data, return it immediately
+                    if (this.availableDevices && this.availableDevices.length > 0) {
+                        debugLog('Using cached device data');
+                        return this.availableDevices;
+                    }
+                    
+                    try {
+                        debugLog('Fetching available devices...');
+                        const response = await fetch('/api/devices/available');
+                        if (!response.ok) {
+                            throw new Error(`Failed to fetch available devices: ${response.status} ${response.statusText}`);
+                        }
+                        
+                        const data = await response.json();
+                        debugLog('Available devices:', data);
+                        
+                        this.availableDevices = data.devices || [];
+                        
+                        // Set selected devices based on roles
+                        this.setSelectedDevicesByRole();
+                        
+                        // Update device dropdowns
+                        this.updateDeviceDropdowns();
+                        
+                        // Update last scan information if available
+                        if (data.last_scan_time) {
+                            this.lastScanTime = new Date(data.last_scan_time);
+                            this.lastDeviceUpdate = this.lastScanTime.toLocaleTimeString();
+                            debugLog(`Last device scan: ${this.lastDeviceUpdate} (${data.device_count} devices)`);
+                        }
+                        
+                        return this.availableDevices;
+                    } catch (error) {
+                        console.error('Error fetching available devices:', error);
+                        this.showToast(`Error fetching devices: ${error.message}`, 'error');
+                        return [];
+                    }
+                },
+                
+                async fetchSystemStatus() {
+                    try {
+                        const response = await fetch('/api/system/status');
+                        if (!response.ok) {
+                            throw new Error(`Failed to fetch system status: ${response.status} ${response.statusText}`);
+                        }
+                        
+                        const data = await response.json();
+                        console.debug('System status:', data);
+                        
+                        // Update device states based on system status
+                        if (this.availableDevices && this.availableDevices.length > 0) {
+                            this.availableDevices.forEach(device => {
+                                if (device.role === 'heater' && data.heater) {
+                                    device.state = data.heater.state || false;
+                                } else if (device.role === 'humidifier' && data.humidifier) {
+                                    device.state = data.humidifier.state || false;
+                                }
+                            });
+                        }
+                        
+                        return data;
+                    } catch (error) {
+                        console.error('Error fetching system status:', error);
+                        this.showToast(`Error fetching system status: ${error.message}`, 'error');
+                        return null;
+                    }
+                },
+
+                // Add a method to fetch all settings at once
+                async fetchSettings() {
+                    try {
+                        // Use the optimized method for immediate loading
+                        return await this.loadSettingsImmediately();
+                    } catch (error) {
+                        debugLog(`Error in fetchSettings: ${error.message}`, 'error');
+                        this.showToast(`Error loading settings: ${error.message}`, 'error');
+                        return null;
+                    }
+                },
+
+                updatePhaseDropdown(phases) {
+                    try {
+                        if (!phases) return;
+                        
+                        debugLog('Updating phase dropdown with available phases');
+                        
+                        // Get the phase select dropdown
+                        const phaseSelect = document.getElementById('phase-select');
+                        if (!phaseSelect) {
+                            debugLog('Phase select dropdown not found', 'warning');
+                            return;
+                        }
+                        
+                        // Clear existing options
+                        phaseSelect.innerHTML = '';
+                        
+                        // Add options for each phase
+                        Object.keys(phases).forEach(phase => {
+                            const option = document.createElement('option');
+                            option.value = phase;
+                            
+                            // Format the phase name for display (capitalize first letter)
+                            const displayName = phase.charAt(0).toUpperCase() + phase.slice(1);
+                            option.textContent = displayName;
+                            
+                            // Set as selected if it matches the current phase
+                            if (phase === this.currentPhase) {
+                                option.selected = true;
+                            }
+                            
+                            phaseSelect.appendChild(option);
+                        });
+                        
+                        debugLog(`Phase dropdown updated with ${Object.keys(phases).length} phases`);
+                    } catch (error) {
+                        debugLog(`Error updating phase dropdown: ${error.message}`, 'error');
+                    }
+                },
+
+                // Update device dropdowns immediately
+                updateDeviceDropdowns() {
+                    try {
+                        // Find all device dropdown elements
+                        const heaterSelect = document.querySelector('select[x-model="selectedDevices.heater"]');
+                        const humidifierSelect = document.querySelector('select[x-model="selectedDevices.humidifier"]');
+                        
+                        if (!heaterSelect && !humidifierSelect) {
+                            debugLog('Device dropdown elements not found', 'warning');
+                            return;
+                        }
+                        
+                        // Clear existing options except the first one (which is usually "None" or similar)
+                        const clearOptions = (select) => {
+                            if (!select) return;
+                            while (select.options.length > 1) {
+                                select.remove(1);
+                            }
+                        };
+                        
+                        if (heaterSelect) clearOptions(heaterSelect);
+                        if (humidifierSelect) clearOptions(humidifierSelect);
+                        
+                        // Add device options
+                        this.availableDevices.forEach(device => {
+                            const option = document.createElement('option');
+                            option.value = device.ip;
+                            option.textContent = `${device.name} (${device.ip})`;
+                            
+                            // Add to appropriate dropdown based on role
+                            if (device.role === 'heater' && heaterSelect) {
+                                heaterSelect.appendChild(option.cloneNode(true));
+                                heaterSelect.value = device.ip;
+                            } else if (device.role === 'humidifier' && humidifierSelect) {
+                                humidifierSelect.appendChild(option.cloneNode(true));
+                                humidifierSelect.value = device.ip;
+                            } else {
+                                // Add to both dropdowns if no specific role
+                                if (heaterSelect) heaterSelect.appendChild(option.cloneNode(true));
+                                if (humidifierSelect) humidifierSelect.appendChild(option.cloneNode(true));
+                            }
+                        });
+                        
+                        // Set selected values
+                        if (heaterSelect && this.selectedDevices.heater) {
+                            heaterSelect.value = this.selectedDevices.heater;
+                        }
+                        if (humidifierSelect && this.selectedDevices.humidifier) {
+                            humidifierSelect.value = this.selectedDevices.humidifier;
+                        }
+                        
+                        debugLog('Device dropdowns updated immediately');
+                    } catch (error) {
+                        debugLog(`Error updating device dropdowns: ${error.message}`, 'error');
                     }
                 }
             };
@@ -1117,26 +2008,86 @@
             100% { transform: rotate(360deg); }
         }
         
+        /* Toast animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(20px); }
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-in-out forwards;
+        }
+        
+        .animate-fade-out {
+            animation: fadeOut 0.3s ease-in-out forwards;
+        }
+        
         /* Toggle Switch Styles */
         .toggle-checkbox:checked {
             right: 0;
+            left: auto;
             border-color: #3b82f6;
         }
         .toggle-checkbox:checked + .toggle-label {
             background-color: #3b82f6;
         }
         .toggle-checkbox {
-            right: 0;
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 6rem;
             z-index: 5;
-            transition: all 0.3s;
+            opacity: 0;
+            cursor: pointer;
         }
         .toggle-label {
             transition: background-color 0.3s;
+            position: relative;
+        }
+        .toggle-label:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1.5rem;
+            height: 1.5rem;
+            background-color: white;
+            border-radius: 50%;
+            transition: all 0.3s;
+            border: 2px solid #e5e7eb;
+        }
+        .toggle-checkbox:checked + .toggle-label:after {
+            left: calc(100% - 1.5rem);
+            border-color: #3b82f6;
+        }
+        
+        /* Resizable container styles */
+        .resizable-container {
+            position: relative;
+            padding-bottom: 10px; /* Space for the resize handle */
+        }
+        
+        .resize-handle {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 15px;
+            height: 15px;
+            cursor: nwse-resize;
+            background: linear-gradient(135deg, transparent 50%, #3b82f6 50%);
+            border-radius: 0 0 4px 0;
         }
         
         /* Safari-specific adjustments */
         .safari-browser input[type="number"] {
             -webkit-appearance: none;
+            appearance: none;
             margin: 0;
         }
         .safari-browser .focus-visible:focus {
@@ -1145,29 +2096,88 @@
         }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen p-6">
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
     <!-- Loading Overlay -->
     <div id="loading-overlay" class="fixed inset-0 bg-white bg-opacity-90 z-50 flex flex-col items-center justify-center">
         <div class="spinner mb-4"></div>
-        <p class="text-lg font-medium text-gray-800 mb-2">Loading Shroombox Control Panel...</p>
+        <p class="text-lg font-medium text-gray-800 mb-2">Loading Control Panel...</p>
         <p class="text-sm text-gray-600">This may take a few moments</p>
         <p id="loading-error" class="mt-4 text-red-600 hidden"></p>
     </div>
 
-    <div x-data="controlPanel()" x-init="init()" x-cloak class="max-w-6xl mx-auto space-y-6">
-        <div class="flex justify-between items-center">
-            <h1 class="text-2xl font-bold text-gray-800">Shroombox Control Panel</h1>
-            <div class="flex space-x-2">
-                <a href="/env-settings" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/" class="navbar-brand">
+                Shroombox Control Panel
+            </a>
+            <div class="navbar-links">
+                <a href="/" class="navbar-link navbar-link-home">
+                    Home
+                </a>
+                <a href="/env-settings" class="navbar-link navbar-link-env">
                     Environment Settings
                 </a>
-                <a href="/settings" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700">
+                <a href="/settings" class="navbar-link navbar-link-settings">
                     Advanced Settings
                 </a>
-                <a href="/logging" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+                <a href="/logging" class="navbar-link navbar-link-logging">
                     Logging Control
                 </a>
             </div>
+        </div>
+    </nav>
+
+    <div x-data="controlPanel()" x-init="init()" x-cloak class="max-w-6xl mx-auto space-y-6">
+        <!-- Toast Notifications -->
+        <div class="fixed top-4 right-4 z-50 space-y-2">
+            <template x-for="toast in toasts" :key="toast.id">
+                <div 
+                    x-show="toast.visible" 
+                    x-transition:enter="transition ease-out duration-300"
+                    x-transition:enter-start="opacity-0 transform translate-x-8"
+                    x-transition:enter-end="opacity-100 transform translate-x-0"
+                    x-transition:leave="transition ease-in duration-200"
+                    x-transition:leave-start="opacity-100 transform translate-x-0"
+                    x-transition:leave-end="opacity-0 transform translate-x-8"
+                    :class="{
+                        'bg-green-100 border-green-400 text-green-800': toast.type === 'success',
+                        'bg-blue-100 border-blue-400 text-blue-800': toast.type === 'info',
+                        'bg-yellow-100 border-yellow-400 text-yellow-800': toast.type === 'warning',
+                        'bg-red-100 border-red-400 text-red-800': toast.type === 'error'
+                    }"
+                    class="rounded-md border px-4 py-3 shadow-md flex items-center"
+                >
+                    <!-- Icon based on type -->
+                    <div class="mr-3">
+                        <svg x-show="toast.type === 'success'" class="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                        <svg x-show="toast.type === 'info'" class="h-5 w-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                        </svg>
+                        <svg x-show="toast.type === 'warning'" class="h-5 w-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                        </svg>
+                        <svg x-show="toast.type === 'error'" class="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <!-- Message -->
+                    <div x-text="toast.message"></div>
+                    <!-- Close button -->
+                    <button @click="hideToast(toast.id)" class="ml-auto text-gray-400 hover:text-gray-600">
+                        <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+                </div>
+            </template>
+        </div>
+
+        <div class="flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-gray-800">Dashboard</h1>
+            <!-- Old navigation removed -->
         </div>
 
         <!-- Dashboard Header -->
@@ -1220,8 +2230,8 @@
                         class="rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
                     >
                         <option value="colonisation">Colonisation</option>
-                        <option value="growing">Growing</option>
-                        <option value="cake">Cake</option>
+                        <option value="fruiting">Fruiting</option>
+                        <option value="vegetative">Vegetative</option>
                     </select>
                 </div>
             </div>
@@ -1232,11 +2242,17 @@
                         <label class="block text-sm font-medium text-gray-700 mb-1">Temperature</label>
                         <div class="text-2xl font-medium temperature-value" x-text="measurements.temperature + ' °C'"></div>
                         <div class="text-xs text-gray-500 flex items-center" x-show="measurements.source">
-                            <span x-show="measurements.source === 'sensor'" class="flex items-center measurement-source">
+                            <span x-show="measurements.source === 'sensor' && (!measurements.sensor_status || measurements.sensor_status.available)" class="flex items-center measurement-source">
                                 <svg class="w-3 h-3 text-green-500 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                                 </svg>
                                 Live
+                            </span>
+                            <span x-show="measurements.source === 'sensor' && measurements.sensor_status && !measurements.sensor_status.available" class="flex items-center measurement-source">
+                                <svg class="w-3 h-3 text-red-500 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-5a1 1 0 112 0v-2a1 1 0 11-2 0v2zm0-6a1 1 0 112 0 1 1 0 01-2 0z" clip-rule="evenodd"></path>
+                                </svg>
+                                Sensor Error
                             </span>
                             <span x-show="measurements.source === 'cache'" class="flex items-center measurement-source">
                                 <svg class="w-3 h-3 text-yellow-500 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -1263,7 +2279,7 @@
                             max="40"
                             :value="setpoints.temperature"
                             @input="setpoints.temperature = parseFloat($el.value)"
-                            @change="updateSetpoint('temperature')"
+                            @change="debouncedUpdateSetpoint('temperature')"
                         >
                     </div>
                 </div>
@@ -1274,11 +2290,17 @@
                         <label class="block text-sm font-medium text-gray-700 mb-1">Humidity</label>
                         <div class="text-2xl font-medium humidity-value" x-text="measurements.humidity + ' %'"></div>
                         <div class="text-xs text-gray-500 flex items-center" x-show="measurements.source">
-                            <span x-show="measurements.source === 'sensor'" class="flex items-center measurement-source">
+                            <span x-show="measurements.source === 'sensor' && (!measurements.sensor_status || measurements.sensor_status.available)" class="flex items-center measurement-source">
                                 <svg class="w-3 h-3 text-green-500 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                                 </svg>
                                 Live
+                            </span>
+                            <span x-show="measurements.source === 'sensor' && measurements.sensor_status && !measurements.sensor_status.available" class="flex items-center measurement-source">
+                                <svg class="w-3 h-3 text-red-500 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-5a1 1 0 112 0v-2a1 1 0 11-2 0v2zm0-6a1 1 0 112 0 1 1 0 01-2 0z" clip-rule="evenodd"></path>
+                                </svg>
+                                Sensor Error
                             </span>
                             <span x-show="measurements.source === 'cache'" class="flex items-center measurement-source">
                                 <svg class="w-3 h-3 text-yellow-500 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -1305,7 +2327,7 @@
                             max="100"
                             :value="setpoints.humidity"
                             @input="setpoints.humidity = parseFloat($el.value)"
-                            @change="updateSetpoint('humidity')"
+                            @change="debouncedUpdateSetpoint('humidity')"
                         >
                     </div>
                 </div>
@@ -1317,11 +2339,17 @@
                         <div class="text-2xl font-medium co2-value" x-text="measurements.co2 + ' ppm'"></div>
                         <div class="text-sm font-medium text-gray-600 fan-speed-display" x-text="'Fan: ' + (measurements.fan_speed !== undefined ? parseFloat(measurements.fan_speed).toFixed(1) : '--') + '%'"></div>
                         <div class="text-xs text-gray-500 flex items-center" x-show="measurements.source">
-                            <span x-show="measurements.source === 'sensor'" class="flex items-center measurement-source">
+                            <span x-show="measurements.source === 'sensor' && (!measurements.sensor_status || measurements.sensor_status.available)" class="flex items-center measurement-source">
                                 <svg class="w-3 h-3 text-green-500 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                                 </svg>
                                 Live
+                            </span>
+                            <span x-show="measurements.source === 'sensor' && measurements.sensor_status && !measurements.sensor_status.available" class="flex items-center measurement-source">
+                                <svg class="w-3 h-3 text-red-500 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-5a1 1 0 112 0v-2a1 1 0 11-2 0v2zm0-6a1 1 0 112 0 1 1 0 01-2 0z" clip-rule="evenodd"></path>
+                                </svg>
+                                Sensor Error
                             </span>
                             <span x-show="measurements.source === 'cache'" class="flex items-center measurement-source">
                                 <svg class="w-3 h-3 text-yellow-500 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -1343,14 +2371,13 @@
                             id="co2-setpoint"
                             type="number" 
                             class="block w-24 rounded-md border border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 p-2"
-                            step="100"
-                            min="400"
-                            max="10000"
+                            step="50"
+                            min="0"
+                            max="5000"
                             :value="setpoints.co2"
-                            @input="setpoints.co2 = Math.min(10000, Math.max(400, parseInt($el.value) || 400))"
-                            @change="updateSetpoint('co2')"
+                            @input="setpoints.co2 = parseInt($el.value)"
+                            @change="debouncedUpdateSetpoint('co2')"
                         >
-                        <p class="text-xs text-gray-500 mt-1">Range: 400-10,000 ppm</p>
                     </div>
                     
                     <!-- Manual Fan Control -->
@@ -1363,7 +2390,7 @@
                                     id="manual-fan-toggle" 
                                     x-model="fanControl.manualMode"
                                     @change="toggleManualFanControl"
-                                    class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
+                                    class="toggle-checkbox"
                                 />
                                 <label 
                                     for="manual-fan-toggle" 
@@ -1382,6 +2409,7 @@
                                     max="100" 
                                     step="1" 
                                     x-model="fanControl.speed"
+                                    @input="$el.nextElementSibling.textContent = fanControl.speed + '%'"
                                     @change="updateManualFanSpeed"
                                     class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
                                 />
@@ -1412,7 +2440,7 @@
                                 max="0"
                                 :value="pidSettings.kp"
                                 @input="pidSettings.kp = parseFloat($el.value)"
-                                @change="updatePidSetting('kp')"
+                                @change="debouncedUpdatePidSetting('kp')"
                             >
                         </div>
                         <div class="flex items-center">
@@ -1426,7 +2454,7 @@
                                 max="0"
                                 :value="pidSettings.ki"
                                 @input="pidSettings.ki = parseFloat($el.value)"
-                                @change="updatePidSetting('ki')"
+                                @change="debouncedUpdatePidSetting('ki')"
                             >
                         </div>
                         <div class="flex items-center">
@@ -1440,7 +2468,7 @@
                                 max="1"
                                 :value="pidSettings.kd"
                                 @input="pidSettings.kd = parseFloat($el.value)"
-                                @change="updatePidSetting('kd')"
+                                @change="debouncedUpdatePidSetting('kd')"
                             >
                         </div>
                     </div>
@@ -1453,8 +2481,11 @@
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-xl font-semibold text-gray-800">Device Settings</h2>
                 <div class="flex items-center space-x-2">
-                    <div x-show="lastDeviceUpdate" class="text-xs text-gray-500 animate-pulse">
+                    <div x-show="lastDeviceUpdate" class="text-xs text-gray-500">
                         Last updated: <span x-text="lastDeviceUpdate"></span>
+                        <span x-show="availableDevices.length > 0" class="ml-2">
+                            (<span x-text="availableDevices.length"></span> devices found)
+                        </span>
                     </div>
                     <button 
                         @click="rescanDevices"
@@ -1478,7 +2509,7 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Select Device</label>
                         <select 
-                            x-model="selectedHeater"
+                            x-model="selectedDevices.heater"
                             @change="updateDeviceRole('heater')"
                             class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 mb-2"
                         >
@@ -1491,9 +2522,9 @@
                             </template>
                         </select>
                         <!-- Heater Device Info -->
-                        <div x-show="selectedHeater" class="mt-2 text-sm space-y-1 text-gray-600 bg-gray-50 p-3 rounded-md" :data-device="'heater'">
+                        <div x-show="selectedDevices.heater" class="mt-2 text-sm space-y-1 text-gray-600 bg-gray-50 p-3 rounded-md" :data-device="'heater'">
                             <template x-for="device in availableDevices" :key="device.ip">
-                                <div x-show="device.ip === selectedHeater">
+                                <div x-show="device.ip === selectedDevices.heater">
                                     <div><span class="font-medium">IP:</span> <span x-text="device.ip"></span></div>
                                     <div><span class="font-medium">MAC:</span> <span x-text="device.mac"></span></div>
                                     <div><span class="font-medium">Model:</span> <span x-text="device.model"></span></div>
@@ -1527,7 +2558,7 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Select Device</label>
                         <select 
-                            x-model="selectedHumidifier"
+                            x-model="selectedDevices.humidifier"
                             @change="updateDeviceRole('humidifier')"
                             class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 mb-2"
                         >
@@ -1540,9 +2571,9 @@
                             </template>
                         </select>
                         <!-- Humidifier Device Info -->
-                        <div x-show="selectedHumidifier" class="mt-2 text-sm space-y-1 text-gray-600 bg-gray-50 p-3 rounded-md" :data-device="'humidifier'">
+                        <div x-show="selectedDevices.humidifier" class="mt-2 text-sm space-y-1 text-gray-600 bg-gray-50 p-3 rounded-md" :data-device="'humidifier'">
                             <template x-for="device in availableDevices" :key="device.ip">
-                                <div x-show="device.ip === selectedHumidifier">
+                                <div x-show="device.ip === selectedDevices.humidifier">
                                     <div><span class="font-medium">IP:</span> <span x-text="device.ip"></span></div>
                                     <div><span class="font-medium">MAC:</span> <span x-text="device.mac"></span></div>
                                     <div><span class="font-medium">Model:</span> <span x-text="device.model"></span></div>
@@ -1572,13 +2603,153 @@
             </div>
         </div>
 
-    </div>
+        <!-- Polling Settings -->
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold text-gray-800">Polling Settings</h2>
+                <div class="text-xs text-gray-500">
+                    Adjust how frequently the dashboard updates data
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-6">
+                <!-- Measurement Polling -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-medium text-gray-700">Sensor Data Polling</h3>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Interval (seconds)</label>
+                        <div class="flex items-center">
+                            <input 
+                                id="measurement-polling-interval"
+                                type="number" 
+                                class="block w-24 rounded-md border border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 p-2 transition-all duration-300"
+                                min="1"
+                                max="60"
+                                value="8"
+                                onchange="updateMeasurementPolling(this.value)"
+                            >
+                            <span class="ml-2 text-sm text-gray-500">seconds</span>
+                            <!-- Confirmation message will be inserted here by JavaScript -->
+                        </div>
+                        <p class="mt-1 text-xs text-gray-500">How often to refresh temperature, humidity, and CO2 readings</p>
+                    </div>
+                </div>
+                
+                <!-- Device Polling -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-medium text-gray-700">Device Status Polling</h3>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Interval (seconds)</label>
+                        <div class="flex items-center">
+                            <input 
+                                id="device-polling-interval"
+                                type="number" 
+                                class="block w-24 rounded-md border border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 p-2 transition-all duration-300"
+                                min="1"
+                                max="60"
+                                value="3"
+                                onchange="updateDevicePolling(this.value)"
+                            >
+                            <span class="ml-2 text-sm text-gray-500">seconds</span>
+                            <!-- Confirmation message will be inserted here by JavaScript -->
+                        </div>
+                        <p class="mt-1 text-xs text-gray-500">How often to refresh device status (on/off state)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <!-- Debug Panel -->
-    <div id="debug-panel" class="bg-black bg-opacity-80 text-white p-4 mt-6 rounded-lg z-[9000] max-h-64 overflow-auto text-xs font-mono mx-auto max-w-6xl">
-        <h3 class="text-sm font-bold mb-2">Debug Panel</h3>
-        <div id="debug-log"></div>
+        <!-- Grafana Dashboard -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold text-gray-800">Metrics Dashboard</h2>
+                <div class="flex space-x-2">
+                    <select id="grafana-time-range" class="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        <option value="now-1h">Last 1 hour</option>
+                        <option value="now-3h">Last 3 hours</option>
+                        <option value="now-6h">Last 6 hours</option>
+                        <option value="now-12h">Last 12 hours</option>
+                        <option value="now-24h" selected>Last 24 hours</option>
+                        <option value="now-2d">Last 2 days</option>
+                        <option value="now-7d">Last 7 days</option>
+                    </select>
+                    <button onclick="reloadGrafana()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded shadow">
+                        Refresh Dashboard
+                    </button>
+                </div>
+            </div>
+            <div class="grafana-container relative w-full resizable-container" style="min-height: 200px; resize: both; overflow: hidden; border: 1px solid #e5e7eb; border-radius: 0.375rem;">
+                <iframe id="grafana-iframe" src="http://{{ request.host.split(':')[0] }}:3000/d-solo/eefisa7jpiuiod/shroombox?orgId=1&from=1741680763777&to=1741702363777&timezone=browser&panelId=1&__feature.dashboardSceneSolo" style="width: 100%; height: 100%; min-height: 200px;" frameborder="0"></iframe>
+                <div class="resize-handle"></div>
+            </div>
+        </div>
+
+        <!-- Debug Panel -->
+        <div id="debug-panel" class="bg-black bg-opacity-80 text-white p-4 mt-6 rounded-lg z-[9000] max-h-64 overflow-auto text-xs font-mono mx-auto max-w-6xl">
+            <h3 class="text-sm font-bold mb-2">Debug Panel</h3>
+            <div id="debug-log"></div>
+        </div>
+
     </div>
 
     <script>
-        // Add debug logging function
+        // Function to update Grafana iframe URL with new time range
+        function updateGrafanaUrl() {
+            const timeRange = document.getElementById('grafana-time-range').value;
+            const iframe = document.getElementById('grafana-iframe');
+            // Get the hostname from the current page URL
+            const hostname = window.location.hostname;
+            const baseUrl = `http://${hostname}:3000/d-solo/eefisa7jpiuiod/shroombox`;
+            const to = Math.floor(Date.now());
+            const from = to - (timeRange === 'now-1h' ? 3600000 : 
+                             timeRange === 'now-3h' ? 10800000 :
+                             timeRange === 'now-6h' ? 21600000 :
+                             timeRange === 'now-12h' ? 43200000 :
+                             timeRange === 'now-24h' ? 86400000 :
+                             timeRange === 'now-2d' ? 172800000 :
+                             timeRange === 'now-7d' ? 604800000 : 86400000);
+            const params = `?orgId=1&timezone=browser&panelId=1&__feature.dashboardSceneSolo&from=${from}&to=${to}`;
+            iframe.src = baseUrl + params;
+        }
+
+        // Function to reload Grafana iframe
+        function reloadGrafana() {
+            const iframe = document.getElementById('grafana-iframe');
+            if (iframe) {
+                iframe.src = iframe.src;
+            }
+        }
+
+        // Initialize Grafana dashboard when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            const timeRangeSelect = document.getElementById('grafana-time-range');
+            if (timeRangeSelect) {
+                timeRangeSelect.addEventListener('change', updateGrafanaUrl);
+                // Trigger initial update
+                updateGrafanaUrl();
+            }
+            
+            // Save the user's preferred size in localStorage
+            const container = document.querySelector('.resizable-container');
+            if (container) {
+                // Load saved size if available
+                const savedHeight = localStorage.getItem('grafana-height');
+                const savedWidth = localStorage.getItem('grafana-width');
+                
+                if (savedHeight) {
+                    container.style.height = savedHeight;
+                }
+                if (savedWidth) {
+                    container.style.width = savedWidth;
+                }
+                
+                // Save size when resized
+                container.addEventListener('mouseup', function() {
+                    localStorage.setItem('grafana-height', container.style.height);
+                    localStorage.setItem('grafana-width', container.style.width);
+                });
+            }
+        });
+    </script>
+
+</body>
+</html>

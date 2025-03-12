@@ -14,12 +14,17 @@ Scripts in this directory follow these naming conventions:
 
 ## Utility Scripts
 
-- `util_update_measurements.py`: Updates the measurements.json file with current sensor readings
+- `util_update_measurements.py`: Updates the measurements.json file with current sensor readings (in the main /data directory)
 - `util_find_tapo_devices.py`: Discovers Tapo devices on the local network
 - `util_simulate_sensor.py`: Simulates sensor readings for testing
 - `util_tapo_ip_finder.py`: Finds IP addresses of Tapo devices
 - `util_init_devices.py`: Initializes devices for the Shroombox system
 - `util_update_test_imports.py`: Updates import statements in test files
+
+## Important Notes
+
+- All scripts should use the measurements.json file in the main `/data` directory, not create their own copies
+- The scripts/data directory should only be used for test data or temporary files, not for production data
 
 ## Calibration Scripts
 

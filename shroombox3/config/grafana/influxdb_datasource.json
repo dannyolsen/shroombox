@@ -1,0 +1,20 @@
+{
+  "name": "InfluxDB",
+  "type": "influxdb",
+  "access": "proxy",
+  "url": "http://localhost:8086",
+  "password": "",
+  "user": "",
+  "database": "",
+  "basicAuth": false,
+  "isDefault": true,
+  "jsonData": {
+    "version": "Flux",
+    "organization": "supershrooms",
+    "defaultBucket": "test",
+    "tlsSkipVerify": true
+  },
+  "secureJsonData": {
+    "token": "c2Rv1eicxKISzPKmJQO8bwwdvgWWBqdVc-5sYJMffEqUG_GTMnmITLCHq-AES_p0la3Fyb5QRHAxwKJ7T6f2Rg=="
+  }
+} 

@@ -1,9 +1,0 @@
----
-description: virtualenvs when testing
-globs: 
-alwaysApply: false
----
-
-# Your rule content
-
-- remember to use the virtual environment when testing files

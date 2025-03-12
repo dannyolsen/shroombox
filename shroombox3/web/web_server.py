@@ -31,7 +31,7 @@ from devices.smart_plug import TapoController
 from managers.device_manager import DeviceManager, device_manager
 from managers.influxdb_manager import influxdb_manager
 from managers.env_manager import env_manager
-from controllers.environment_controller import EnvironmentController
+from managers.environment_controller import EnvironmentController
 
 # Load environment variables from .env file
 load_dotenv()
@@ -291,26 +291,75 @@ async def simple_page():
 
 @app.route('/api/settings', methods=['GET'])
 async def get_settings():
-    """Get current settings."""
+    """Get settings from settings.json."""
     try:
-        settings = await settings_manager.load_settings()
+        settings_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'config', 'settings.json')
+        
+        if not os.path.exists(settings_path):
+            app.logger.warning(f"Settings file not found at {settings_path}")
+            # Return default settings to avoid breaking the UI
+            return jsonify({
+                'environment': {
+                    'current_phase': 'vegetative',
+                    'phases': {
+                        'vegetative': {
+                            'temperature': 24,
+                            'humidity': 85,
+                            'co2': 800
+                        },
+                        'fruiting': {
+                            'temperature': 22,
+                            'humidity': 90,
+                            'co2': 1000
+                        }
+                    }
+                },
+                'available_devices': [],
+                'fan': {
+                    'speed': 50,
+                    'manual_mode': True
+                },
+                'message': 'Settings file not found, using default values'
+            })
+            
+        with open(settings_path, 'r') as f:
+            settings = json.load(f)
+            
         return jsonify(settings)
     except Exception as e:
-        logger.error(f"Error getting settings: {e}")
+        app.logger.error(f"Error getting settings: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/settings', methods=['POST'])
 async def update_settings():
-    """Update settings."""
+    """Update settings in settings.json."""
     try:
-        updates = await request.get_json()
-        success = await settings_manager.update_settings(updates)
-        if success:
-            return jsonify({'status': 'success'})
+        settings_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'config', 'settings.json')
+        data = await request.get_json()
+        
+        # Check if settings file exists
+        if os.path.exists(settings_path):
+            # Load existing settings
+            with open(settings_path, 'r') as f:
+                settings = json.load(f)
+                
+            # Update settings with new data
+            settings.update(data)
         else:
-            return jsonify({'error': 'Failed to update settings'}), 500
+            # Create new settings file with provided data
+            app.logger.info(f"Creating new settings file at {settings_path}")
+            settings = data
+            
+            # Ensure directory exists
+            os.makedirs(os.path.dirname(settings_path), exist_ok=True)
+        
+        # Save updated settings
+        with open(settings_path, 'w') as f:
+            json.dump(settings, f, indent=4)
+            
+        return jsonify({'message': 'Settings updated successfully'})
     except Exception as e:
-        logger.error(f"Error updating settings: {e}")
+        app.logger.error(f"Error updating settings: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/devices', methods=['GET'])
@@ -406,6 +455,7 @@ async def scan_devices():
         
         # Use the global TapoController instance or create a new one if it doesn't exist
         if tapo_controller is None:
+            app.logger.info("Initializing TapoController for device scan")
             tapo_controller = TapoController(
                 email=os.getenv('TAPO_EMAIL'),
                 password=os.getenv('TAPO_PASSWORD')
@@ -414,100 +464,98 @@ async def scan_devices():
         # Get the settings path
         settings_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'config', 'settings.json')
         
-        # Run the scan_and_update_settings method
-        success = await tapo_controller.scan_and_update_settings(settings_path, force_scan)
+        app.logger.info(f"Starting device scan (force_scan={force_scan})")
         
-        if success:
-            return jsonify({"status": "success", "message": "Device scan completed successfully"})
-        else:
-            return jsonify({"status": "error", "message": "Device scan failed"}), 500
+        # Create a background task for scanning to avoid blocking the response
+        # This allows us to return immediately while the scan continues in the background
+        async def background_scan():
+            try:
+                # Run the scan_and_update_settings method
+                success = await tapo_controller.scan_and_update_settings(settings_path, force_scan)
+                app.logger.info(f"Background device scan completed: {'success' if success else 'failed'}")
+            except Exception as e:
+                app.logger.error(f"Error in background device scan: {e}")
+        
+        # Start the background task
+        asyncio.create_task(background_scan())
+        
+        # Return immediately with a success message
+        return jsonify({
+            "status": "success", 
+            "message": "Device scan started in background",
+            "background": True
+        })
+        
     except Exception as e:
-        app.logger.error(f"Error during device scan: {e}")
+        app.logger.error(f"Error starting device scan: {e}")
         return jsonify({"status": "error", "message": str(e)}), 500
 
 @app.route('/api/system/status')
 async def get_system_status():
-    """Get current system status including fan speed, device states, and CPU temp."""
+    """Get system status including device states."""
     try:
-        # Get fan speed from measurements.json
-        fan_speed = 0
-        try:
-            if os.path.exists(MEASUREMENTS_FILE):
-                with open(MEASUREMENTS_FILE, 'r') as f:
-                    measurements_data = json.load(f)
-                    fan_speed = measurements_data.get('fan_speed', 0)
-                    logger.info(f"Got fan speed from measurements.json: {fan_speed}%")
-        except Exception as measurements_error:
-            logger.error(f"Error reading fan speed from measurements.json: {measurements_error}")
-            # Fallback to getting fan speed from device manager
-            fan_speed = device_manager.get_fan_speed()
-            logger.info(f"Got fan speed from device manager: {fan_speed}%")
+        # Get settings
+        settings_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'config', 'settings.json')
         
-        # Get CPU temperature
-        cpu_temp = device_manager.get_cpu_temperature()
+        if not os.path.exists(settings_path):
+            app.logger.warning(f"Settings file not found at {settings_path}")
+            # Return default status to avoid breaking the UI
+            return jsonify({
+                'heater': {'state': False, 'device': None},
+                'humidifier': {'state': False, 'device': None},
+                'fan': {'speed': 0, 'manual_mode': False},
+                'cpu_temp': get_cpu_temperature(),
+                'message': 'Settings file not found, using default values'
+            })
+            
+        with open(settings_path, 'r') as f:
+            settings = json.load(f)
+            
+        # Get device states
+        heater_device = None
+        humidifier_device = None
         
-        # Get heater state
-        heater_state = False
-        heater_ip = None
-        try:
-            heater_device = next((d for d in device_manager.devices if d.role == 'heater'), None)
-            if heater_device:
-                heater_state = heater_device.get_state()
-                heater_ip = heater_device.ip_address
-        except Exception as heater_error:
-            logger.error(f"Error getting heater state: {heater_error}")
+        if 'available_devices' in settings:
+            for device in settings['available_devices']:
+                if device.get('role') == 'heater':
+                    heater_device = device
+                elif device.get('role') == 'humidifier':
+                    humidifier_device = device
         
-        # Get humidifier state
-        humidifier_state = False
-        humidifier_ip = None
-        try:
-            humidifier_device = next((d for d in device_manager.devices if d.role == 'humidifier'), None)
-            if humidifier_device:
-                humidifier_state = humidifier_device.get_state()
-                humidifier_ip = humidifier_device.ip_address
-        except Exception as humidifier_error:
-            logger.error(f"Error getting humidifier state: {humidifier_error}")
+        # Get fan settings
+        fan_settings = {
+            'speed': 0,
+            'manual_mode': False
+        }
         
-        return jsonify({
-            'fan_speed': round(float(fan_speed), 1) if fan_speed is not None else 0.0,
-            'cpu_temp': round(cpu_temp, 1) if cpu_temp is not None else None,
+        if 'fan' in settings:
+            fan_settings = settings['fan']
+        
+        # Build response
+        response = {
             'heater': {
-                'state': heater_state,
-                'ip': heater_ip
+                'state': heater_device.get('state', False) if heater_device else False,
+                'device': heater_device
             },
             'humidifier': {
-                'state': humidifier_state,
-                'ip': humidifier_ip
-            }
-        })
+                'state': humidifier_device.get('state', False) if humidifier_device else False,
+                'device': humidifier_device
+            },
+            'fan': fan_settings,
+            'cpu_temp': get_cpu_temperature()
+        }
+        
+        return jsonify(response)
         
     except Exception as e:
-        logger.error(f"Error getting system status: {e}")
-        
-        # Try to get fan speed from measurements.json
-        fan_speed = 0
-        try:
-            if os.path.exists(MEASUREMENTS_FILE):
-                with open(MEASUREMENTS_FILE, 'r') as f:
-                    measurements_data = json.load(f)
-                    fan_speed = measurements_data.get('fan_speed', 0)
-        except Exception as measurements_error:
-            logger.error(f"Error reading fan speed from measurements.json: {measurements_error}")
-            
-            # Fallback to getting fan speed from settings.json
-            try:
-                settings_file = os.path.join(BASE_DIR, 'config', 'settings.json')
-                with open(settings_file, 'r') as f:
-                    settings = json.load(f)
-                    fan_speed = settings.get('fan', {}).get('speed', 0)
-            except Exception as settings_error:
-                logger.error(f"Error reading fan speed from settings: {settings_error}")
-        
+        app.logger.error(f"Error getting system status: {str(e)}")
+        # Return default status to avoid breaking the UI
         return jsonify({
-            'fan_speed': round(float(fan_speed), 1) if fan_speed is not None else 0.0,
-            'cpu_temp': None,
-            'heater': {'state': False, 'ip': None},
-            'humidifier': {'state': False, 'ip': None}
+            'heater': {'state': False, 'device': None},
+            'humidifier': {'state': False, 'device': None},
+            'fan': {'speed': 0, 'manual_mode': False},
+            'cpu_temp': get_cpu_temperature(),
+            'error': str(e)
         })
 
 @app.route('/api/system/control', methods=['POST'])
@@ -933,7 +981,7 @@ async def env_settings_page():
         return await render_template('env_settings.html')
     except Exception as e:
         logger.error(f"Error rendering environment settings page: {e}")
-        return f"Error: {str(e)}", 500
+        return "Error loading environment settings page", 500
 
 # Add a route to explicitly serve the main.js file
 @app.route('/static/js/main.js')
@@ -1188,6 +1236,70 @@ async def settings_page():
     except Exception as e:
         logger.error(f"Error rendering settings page: {e}")
         return "Error loading settings page", 500
+
+@app.route('/api/grafana/token')
+def get_grafana_token():
+    """Return the Grafana API token from environment variables."""
+    token = os.getenv('GRAFANA_API_TOKEN')
+    if token:
+        return jsonify({'token': token})
+    else:
+        return jsonify({'error': 'Grafana token not configured'}), 404
+
+@app.route('/grafana')
+async def grafana_page():
+    """Render the standalone Grafana dashboard page."""
+    return await render_template('grafana.html')
+
+@app.route('/api/devices/available', methods=['GET'])
+async def get_available_devices():
+    """Get available devices from settings file."""
+    try:
+        settings_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'config', 'settings.json')
+        
+        if not os.path.exists(settings_path):
+            app.logger.warning(f"Settings file not found at {settings_path}")
+            # Return empty data but with a 200 status code to avoid breaking the UI
+            return jsonify({
+                'devices': [],
+                'last_scan_time': None,
+                'device_count': 0,
+                'message': 'Settings file not found, but continuing with empty device list'
+            }), 200
+            
+        with open(settings_path, 'r') as f:
+            settings = json.load(f)
+            
+        # Extract available devices from settings
+        available_devices = []
+        if 'available_devices' in settings:
+            available_devices = settings['available_devices']
+            
+        # Get last scan time if available
+        last_scan_time = None
+        if 'tapo' in settings and 'last_scan_time' in settings['tapo']:
+            last_scan_time = settings['tapo']['last_scan_time']
+        elif 'last_device_scan' in settings and 'timestamp' in settings['last_device_scan']:
+            last_scan_time = settings['last_device_scan']['timestamp']
+            
+        # Get device count if available
+        device_count = len(available_devices)
+        
+        return jsonify({
+            'devices': available_devices,
+            'last_scan_time': last_scan_time,
+            'device_count': device_count
+        })
+        
+    except Exception as e:
+        app.logger.error(f"Error getting available devices: {str(e)}")
+        # Return empty data but with a 200 status code to avoid breaking the UI
+        return jsonify({
+            'devices': [],
+            'last_scan_time': None,
+            'device_count': 0,
+            'message': f'Error retrieving devices: {str(e)}'
+        }), 200
 
 if __name__ == '__main__':
     config = Config()

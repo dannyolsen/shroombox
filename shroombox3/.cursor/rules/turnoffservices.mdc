@@ -1,10 +1,57 @@
 ---
-description: rules for working with services
+description: 
 globs: 
 alwaysApply: false
 ---
+# Service Management Guidelines
 
-# Your rule content
+This rule ensures proper configuration and management of system services in the Shroombox project.
 
-- when creating services they should only restart on-failure
-- when making implementations to the project always determine if we need to restart services in order so verify if changes are working. If services need to be restarted restart them
+## Service Configuration
+- Configure all services to restart only on failure (`Restart=on-failure`)
+- Set appropriate restart delays to prevent rapid cycling (`RestartSec=10s`)
+- Use descriptive service names with the `shroombox-` prefix
+- Include clear descriptions in service files
+- Set proper dependencies between services
+
+## Service Implementation
+- Create separate service files for each component
+- Use environment files for configuration when appropriate
+- Implement proper logging for all services
+- Add status reporting capabilities
+
+## Service Management
+- Restart affected services after code changes to verify functionality
+- Use systemd for service management (start, stop, enable, disable)
+- Monitor service status and logs for issues
+- Implement graceful shutdown procedures
+
+## Example Service File
+```ini
+[Unit]
+Description=Shroombox Measurement Service
+After=network.target
+
+[Service]
+Type=simple
+User=shroombox
+WorkingDirectory=/home/shroombox/shroombox3
+ExecStart=/home/shroombox/shroombox3/scripts/run_measurements.sh
+Restart=on-failure
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target
+```
+
+## Service Deployment
+- Use the `install_services.sh` script to deploy services
+- Verify service status after installation
+- Test service recovery after failure
+- Document service dependencies and startup order
+
+## Service Monitoring
+- Check service status before and after making changes
+- Monitor service logs for errors or warnings
+- Implement health checks for critical services
+- Set up notifications for service failures

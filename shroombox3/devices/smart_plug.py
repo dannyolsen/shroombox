@@ -12,6 +12,7 @@ import logging
 import time
 from typing import Optional, Dict, Any, List
 import json
+from datetime import datetime
 
 from devices.base import Device
 from utils.singleton import singleton
@@ -459,57 +460,104 @@ class TapoController(Device):
             logger.error(f"Error getting device info for {ip_addr}: {e}")
             return None
     
-    async def discover_devices(self) -> List[Dict[str, Any]]:
+    async def discover_devices(self, force_refresh: bool = False) -> List[Dict[str, Any]]:
         """
         Discover all Tapo devices on the network.
         
+        Args:
+            force_refresh: Force a refresh of the device cache
+            
         Returns:
             List[Dict[str, Any]]: List of discovered devices
         """
         if not self.is_initialized:
             logger.warning("Cannot discover devices: controller not initialized")
-            return []
+            if not self.initialize():
+                return []
+            
+        # Reduce TTL from 300 to 60 seconds for more responsive updates
+        self._discovery_ttl = 60  # 1 minute cache TTL
             
         current_time = time.time()
-        if current_time - self._last_discovery > self._discovery_ttl:
-            logger.info("Refreshing Tapo discovery cache")
-            self._discovery_cache = []
-            self._last_discovery = current_time
-        
-        if self._discovery_cache:
-            logger.info("Using cached Tapo discovery results")
+        # Use cache unless force_refresh is True or cache is expired
+        if not force_refresh and self._discovery_cache and (current_time - self._last_discovery <= self._discovery_ttl):
+            logger.info(f"Using cached Tapo discovery results ({len(self._discovery_cache)} devices)")
             return self._discovery_cache
+        
+        logger.info("Refreshing Tapo discovery cache")
+        self._discovery_cache = []
+        self._last_discovery = current_time
         
         discovered_devices = []
         
-        # Try Kasa discovery first
+        # Run both discovery methods in parallel
+        try:
+            logger.info("Starting parallel device discovery...")
+            
+            # Create tasks for both discovery methods
+            kasa_task = self._discover_kasa_devices()
+            tapo_task = self._discover_tapo_devices()
+            
+            # Wait for both tasks with a timeout
+            done, pending = await asyncio.wait(
+                [kasa_task, tapo_task], 
+                timeout=10,  # 10 second timeout for discovery
+                return_when=asyncio.ALL_COMPLETED
+            )
+            
+            # Cancel any pending tasks
+            for task in pending:
+                logger.warning("Discovery timeout reached, cancelling remaining discovery")
+                task.cancel()
+            
+            # Process results
+            for task in done:
+                try:
+                    devices = await task
+                    if devices:
+                        # Add devices to the discovered list, avoiding duplicates by MAC
+                        existing_macs = {d['mac'] for d in discovered_devices}
+                        for device in devices:
+                            if device['mac'] not in existing_macs:
+                                discovered_devices.append(device)
+                                existing_macs.add(device['mac'])
+                except Exception as e:
+                    logger.error(f"Error processing discovery task result: {e}")
+            
+        except Exception as e:
+            logger.error(f"Error during parallel device discovery: {e}")
+        
+        # Log discovery results
+        if discovered_devices:
+            logger.info(f"Discovered {len(discovered_devices)} devices in total")
+            self._discovery_cache = discovered_devices
+        else:
+            logger.warning("No devices discovered")
+            
+        return discovered_devices
+    
+    async def _discover_kasa_devices(self) -> List[Dict[str, Any]]:
+        """
+        Discover devices using Kasa protocol.
+        
+        Returns:
+            List[Dict[str, Any]]: List of discovered Kasa devices
+        """
+        discovered_devices = []
         try:
             logger.info("Discovering devices using Kasa...")
-            kasa_devices = await Discover.discover()
+            # Add timeout to Kasa discovery
+            kasa_devices = await asyncio.wait_for(Discover.discover(), timeout=5)
             
             for addr, device in kasa_devices.items():
                 try:
                     # Only add P115 devices
                     if 'P115' in device.model:
-                        # Get the actual device name by directly querying the device
-                        actual_name = None
-                        try:
-                            # Try to get the device info directly
-                            tapo_device = await self.get_device(addr)
-                            if tapo_device:
-                                device_info = await tapo_device.get_device_info()
-                                if device_info and 'alias' in device_info and device_info['alias']:
-                                    actual_name = device_info['alias']
-                                    logger.info(f"Retrieved actual name from device at {addr}: {actual_name}")
-                        except Exception as e:
-                            logger.warning(f"Error getting device info for {addr}: {e}")
+                        # Simplified name retrieval - don't query each device individually
+                        name = device.alias
                         
-                        # Use the actual name if available, otherwise use the alias from Kasa
-                        name = actual_name or device.alias
-                        
-                        # If still no name, use a default
+                        # If no name, use a default
                         if not name or name == "":
-                            logger.info(f"Device at {addr} has no name, using model and IP")
                             name = f"{device.model} ({addr})"
                         
                         device_info = {
@@ -524,59 +572,51 @@ class TapoController(Device):
                         logger.info(f"Discovered Kasa device: {name} at {addr}")
                 except Exception as e:
                     logger.warning(f"Error processing Kasa device at {addr}: {e}")
+        except asyncio.TimeoutError:
+            logger.warning("Kasa discovery timed out after 5 seconds")
         except Exception as e:
             logger.warning(f"Error during Kasa discovery: {e}")
+            
+        return discovered_devices
+    
+    async def _discover_tapo_devices(self) -> List[Dict[str, Any]]:
+        """
+        Discover devices using Tapo cloud.
         
-        # Try Tapo discovery
+        Returns:
+            List[Dict[str, Any]]: List of discovered Tapo devices
+        """
+        discovered_devices = []
         try:
             logger.info("Discovering devices using Tapo...")
             await self._refresh_session_if_needed()
             
-            # Get all devices from Tapo cloud
-            cloud_devices = await self.client.find_devices()
+            # Get all devices from Tapo cloud with timeout
+            cloud_devices = await asyncio.wait_for(self.client.find_devices(), timeout=5)
             
             for device in cloud_devices:
                 try:
-                    # Check if device is already in the list
+                    # Simplified processing - don't query each device individually
                     device_mac = device['mac'].upper().replace(':', '-')
-                    if not any(d['mac'] == device_mac for d in discovered_devices):
-                        # Get the actual device name by directly querying the device
-                        actual_name = None
-                        try:
-                            # Try to get the device info directly
-                            tapo_device = await self.get_device(device['ip'])
-                            if tapo_device:
-                                device_info = await tapo_device.get_device_info()
-                                if device_info and 'alias' in device_info and device_info['alias']:
-                                    actual_name = device_info['alias']
-                                    logger.info(f"Retrieved actual name from device at {device['ip']}: {actual_name}")
-                        except Exception as e:
-                            logger.warning(f"Error getting device info for {device['ip']}: {e}")
-                        
-                        # Use the actual name if available, otherwise use the alias from Tapo cloud
-                        name = actual_name or device.get('alias')
-                        
-                        # If still no name, use a default
-                        if not name or name == "":
-                            logger.info(f"Device at {device['ip']} has no name, using model and IP")
-                            name = f"{device.get('model', 'Device')} ({device['ip']})"
-                        
-                        device_info = {
-                            'name': name,
-                            'ip': device['ip'],
-                            'mac': device_mac,
-                            'model': device['model'],
-                            'type': device['type'],
-                            'state': device['status'] == 1
-                        }
-                        discovered_devices.append(device_info)
-                        logger.info(f"Discovered Tapo device: {name} at {device['ip']}")
+                    name = device.get('alias') or f"{device.get('model', 'Device')} ({device['ip']})"
+                    
+                    device_info = {
+                        'name': name,
+                        'ip': device['ip'],
+                        'mac': device_mac,
+                        'model': device['model'],
+                        'type': device['type'],
+                        'state': device['status'] == 1
+                    }
+                    discovered_devices.append(device_info)
+                    logger.info(f"Discovered Tapo device: {name} at {device['ip']}")
                 except Exception as e:
                     logger.warning(f"Error processing Tapo device: {e}")
+        except asyncio.TimeoutError:
+            logger.warning("Tapo discovery timed out after 5 seconds")
         except Exception as e:
             logger.warning(f"Error during Tapo discovery: {e}")
-        
-        self._discovery_cache = discovered_devices
+            
         return discovered_devices
     
     async def get_or_update_device(self, device_config: Dict[str, str]) -> Optional[str]:
@@ -947,103 +987,74 @@ class TapoController(Device):
         try:
             logger.info(f"Scanning for devices and updating settings at {settings_path}")
             
-            # If force_scan is true, clear the discovery cache
-            if force_scan:
-                self._discovery_cache = []
-                self._last_discovery = 0
-                logger.info("Forcing a new device scan")
+            # Load current settings first to get existing device names and roles
+            settings = {}
+            existing_device_names = {}
+            existing_device_roles = {}
             
-            # Load current settings first to get existing device names
             try:
-                with open(settings_path, 'r') as f:
-                    settings = json.load(f)
-                    
-                # Create a mapping of MAC addresses to existing device names
-                existing_device_names = {}
-                if 'available_devices' in settings:
-                    for device in settings['available_devices']:
-                        if 'mac' in device and 'name' in device and device['name']:
-                            existing_device_names[device['mac']] = device['name']
-                            logger.info(f"Found existing device name in settings: {device['mac']} -> {device['name']}")
+                if os.path.exists(settings_path):
+                    with open(settings_path, 'r') as f:
+                        settings = json.load(f)
+                        
+                    # Create mappings of MAC addresses to existing device names and roles
+                    if 'available_devices' in settings:
+                        for device in settings['available_devices']:
+                            if 'mac' in device:
+                                if 'name' in device and device['name']:
+                                    existing_device_names[device['mac']] = device['name']
+                                if 'role' in device and device['role']:
+                                    existing_device_roles[device['mac']] = device['role']
+                else:
+                    logger.warning(f"Settings file not found at {settings_path}, creating new settings")
             except Exception as e:
                 logger.error(f"Error loading settings file: {e}")
-                settings = {}
-                existing_device_names = {}
             
-            # Discover all devices
-            discovered_devices = await self.discover_devices()
+            # Discover all devices - pass force_scan to discover_devices
+            discovered_devices = await self.discover_devices(force_refresh=force_scan)
             
             if not discovered_devices:
-                logger.warning("No devices discovered")
+                logger.warning("No devices discovered, cannot update settings")
                 return False
                 
             logger.info(f"Discovered {len(discovered_devices)} devices")
             
-            # For each discovered device, try to get the actual name directly from the device
+            # Preserve existing names and roles
             for device in discovered_devices:
-                logger.info(f"Processing device - IP: {device.get('ip', 'Unknown')}, MAC: {device.get('mac', 'Unknown')}")
-                
-                # First check if we already have a name for this device in settings.json
                 if device['mac'] in existing_device_names:
-                    original_name = device['name']
                     device['name'] = existing_device_names[device['mac']]
-                    logger.info(f"Using existing name from settings for {device['mac']}: '{original_name}' -> '{device['name']}'")
-                    continue  # Skip to next device since we're using the existing name
-                
-                # If this is a new device, try to get the actual name directly from the device
-                try:
-                    logger.info(f"Attempting to get name directly for device at {device.get('ip')}")
-                    tapo_device = await self.get_device(device.get('ip'))
-                    if tapo_device:
-                        device_info = await tapo_device.get_device_info()
-                        
-                        # Handle different return types from the API
-                        actual_name = None
-                        
-                        # Try to extract the alias/name from device_info
-                        if hasattr(device_info, 'alias') and device_info.alias:
-                            actual_name = device_info.alias
-                        elif isinstance(device_info, dict) and 'alias' in device_info and device_info['alias']:
-                            actual_name = device_info['alias']
-                        elif hasattr(device_info, 'nickname') and device_info.nickname:
-                            actual_name = device_info.nickname
-                        elif isinstance(device_info, dict) and 'nickname' in device_info and device_info['nickname']:
-                            actual_name = device_info['nickname']
-                        
-                        # If we found a name, use it
-                        if actual_name:
-                            logger.info(f"Retrieved actual name from device: '{actual_name}' (was '{device['name']}')")
-                            device['name'] = actual_name
-                        else:
-                            logger.warning(f"No alias or nickname found in device_info for {device.get('ip')}")
-                except Exception as e:
-                    logger.warning(f"Error getting device name directly: {e}")
+                if device['mac'] in existing_device_roles:
+                    device['role'] = existing_device_roles[device['mac']]
+                elif 'role' not in device:
+                    device['role'] = None  # Ensure all devices have a role field
             
-            # Update or add devices
+            # Update or create the available_devices list in settings
             if 'available_devices' not in settings:
                 settings['available_devices'] = []
-                
-            # Keep track of existing devices by MAC
-            existing_macs = {device['mac']: i for i, device in enumerate(settings['available_devices'])}
             
-            # Update existing devices and add new ones
-            for device in discovered_devices:
-                if device['mac'] in existing_macs:
-                    # Update existing device
-                    index = existing_macs[device['mac']]
-                    # Preserve role if it exists
-                    if 'role' in settings['available_devices'][index]:
-                        device['role'] = settings['available_devices'][index]['role']
-                    # Preserve name if it exists in settings
-                    if 'name' in settings['available_devices'][index] and settings['available_devices'][index]['name']:
-                        device['name'] = settings['available_devices'][index]['name']
-                    settings['available_devices'][index] = device
-                    logger.info(f"Updated device {device['name']} in settings")
-                else:
-                    # Add new device
-                    device['role'] = None  # No role assigned by default
-                    settings['available_devices'].append(device)
-                    logger.info(f"Added new device {device['name']} to settings")
+            # Replace the entire available_devices list with the new one
+            # This is simpler and less error-prone than trying to update individual devices
+            settings['available_devices'] = discovered_devices
+            
+            # Add last scan timestamp
+            settings['last_device_scan'] = {
+                'timestamp': datetime.now().isoformat(),
+                'count': len(discovered_devices)
+            }
+            logger.info(f"Added scan timestamp: {settings['last_device_scan']['timestamp']}")
+            
+            # Create a backup of the settings file
+            if os.path.exists(settings_path):
+                backup_path = f"{settings_path}.bak"
+                try:
+                    with open(settings_path, 'r') as src, open(backup_path, 'w') as dst:
+                        dst.write(src.read())
+                    logger.info(f"Created backup of settings at {backup_path}")
+                except Exception as e:
+                    logger.warning(f"Failed to create settings backup: {e}")
+            
+            # Ensure the directory exists
+            os.makedirs(os.path.dirname(settings_path), exist_ok=True)
             
             # Save updated settings
             try:
